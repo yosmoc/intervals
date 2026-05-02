@@ -1,6 +1,6 @@
 use clap::{Parser, Subcommand};
 use intervals_cli::client::ApiClient;
-use intervals_cli::commands::{create_manual_activity, get_activity, get_athlete, list_activities, list_events, list_wellness, list_workouts, update_activity};
+use intervals_cli::commands::{create_manual_activity, delete_activity, get_activity, get_athlete, list_activities, list_events, list_wellness, list_workouts, update_activity};
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
 
@@ -105,6 +105,11 @@ enum Commands {
         #[arg(long, help = "Elapsed time in seconds")]
         elapsed_time: Option<i64>,
     },
+    #[command(about = "Delete an activity")]
+    DeleteActivity {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+    },
 }
 
 #[tokio::main]
@@ -150,6 +155,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let input = create_manual_activity::CreateManualActivityInput { start_date_local, activity_type, name, description, sport, distance, elapsed_time };
             let activity = create_manual_activity::create_manual_activity(&client, &id, &input).await?;
             println!("{}", serde_json::to_string_pretty(&activity)?);
+        }
+        Commands::DeleteActivity { activity_id } => {
+            let result = delete_activity::delete_activity(&client, &activity_id).await?;
+            println!("{}", serde_json::to_string_pretty(&result)?);
         }
     }
 

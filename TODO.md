@@ -17,7 +17,7 @@
 ### Phase 2: Write Operations
 - [x] `update-activity <activityId>` - Update activity
 - [x] `create-manual-activity <id>` - Create manual activity
-- [ ] `delete-activity <activityId>` - Delete activity
+- [x] `delete-activity <activityId>` - Delete activity
 
 ### Phase 3: Additional Features
 - [x] `list-events <id>` - List calendar events
