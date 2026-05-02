@@ -1,6 +1,6 @@
 use clap::{Parser, Subcommand};
 use intervals_cli::client::ApiClient;
-use intervals_cli::commands::get_athlete;
+use intervals_cli::commands::{get_activity, get_athlete};
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
 
@@ -22,6 +22,13 @@ enum Commands {
         #[arg(help = "Athlete ID")]
         id: String,
     },
+    #[command(about = "Get an activity")]
+    GetActivity {
+        #[arg(help = "Athlete ID")]
+        id: String,
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+    },
 }
 
 #[tokio::main]
@@ -34,6 +41,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Commands::GetAthlete { id } => {
             let athlete = get_athlete::get_athlete(&client, &id).await?;
             println!("{}", serde_json::to_string_pretty(&athlete)?);
+        }
+        Commands::GetActivity { id, activity_id } => {
+            let activity = get_activity::get_activity(&client, &id, &activity_id).await?;
+            println!("{}", serde_json::to_string_pretty(&activity)?);
         }
     }
 

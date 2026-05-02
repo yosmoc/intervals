@@ -11,7 +11,7 @@
 ### Phase 1: Core Read Operations
 - [x] `get-athlete <id>` - Get athlete profile and settings
 - [ ] `list-activities <id>` - List activities for a date range
-- [ ] `get-activity <id> <activityId>` - Get a single activity
+- [x] `get-activity <id> <activityId>` - Get a single activity
 - [ ] `list-workouts <id>` - List workouts in athlete's library
 
 ### Phase 2: Write Operations
