@@ -1,6 +1,6 @@
 use clap::{Parser, Subcommand};
 use intervals_cli::client::ApiClient;
-use intervals_cli::commands::{create_event, create_manual_activity, delete_activity, get_activity, get_athlete, list_activities, list_events, list_folders, list_gear, list_wellness, list_workouts, search_activities, update_activity};
+use intervals_cli::commands::{create_event, create_manual_activity, delete_activity, get_activity, get_athlete, get_workout, list_activities, list_events, list_folders, list_gear, list_wellness, list_workouts, search_activities, update_activity};
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
 
@@ -152,6 +152,13 @@ enum Commands {
         #[arg(long, help = "Update existing event with matching uid")]
         upsert_on_uid: bool,
     },
+    #[command(about = "Get a workout from library")]
+    GetWorkout {
+        #[arg(help = "Athlete ID")]
+        id: String,
+        #[arg(help = "Workout ID")]
+        workout_id: i32,
+    },
 }
 
 #[tokio::main]
@@ -219,6 +226,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let input = create_event::CreateEventInput { start_date_local, event_type, category, name, description, uid, calendar_id };
             let event = create_event::create_event(&client, &id, &input, upsert_on_uid).await?;
             println!("{}", serde_json::to_string_pretty(&event)?);
+        }
+        Commands::GetWorkout { id, workout_id } => {
+            let workout = get_workout::get_workout(&client, &id, workout_id).await?;
+            println!("{}", serde_json::to_string_pretty(&workout)?);
         }
     }
 

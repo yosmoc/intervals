@@ -3,6 +3,7 @@ pub mod create_manual_activity;
 pub mod delete_activity;
 pub mod get_activity;
 pub mod get_athlete;
+pub mod get_workout;
 pub mod list_activities;
 pub mod list_events;
 pub mod list_folders;

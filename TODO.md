@@ -22,7 +22,7 @@
 - [x] `search-activities <id> --query <q>` - Search activities by name or tag
 - [x] `list-folders <id>` - List workout folders, plans, and workouts
 - [x] `create-event <id>` - Create a planned workout/note on calendar
-- [ ] `get-workout <id> <workoutId>` - Get a single workout from library
+- [x] `get-workout <id> <workoutId>` - Get a single workout from library
 - [ ] `upload-activity <id> <file>` - Upload FIT/GPX/TCX file
 
 ## Phase 5: Medium Priority
