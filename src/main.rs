@@ -1,6 +1,6 @@
 use clap::{Parser, Subcommand};
 use intervals_cli::client::ApiClient;
-use intervals_cli::commands::{create_event, create_manual_activity, delete_activity, get_activity, get_athlete, get_workout, list_activities, list_events, list_folders, list_gear, list_wellness, list_workouts, search_activities, update_activity};
+use intervals_cli::commands::{create_event, create_manual_activity, delete_activity, get_activity, get_athlete, get_athlete_profile, get_athlete_training_plan, get_weather_forecast, get_workout, list_activities, list_activity_intervals, list_activity_messages, list_athlete_hr_curves, list_athlete_pace_curves, list_athlete_power_curves, list_athlete_routes, list_chats, list_events, list_folders, list_gear, list_sport_settings, list_wellness, list_workouts, search_activities, update_activity};
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
 
@@ -159,6 +159,61 @@ enum Commands {
         #[arg(help = "Workout ID")]
         workout_id: i32,
     },
+    #[command(about = "List athlete power curves")]
+    ListAthletePowerCurves {
+        #[arg(help = "Athlete ID")]
+        id: String,
+    },
+    #[command(about = "List athlete routes")]
+    ListAthleteRoutes {
+        #[arg(help = "Athlete ID")]
+        id: String,
+    },
+    #[command(about = "Get athlete profile")]
+    GetAthleteProfile {
+        #[arg(help = "Athlete ID")]
+        id: String,
+    },
+    #[command(about = "List activity messages")]
+    ListActivityMessages {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+    },
+    #[command(about = "Get weather forecast")]
+    GetWeatherForecast {
+        #[arg(help = "Athlete ID")]
+        id: String,
+    },
+    #[command(about = "List sport settings")]
+    ListSportSettings {
+        #[arg(help = "Athlete ID")]
+        id: String,
+    },
+    #[command(about = "List chats")]
+    ListChats {
+        #[arg(help = "Athlete ID")]
+        id: String,
+    },
+    #[command(about = "List athlete HR curves")]
+    ListAthleteHrCurves {
+        #[arg(help = "Athlete ID")]
+        id: String,
+    },
+    #[command(about = "List athlete pace curves")]
+    ListAthletePaceCurves {
+        #[arg(help = "Athlete ID")]
+        id: String,
+    },
+    #[command(about = "Get athlete training plan")]
+    GetAthleteTrainingPlan {
+        #[arg(help = "Athlete ID")]
+        id: String,
+    },
+    #[command(about = "List activity intervals")]
+    ListActivityIntervals {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+    },
 }
 
 #[tokio::main]
@@ -230,6 +285,50 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Commands::GetWorkout { id, workout_id } => {
             let workout = get_workout::get_workout(&client, &id, workout_id).await?;
             println!("{}", serde_json::to_string_pretty(&workout)?);
+        }
+        Commands::ListAthletePowerCurves { id } => {
+            let curves = list_athlete_power_curves::list_athlete_power_curves(&client, &id).await?;
+            println!("{}", serde_json::to_string_pretty(&curves)?);
+        }
+        Commands::ListAthleteRoutes { id } => {
+            let routes = list_athlete_routes::list_athlete_routes(&client, &id).await?;
+            println!("{}", serde_json::to_string_pretty(&routes)?);
+        }
+        Commands::GetAthleteProfile { id } => {
+            let profile = get_athlete_profile::get_athlete_profile(&client, &id).await?;
+            println!("{}", serde_json::to_string_pretty(&profile)?);
+        }
+        Commands::ListActivityMessages { activity_id } => {
+            let messages = list_activity_messages::list_activity_messages(&client, &activity_id).await?;
+            println!("{}", serde_json::to_string_pretty(&messages)?);
+        }
+        Commands::GetWeatherForecast { id } => {
+            let forecast = get_weather_forecast::get_weather_forecast(&client, &id).await?;
+            println!("{}", serde_json::to_string_pretty(&forecast)?);
+        }
+        Commands::ListSportSettings { id } => {
+            let settings = list_sport_settings::list_sport_settings(&client, &id).await?;
+            println!("{}", serde_json::to_string_pretty(&settings)?);
+        }
+        Commands::ListChats { id } => {
+            let chats = list_chats::list_chats(&client, &id).await?;
+            println!("{}", serde_json::to_string_pretty(&chats)?);
+        }
+        Commands::ListAthleteHrCurves { id } => {
+            let curves = list_athlete_hr_curves::list_athlete_hr_curves(&client, &id).await?;
+            println!("{}", serde_json::to_string_pretty(&curves)?);
+        }
+        Commands::ListAthletePaceCurves { id } => {
+            let curves = list_athlete_pace_curves::list_athlete_pace_curves(&client, &id).await?;
+            println!("{}", serde_json::to_string_pretty(&curves)?);
+        }
+        Commands::GetAthleteTrainingPlan { id } => {
+            let plan = get_athlete_training_plan::get_athlete_training_plan(&client, &id).await?;
+            println!("{}", serde_json::to_string_pretty(&plan)?);
+        }
+        Commands::ListActivityIntervals { activity_id } => {
+            let intervals = list_activity_intervals::list_activity_intervals(&client, &activity_id).await?;
+            println!("{}", serde_json::to_string_pretty(&intervals)?);
         }
     }
 
