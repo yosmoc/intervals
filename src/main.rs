@@ -1,6 +1,6 @@
 use clap::{Parser, Subcommand};
 use intervals_cli::client::ApiClient;
-use intervals_cli::commands::{get_activity, get_athlete, list_activities, list_wellness, list_workouts};
+use intervals_cli::commands::{get_activity, get_athlete, list_activities, list_events, list_wellness, list_workouts};
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
 
@@ -56,6 +56,19 @@ enum Commands {
         #[arg(help = "Athlete ID")]
         id: String,
     },
+    #[command(about = "List calendar events (planned workouts, notes)")]
+    ListEvents {
+        #[arg(help = "Athlete ID")]
+        id: String,
+        #[arg(long, help = "Oldest date (ISO-8601)")]
+        oldest: Option<String>,
+        #[arg(long, help = "Newest date (ISO-8601)")]
+        newest: Option<String>,
+        #[arg(long, help = "Filter by category (WORKOUT,NOTE,RACE_A,etc.)")]
+        category: Option<String>,
+        #[arg(long, help = "Maximum number of events")]
+        limit: Option<i32>,
+    },
 }
 
 #[tokio::main]
@@ -86,6 +99,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Commands::ListWorkouts { id } => {
             let workouts = list_workouts::list_workouts(&client, &id).await?;
             println!("{}", serde_json::to_string_pretty(&workouts)?);
+        }
+        Commands::ListEvents { id, oldest, newest, category, limit } => {
+            let params = list_events::ListEventsParams { oldest, newest, category, limit };
+            let events = list_events::list_events(&client, &id, &params).await?;
+            println!("{}", serde_json::to_string_pretty(&events)?);
         }
     }
 

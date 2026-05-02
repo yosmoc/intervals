@@ -20,7 +20,7 @@
 - [ ] `delete-activity <id> <activityId>` - Delete activity
 
 ### Phase 3: Additional Features
-- [ ] `list-events <id>` - List calendar events
+- [x] `list-events <id>` - List calendar events
 - [x] `list-wellness <id>` - List wellness records
 - [ ] `list-gear <id>` - List athlete gear
 
