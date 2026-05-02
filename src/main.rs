@@ -1,6 +1,6 @@
 use clap::{Parser, Subcommand};
 use intervals_cli::client::ApiClient;
-use intervals_cli::commands::{create_manual_activity, delete_activity, get_activity, get_athlete, list_activities, list_events, list_gear, list_wellness, list_workouts, search_activities, update_activity};
+use intervals_cli::commands::{create_manual_activity, delete_activity, get_activity, get_athlete, list_activities, list_events, list_folders, list_gear, list_wellness, list_workouts, search_activities, update_activity};
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
 
@@ -126,6 +126,11 @@ enum Commands {
         #[arg(long, help = "Return full activity details")]
         full: bool,
     },
+    #[command(about = "List workout folders, plans, and workouts")]
+    ListFolders {
+        #[arg(help = "Athlete ID")]
+        id: String,
+    },
 }
 
 #[tokio::main]
@@ -184,6 +189,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let params = search_activities::SearchActivitiesParams { query, limit, full };
             let results = search_activities::search_activities(&client, &id, &params).await?;
             println!("{}", serde_json::to_string_pretty(&results)?);
+        }
+        Commands::ListFolders { id } => {
+            let folders = list_folders::list_folders(&client, &id).await?;
+            println!("{}", serde_json::to_string_pretty(&folders)?);
         }
     }
 
