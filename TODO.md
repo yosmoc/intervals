@@ -15,7 +15,7 @@
 - [x] `list-workouts <id>` - List workouts in athlete's library
 
 ### Phase 2: Write Operations
-- [ ] `update-activity <id> <activityId>` - Update activity
+- [x] `update-activity <activityId>` - Update activity
 - [ ] `create-manual-activity <id>` - Create manual activity
 - [ ] `delete-activity <id> <activityId>` - Delete activity
 

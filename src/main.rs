@@ -1,6 +1,6 @@
 use clap::{Parser, Subcommand};
 use intervals_cli::client::ApiClient;
-use intervals_cli::commands::{get_activity, get_athlete, list_activities, list_events, list_wellness, list_workouts};
+use intervals_cli::commands::{get_activity, get_athlete, list_activities, list_events, list_wellness, list_workouts, update_activity};
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
 
@@ -69,6 +69,23 @@ enum Commands {
         #[arg(long, help = "Maximum number of events")]
         limit: Option<i32>,
     },
+    #[command(about = "Update an activity")]
+    UpdateActivity {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+        #[arg(long, help = "Activity name")]
+        name: Option<String>,
+        #[arg(long, help = "Activity description")]
+        description: Option<String>,
+        #[arg(long, help = "Activity type")]
+        activity_type: Option<String>,
+        #[arg(long, help = "Sport")]
+        sport: Option<String>,
+        #[arg(long, help = "Distance in meters")]
+        distance: Option<f64>,
+        #[arg(long, help = "Elapsed time in seconds")]
+        elapsed_time: Option<i64>,
+    },
 }
 
 #[tokio::main]
@@ -104,6 +121,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let params = list_events::ListEventsParams { oldest, newest, category, limit };
             let events = list_events::list_events(&client, &id, &params).await?;
             println!("{}", serde_json::to_string_pretty(&events)?);
+        }
+        Commands::UpdateActivity { activity_id, name, description, activity_type, sport, distance, elapsed_time } => {
+            let input = update_activity::UpdateActivityInput { name, description, activity_type, sport, distance, elapsed_time };
+            let activity = update_activity::update_activity(&client, &activity_id, &input).await?;
+            println!("{}", serde_json::to_string_pretty(&activity)?);
         }
     }
 
