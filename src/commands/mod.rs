@@ -1,3 +1,4 @@
+pub mod create_event;
 pub mod create_manual_activity;
 pub mod delete_activity;
 pub mod get_activity;

@@ -1,6 +1,6 @@
 use clap::{Parser, Subcommand};
 use intervals_cli::client::ApiClient;
-use intervals_cli::commands::{create_manual_activity, delete_activity, get_activity, get_athlete, list_activities, list_events, list_folders, list_gear, list_wellness, list_workouts, search_activities, update_activity};
+use intervals_cli::commands::{create_event, create_manual_activity, delete_activity, get_activity, get_athlete, list_activities, list_events, list_folders, list_gear, list_wellness, list_workouts, search_activities, update_activity};
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
 
@@ -131,6 +131,27 @@ enum Commands {
         #[arg(help = "Athlete ID")]
         id: String,
     },
+    #[command(about = "Create a calendar event (workout, note, race)")]
+    CreateEvent {
+        #[arg(help = "Athlete ID")]
+        id: String,
+        #[arg(long, help = "Start date/time (ISO-8601), required")]
+        start_date_local: String,
+        #[arg(long, help = "Event type (WORKOUT,NOTE,RACE_A,etc.), required")]
+        event_type: String,
+        #[arg(long, help = "Category (WORKOUT,NOTE,RACE_A,etc.), required")]
+        category: String,
+        #[arg(long, help = "Event name")]
+        name: Option<String>,
+        #[arg(long, help = "Event description or workout definition")]
+        description: Option<String>,
+        #[arg(long, help = "Unique identifier for upsert")]
+        uid: Option<String>,
+        #[arg(long, help = "Calendar ID")]
+        calendar_id: Option<i32>,
+        #[arg(long, help = "Update existing event with matching uid")]
+        upsert_on_uid: bool,
+    },
 }
 
 #[tokio::main]
@@ -193,6 +214,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Commands::ListFolders { id } => {
             let folders = list_folders::list_folders(&client, &id).await?;
             println!("{}", serde_json::to_string_pretty(&folders)?);
+        }
+        Commands::CreateEvent { id, start_date_local, event_type, category, name, description, uid, calendar_id, upsert_on_uid } => {
+            let input = create_event::CreateEventInput { start_date_local, event_type, category, name, description, uid, calendar_id };
+            let event = create_event::create_event(&client, &id, &input, upsert_on_uid).await?;
+            println!("{}", serde_json::to_string_pretty(&event)?);
         }
     }
 
