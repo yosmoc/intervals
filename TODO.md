@@ -22,7 +22,7 @@
 ### Phase 3: Additional Features
 - [x] `list-events <id>` - List calendar events
 - [x] `list-wellness <id>` - List wellness records
-- [ ] `list-gear <id>` - List athlete gear
+- [x] `list-gear <id>` - List athlete gear
 
 ## Implementation Approach
 - TDD: Write tests first, then implement
@@ -33,4 +33,4 @@
 - Output JSON by default
 
 ## Current Status
-Working on: next command
+All planned commands implemented. 33 tests passing.

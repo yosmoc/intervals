@@ -1,6 +1,6 @@
 use clap::{Parser, Subcommand};
 use intervals_cli::client::ApiClient;
-use intervals_cli::commands::{create_manual_activity, delete_activity, get_activity, get_athlete, list_activities, list_events, list_wellness, list_workouts, update_activity};
+use intervals_cli::commands::{create_manual_activity, delete_activity, get_activity, get_athlete, list_activities, list_events, list_gear, list_wellness, list_workouts, update_activity};
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
 
@@ -110,6 +110,11 @@ enum Commands {
         #[arg(help = "Activity ID")]
         activity_id: String,
     },
+    #[command(about = "List athlete gear")]
+    ListGear {
+        #[arg(help = "Athlete ID")]
+        id: String,
+    },
 }
 
 #[tokio::main]
@@ -159,6 +164,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Commands::DeleteActivity { activity_id } => {
             let result = delete_activity::delete_activity(&client, &activity_id).await?;
             println!("{}", serde_json::to_string_pretty(&result)?);
+        }
+        Commands::ListGear { id } => {
+            let gear = list_gear::list_gear(&client, &id).await?;
+            println!("{}", serde_json::to_string_pretty(&gear)?);
         }
     }
 
