@@ -21,7 +21,7 @@
 
 ### Phase 3: Additional Features
 - [ ] `list-events <id>` - List calendar events
-- [ ] `list-wellness <id>` - List wellness records
+- [x] `list-wellness <id>` - List wellness records
 - [ ] `list-gear <id>` - List athlete gear
 
 ## Implementation Approach
@@ -33,4 +33,4 @@
 - Output JSON by default
 
 ## Current Status
-Working on: `list-activities` command (next)
+Working on: next command

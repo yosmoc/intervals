@@ -1,6 +1,6 @@
 use clap::{Parser, Subcommand};
 use intervals_cli::client::ApiClient;
-use intervals_cli::commands::{get_activity, get_athlete};
+use intervals_cli::commands::{get_activity, get_athlete, list_wellness};
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
 
@@ -29,6 +29,15 @@ enum Commands {
         #[arg(help = "Activity ID")]
         activity_id: String,
     },
+    #[command(about = "List wellness records for a date range")]
+    ListWellness {
+        #[arg(help = "Athlete ID")]
+        id: String,
+        #[arg(long, help = "Oldest date (ISO-8601)")]
+        oldest: Option<String>,
+        #[arg(long, help = "Newest date (ISO-8601)")]
+        newest: Option<String>,
+    },
 }
 
 #[tokio::main]
@@ -45,6 +54,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Commands::GetActivity { id, activity_id } => {
             let activity = get_activity::get_activity(&client, &id, &activity_id).await?;
             println!("{}", serde_json::to_string_pretty(&activity)?);
+        }
+        Commands::ListWellness { id, oldest, newest } => {
+            let params = list_wellness::ListWellnessParams { oldest, newest };
+            let records = list_wellness::list_wellness(&client, &id, &params).await?;
+            println!("{}", serde_json::to_string_pretty(&records)?);
         }
     }
 

@@ -100,14 +100,11 @@ mod tests {
     }
 
     #[test]
-    fn test_api_client_from_env_missing_key() {
+    fn test_api_client_from_env() {
         unsafe { std::env::remove_var("INTERVALS_API_KEY") };
         let result = ApiClient::from_env("http://localhost".to_string());
         assert!(result.is_err());
-    }
 
-    #[test]
-    fn test_api_client_from_env_with_key() {
         unsafe { std::env::set_var("INTERVALS_API_KEY", "test-key") };
         let result = ApiClient::from_env("http://localhost".to_string());
         assert!(result.is_ok());
