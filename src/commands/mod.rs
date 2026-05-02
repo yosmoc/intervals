@@ -7,4 +7,5 @@ pub mod list_events;
 pub mod list_gear;
 pub mod list_wellness;
 pub mod list_workouts;
+pub mod search_activities;
 pub mod update_activity;

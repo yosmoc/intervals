@@ -6,23 +6,39 @@
 - [x] Add dependencies: clap, reqwest, serde, serde_json, tokio, thiserror
 - [x] Configure $INTERVALS_API_KEY environment variable
 
-## Commands to Implement
+## Commands Implemented
+- [x] `get-athlete <id>`
+- [x] `list-activities <id> --oldest <date>`
+- [x] `get-activity <id> <activityId>`
+- [x] `list-workouts <id>`
+- [x] `list-events <id>`
+- [x] `list-wellness <id>`
+- [x] `list-gear <id>`
+- [x] `update-activity <activityId>`
+- [x] `create-manual-activity <id>`
+- [x] `delete-activity <activityId>`
 
-### Phase 1: Core Read Operations
-- [x] `get-athlete <id>` - Get athlete profile and settings
-- [x] `list-activities <id>` - List activities for a date range
-- [x] `get-activity <id> <activityId>` - Get a single activity
-- [x] `list-workouts <id>` - List workouts in athlete's library
+## Phase 4: High Priority
+- [x] `search-activities <id> --query <q>` - Search activities by name or tag
+- [ ] `list-folders <id>` - List workout folders, plans, and workouts
+- [ ] `create-event <id>` - Create a planned workout/note on calendar
+- [ ] `get-workout <id> <workoutId>` - Get a single workout from library
+- [ ] `upload-activity <id> <file>` - Upload FIT/GPX/TCX file
 
-### Phase 2: Write Operations
-- [x] `update-activity <activityId>` - Update activity
-- [x] `create-manual-activity <id>` - Create manual activity
-- [x] `delete-activity <activityId>` - Delete activity
+## Phase 5: Medium Priority
+- [ ] `list-athlete-power-curves <id>` - Best power curves for athlete
+- [ ] `list-athlete-routes <id>` - List routes with activity counts
+- [ ] `get-athlete-profile <id>` - Athlete profile info
+- [ ] `list-activity-messages <id> <activityId>` - List comments on activity
+- [ ] `get-weather-forecast <id>` - Weather forecast
+- [ ] `list-sport-settings <athleteId>` - List sport settings
 
-### Phase 3: Additional Features
-- [x] `list-events <id>` - List calendar events
-- [x] `list-wellness <id>` - List wellness records
-- [x] `list-gear <id>` - List athlete gear
+## Phase 6: Lower Priority
+- [ ] `list-chats <id>` - List chats
+- [ ] `list-athlete-hr-curves <id>` - Best HR curves
+- [ ] `list-athlete-pace-curves <id>` - Best pace curves
+- [ ] `get-athlete-training-plan <id>` - Get training plan
+- [ ] `list-activity-intervals <id> <activityId>` - Get activity intervals
 
 ## Implementation Approach
 - TDD: Write tests first, then implement
@@ -33,4 +49,4 @@
 - Output JSON by default
 
 ## Current Status
-All planned commands implemented. 33 tests passing.
+Implementing Phase 4: search-activities

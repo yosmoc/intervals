@@ -1,6 +1,6 @@
 use clap::{Parser, Subcommand};
 use intervals_cli::client::ApiClient;
-use intervals_cli::commands::{create_manual_activity, delete_activity, get_activity, get_athlete, list_activities, list_events, list_gear, list_wellness, list_workouts, update_activity};
+use intervals_cli::commands::{create_manual_activity, delete_activity, get_activity, get_athlete, list_activities, list_events, list_gear, list_wellness, list_workouts, search_activities, update_activity};
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
 
@@ -115,6 +115,17 @@ enum Commands {
         #[arg(help = "Athlete ID")]
         id: String,
     },
+    #[command(about = "Search activities by name or tag")]
+    SearchActivities {
+        #[arg(help = "Athlete ID")]
+        id: String,
+        #[arg(help = "Search query (use # for tag search)")]
+        query: String,
+        #[arg(long, help = "Maximum number of results")]
+        limit: Option<i32>,
+        #[arg(long, help = "Return full activity details")]
+        full: bool,
+    },
 }
 
 #[tokio::main]
@@ -168,6 +179,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Commands::ListGear { id } => {
             let gear = list_gear::list_gear(&client, &id).await?;
             println!("{}", serde_json::to_string_pretty(&gear)?);
+        }
+        Commands::SearchActivities { id, query, limit, full } => {
+            let params = search_activities::SearchActivitiesParams { query, limit, full };
+            let results = search_activities::search_activities(&client, &id, &params).await?;
+            println!("{}", serde_json::to_string_pretty(&results)?);
         }
     }
 
