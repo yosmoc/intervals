@@ -12,7 +12,7 @@
 - [x] `get-athlete <id>` - Get athlete profile and settings
 - [x] `list-activities <id>` - List activities for a date range
 - [x] `get-activity <id> <activityId>` - Get a single activity
-- [ ] `list-workouts <id>` - List workouts in athlete's library
+- [x] `list-workouts <id>` - List workouts in athlete's library
 
 ### Phase 2: Write Operations
 - [ ] `update-activity <id> <activityId>` - Update activity

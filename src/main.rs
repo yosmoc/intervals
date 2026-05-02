@@ -1,6 +1,6 @@
 use clap::{Parser, Subcommand};
 use intervals_cli::client::ApiClient;
-use intervals_cli::commands::{get_activity, get_athlete, list_activities, list_wellness};
+use intervals_cli::commands::{get_activity, get_athlete, list_activities, list_wellness, list_workouts};
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
 
@@ -51,6 +51,11 @@ enum Commands {
         #[arg(long, help = "Maximum number of activities")]
         limit: Option<i32>,
     },
+    #[command(about = "List workouts in athlete's library")]
+    ListWorkouts {
+        #[arg(help = "Athlete ID")]
+        id: String,
+    },
 }
 
 #[tokio::main]
@@ -77,6 +82,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let params = list_activities::ListActivitiesParams { oldest, newest, route_id, limit };
             let activities = list_activities::list_activities(&client, &id, &params).await?;
             println!("{}", serde_json::to_string_pretty(&activities)?);
+        }
+        Commands::ListWorkouts { id } => {
+            let workouts = list_workouts::list_workouts(&client, &id).await?;
+            println!("{}", serde_json::to_string_pretty(&workouts)?);
         }
     }
 
