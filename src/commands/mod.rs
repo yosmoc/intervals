@@ -9,6 +9,7 @@ pub mod get_activity_streams;
 pub mod get_activity_weather_summary;
 pub mod get_athlete;
 pub mod get_athlete_profile;
+pub mod get_athlete_summary;
 pub mod get_athlete_training_plan;
 pub mod get_delete_event;
 pub mod get_weather_forecast;

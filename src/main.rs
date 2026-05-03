@@ -3,8 +3,8 @@ use intervals::client::ApiClient;
 use intervals::commands::{
     create_event, create_manual_activity, delete_activity, get_activity, get_activity_best_efforts,
     get_activity_map, get_activity_segments, get_activity_streams, get_activity_weather_summary,
-    get_athlete, get_athlete_profile, get_athlete_training_plan, get_delete_event,
-    get_weather_forecast, get_workout, list_activities, list_activity_intervals,
+    get_athlete, get_athlete_profile, get_athlete_summary, get_athlete_training_plan,
+    get_delete_event, get_weather_forecast, get_workout, list_activities, list_activity_intervals,
     list_activity_messages, list_athlete_hr_curves, list_athlete_pace_curves,
     list_athlete_power_curves, list_athlete_routes, list_chats, list_events, list_folders,
     list_gear, list_sport_settings, list_wellness, list_workouts, mark_event_done,
@@ -258,6 +258,15 @@ enum Commands {
     GetAthleteProfile {
         #[arg(help = "Athlete ID")]
         id: String,
+    },
+    #[command(about = "Get athlete summary (fitness data)")]
+    GetAthleteSummary {
+        #[arg(help = "Athlete ID")]
+        id: String,
+        #[arg(long, help = "Start date (ISO-8601)")]
+        start: Option<String>,
+        #[arg(long, help = "End date (ISO-8601)")]
+        end: Option<String>,
     },
     #[command(about = "List activity messages")]
     ListActivityMessages {
@@ -566,6 +575,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Commands::GetAthleteProfile { id } => {
             let profile = get_athlete_profile::get_athlete_profile(&client, &id).await?;
             println!("{}", serde_json::to_string_pretty(&profile)?);
+        }
+        Commands::GetAthleteSummary { id, start, end } => {
+            let params = get_athlete_summary::GetAthleteSummaryParams {
+                start,
+                end,
+                tags: None,
+            };
+            let summaries = get_athlete_summary::get_athlete_summary(&client, &id, &params).await?;
+            println!("{}", serde_json::to_string_pretty(&summaries)?);
         }
         Commands::ListActivityMessages { activity_id } => {
             let messages =
