@@ -1,6 +1,6 @@
 use clap::{Parser, Subcommand};
-use intervals_cli::client::ApiClient;
-use intervals_cli::commands::{
+use intervals::client::ApiClient;
+use intervals::commands::{
     create_event, create_manual_activity, delete_activity, get_activity, get_athlete,
     get_athlete_profile, get_athlete_training_plan, get_weather_forecast, get_workout,
     list_activities, list_activity_intervals, list_activity_messages, list_athlete_hr_curves,

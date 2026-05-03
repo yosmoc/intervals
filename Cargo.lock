@@ -747,7 +747,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "intervals-cli"
+name = "intervals"
 version = "0.1.0"
 dependencies = [
  "assert_cmd",

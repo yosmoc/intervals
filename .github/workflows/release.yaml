@@ -26,12 +26,12 @@ jobs:
       - name: Upload release artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: intervals-cli
-          path: target/release/intervals-cli
+          name: intervals
+          path: target/release/intervals
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create ${{ github.ref_name }} \
             --generate-notes \
-            target/release/intervals-cli#intervals-cli
+            target/release/intervals#intervals
