@@ -4,11 +4,12 @@ use intervals::commands::{
     create_event, create_manual_activity, delete_activity, download_activity_file, get_activity,
     get_activity_best_efforts, get_activity_map, get_activity_segments, get_activity_streams,
     get_activity_weather_summary, get_athlete, get_athlete_profile, get_athlete_summary,
-    get_athlete_training_plan, get_delete_event, get_route, get_weather_forecast, get_workout,
-    list_activities, list_activity_intervals, list_activity_messages, list_athlete_hr_curves,
-    list_athlete_pace_curves, list_athlete_power_curves, list_athlete_routes, list_chats,
-    list_events, list_folders, list_gear, list_sport_settings, list_wellness, list_workouts,
-    mark_event_done, post_activity_message, search_activities, update_activity,
+    get_athlete_training_plan, get_delete_event, get_interval_stats, get_route,
+    get_weather_forecast, get_workout, list_activities, list_activity_intervals,
+    list_activity_messages, list_athlete_hr_curves, list_athlete_pace_curves,
+    list_athlete_power_curves, list_athlete_routes, list_chats, list_events, list_folders,
+    list_gear, list_sport_settings, list_wellness, list_workouts, mark_event_done,
+    post_activity_message, search_activities, update_activity,
 };
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
@@ -50,6 +51,15 @@ enum Commands {
         distance: Option<f64>,
         #[arg(long, help = "Number of efforts to return")]
         count: Option<i64>,
+    },
+    #[command(about = "Get interval stats for part of an activity")]
+    GetIntervalStats {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+        #[arg(help = "Start index")]
+        start_index: i64,
+        #[arg(help = "End index")]
+        end_index: i64,
     },
     #[command(about = "Get activity streams (time series data)")]
     GetActivityStreams {
@@ -394,6 +404,20 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             )
             .await?;
             println!("{}", serde_json::to_string_pretty(&efforts)?);
+        }
+        Commands::GetIntervalStats {
+            activity_id,
+            start_index,
+            end_index,
+        } => {
+            let stats = get_interval_stats::get_interval_stats(
+                &client,
+                &activity_id,
+                start_index,
+                end_index,
+            )
+            .await?;
+            println!("{}", serde_json::to_string_pretty(&stats)?);
         }
         Commands::GetActivityStreams {
             activity_id,
