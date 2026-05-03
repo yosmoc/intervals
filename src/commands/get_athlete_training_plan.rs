@@ -2,11 +2,20 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct TrainingPlan {
-    pub id: String,
-    pub name: String,
-    pub description: String,
-    pub start_date: String,
-    pub weeks: i32,
+    #[serde(default)]
+    pub athlete_id: Option<String>,
+    #[serde(default)]
+    pub training_plan_id: Option<String>,
+    #[serde(default)]
+    pub training_plan_start_date: Option<String>,
+    #[serde(default)]
+    pub timezone: Option<String>,
+    #[serde(default)]
+    pub training_plan_last_applied: Option<String>,
+    #[serde(default)]
+    pub training_plan: Option<String>,
+    #[serde(default)]
+    pub training_plan_alias: Option<String>,
 }
 
 pub async fn get_athlete_training_plan(
@@ -18,6 +27,7 @@ pub async fn get_athlete_training_plan(
         client.base_url(),
         athlete_id
     );
+
     let response = client
         .client()
         .get(&url)
@@ -52,11 +62,11 @@ mod tests {
             .and(path("/api/v1/athlete/12345/training-plan"))
             .and(header("Authorization", TEST_AUTH_HEADER))
             .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!({
-                "id": "plan-001",
-                "name": "Base Training",
-                "description": "12 week base training plan",
-                "start_date": "2024-01-01",
-                "weeks": 12
+                "athlete_id": "i12345",
+                "training_plan_id": "plan-001",
+                "training_plan_start_date": "2024-01-01",
+                "timezone": "Europe/Stockholm",
+                "training_plan_alias": "Base Plan"
             })))
             .mount(&mock_server)
             .await;
@@ -64,8 +74,8 @@ mod tests {
         let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
         let plan = get_athlete_training_plan(&client, "12345").await.unwrap();
 
-        assert_eq!(plan.id, "plan-001");
-        assert_eq!(plan.weeks, 12);
+        assert_eq!(plan.athlete_id, Some("i12345".to_string()));
+        assert_eq!(plan.training_plan_alias, Some("Base Plan".to_string()));
     }
 
     #[tokio::test]
@@ -77,7 +87,7 @@ mod tests {
             .respond_with(
                 ResponseTemplate::new(404)
                     .set_body_json(serde_json::json!({
-                        "error": "Training plan not found"
+                        "error": "Not found"
                     })),
             )
             .mount(&mock_server)

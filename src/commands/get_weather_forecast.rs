@@ -2,11 +2,22 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct WeatherForecast {
-    pub date: String,
-    pub temp_min: f64,
-    pub temp_max: f64,
-    pub condition: String,
-    pub icon: String,
+    #[serde(default)]
+    pub date: Option<String>,
+    #[serde(default)]
+    pub temp_min: Option<f64>,
+    #[serde(default)]
+    pub temp_max: Option<f64>,
+    #[serde(default)]
+    pub condition: Option<String>,
+    #[serde(default)]
+    pub icon: Option<String>,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct WeatherForecastResponse {
+    #[serde(default)]
+    pub forecasts: Vec<WeatherForecast>,
 }
 
 pub async fn get_weather_forecast(
@@ -31,8 +42,8 @@ pub async fn get_weather_forecast(
         return Err(format!("API error: {} - {}", status, body).into());
     }
 
-    let forecast = response.json::<Vec<WeatherForecast>>().await?;
-    Ok(forecast)
+    let wrapper = response.json::<WeatherForecastResponse>().await?;
+    Ok(wrapper.forecasts)
 }
 
 #[cfg(test)]
@@ -41,7 +52,7 @@ mod tests {
     use crate::client::ApiClient;
     use crate::commands::TEST_AUTH_HEADER;
 
-    use wiremock::matchers::{header, method, path};
+    use wiremock::matchers::{header, method, path_regex};
     use wiremock::{Mock, MockServer, ResponseTemplate};
 
     #[tokio::test]
@@ -49,25 +60,27 @@ mod tests {
         let mock_server = MockServer::start().await;
 
         Mock::given(method("GET"))
-            .and(path("/api/v1/athlete/12345/weather-forecast"))
+            .and(path_regex("/api/v1/athlete/.*/weather-forecast"))
             .and(header("Authorization", TEST_AUTH_HEADER))
-            .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!([
-                {
-                    "date": "2024-01-15",
-                    "temp_min": 5.0,
-                    "temp_max": 12.0,
-                    "condition": "Partly Cloudy",
-                    "icon": "partly-cloudy"
-                }
-            ])))
+            .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!({
+                "forecasts": [
+                    {
+                        "date": "2024-01-15",
+                        "temp_min": 2.0,
+                        "temp_max": 8.0,
+                        "condition": "Cloudy",
+                        "icon": "cloudy"
+                    }
+                ]
+            })))
             .mount(&mock_server)
             .await;
 
         let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
-        let forecast = get_weather_forecast(&client, "12345").await.unwrap();
+        let forecasts = get_weather_forecast(&client, "12345").await.unwrap();
 
-        assert_eq!(forecast.len(), 1);
-        assert_eq!(forecast[0].condition, "Partly Cloudy");
+        assert_eq!(forecasts.len(), 1);
+        assert_eq!(forecasts[0].temp_max, Some(8.0));
     }
 
     #[tokio::test]
@@ -75,7 +88,7 @@ mod tests {
         let mock_server = MockServer::start().await;
 
         Mock::given(method("GET"))
-            .and(path("/api/v1/athlete/12345/weather-forecast"))
+            .and(path_regex("/api/v1/athlete/.*/weather-forecast"))
             .respond_with(
                 ResponseTemplate::new(401)
                     .set_body_json(serde_json::json!({

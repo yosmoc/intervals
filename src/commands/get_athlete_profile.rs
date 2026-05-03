@@ -4,10 +4,16 @@ use serde::{Deserialize, Serialize};
 pub struct AthleteProfile {
     pub id: String,
     pub name: String,
-    pub email: String,
-    pub dob: String,
-    pub weight: f64,
-    pub gender: String,
+    #[serde(default)]
+    pub email: Option<String>,
+    #[serde(default)]
+    pub city: Option<String>,
+    #[serde(default)]
+    pub country: Option<String>,
+    #[serde(default)]
+    pub timezone: Option<String>,
+    #[serde(default)]
+    pub sex: Option<String>,
 }
 
 pub async fn get_athlete_profile(
@@ -32,7 +38,9 @@ pub async fn get_athlete_profile(
         return Err(format!("API error: {} - {}", status, body).into());
     }
 
-    let profile = response.json::<AthleteProfile>().await?;
+    let json: serde_json::Value = response.json().await?;
+    let athlete = json.get("athlete").ok_or("Missing 'athlete' field")?;
+    let profile = serde_json::from_value(athlete.clone())?;
     Ok(profile)
 }
 
@@ -53,12 +61,14 @@ mod tests {
             .and(path("/api/v1/athlete/12345/profile"))
             .and(header("Authorization", TEST_AUTH_HEADER))
             .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!({
-                "id": "i12345",
-                "name": "Test Athlete",
-                "email": "test@example.com",
-                "dob": "1990-01-01",
-                "weight": 75.0,
-                "gender": "M"
+                "athlete": {
+                    "id": "i12345",
+                    "name": "Test Athlete",
+                    "city": "Lund",
+                    "country": "Sweden",
+                    "timezone": "Europe/Stockholm",
+                    "sex": "M"
+                }
             })))
             .mount(&mock_server)
             .await;
@@ -68,7 +78,6 @@ mod tests {
 
         assert_eq!(profile.id, "i12345");
         assert_eq!(profile.name, "Test Athlete");
-        assert_eq!(profile.email, "test@example.com");
     }
 
     #[tokio::test]

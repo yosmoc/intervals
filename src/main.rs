@@ -163,6 +163,8 @@ enum Commands {
     ListAthletePowerCurves {
         #[arg(help = "Athlete ID")]
         id: String,
+        #[arg(help = "Activity type (Ride, Run, etc.)")]
+        activity_type: String,
     },
     #[command(about = "List athlete routes")]
     ListAthleteRoutes {
@@ -286,8 +288,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let workout = get_workout::get_workout(&client, &id, workout_id).await?;
             println!("{}", serde_json::to_string_pretty(&workout)?);
         }
-        Commands::ListAthletePowerCurves { id } => {
-            let curves = list_athlete_power_curves::list_athlete_power_curves(&client, &id).await?;
+        Commands::ListAthletePowerCurves { id, activity_type } => {
+            let curves = list_athlete_power_curves::list_athlete_power_curves(&client, &id, &activity_type).await?;
             println!("{}", serde_json::to_string_pretty(&curves)?);
         }
         Commands::ListAthleteRoutes { id } => {

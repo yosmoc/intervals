@@ -2,9 +2,17 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct HRCurve {
-    pub duration: f64,
-    pub hr: f64,
-    pub date: String,
+    pub id: String,
+    pub label: String,
+    pub days: i64,
+    #[serde(default)]
+    pub secs: Option<Vec<f64>>,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct HRCurveResponse {
+    #[serde(default)]
+    pub list: Vec<HRCurve>,
 }
 
 pub async fn list_athlete_hr_curves(
@@ -16,6 +24,7 @@ pub async fn list_athlete_hr_curves(
         client.base_url(),
         athlete_id
     );
+
     let response = client
         .client()
         .get(&url)
@@ -29,8 +38,8 @@ pub async fn list_athlete_hr_curves(
         return Err(format!("API error: {} - {}", status, body).into());
     }
 
-    let curves = response.json::<Vec<HRCurve>>().await?;
-    Ok(curves)
+    let wrapper = response.json::<HRCurveResponse>().await?;
+    Ok(wrapper.list)
 }
 
 #[cfg(test)]
@@ -39,7 +48,7 @@ mod tests {
     use crate::client::ApiClient;
     use crate::commands::TEST_AUTH_HEADER;
 
-    use wiremock::matchers::{header, method, path};
+    use wiremock::matchers::{header, method, path_regex};
     use wiremock::{Mock, MockServer, ResponseTemplate};
 
     #[tokio::test]
@@ -47,28 +56,26 @@ mod tests {
         let mock_server = MockServer::start().await;
 
         Mock::given(method("GET"))
-            .and(path("/api/v1/athlete/12345/hr-curves"))
+            .and(path_regex("/api/v1/athlete/.*/hr-curves"))
             .and(header("Authorization", TEST_AUTH_HEADER))
-            .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!([
-                {
-                    "duration": 60.0,
-                    "hr": 170.0,
-                    "date": "2024-01-15"
-                },
-                {
-                    "duration": 300.0,
-                    "hr": 160.0,
-                    "date": "2024-01-14"
-                }
-            ])))
+            .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!({
+                "list": [
+                    {
+                        "id": "1y",
+                        "label": "1 year",
+                        "days": 365,
+                        "secs": [1, 2, 3]
+                    }
+                ]
+            })))
             .mount(&mock_server)
             .await;
 
         let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
         let curves = list_athlete_hr_curves(&client, "12345").await.unwrap();
 
-        assert_eq!(curves.len(), 2);
-        assert_eq!(curves[0].hr, 170.0);
+        assert_eq!(curves.len(), 1);
+        assert_eq!(curves[0].id, "1y");
     }
 
     #[tokio::test]
@@ -76,7 +83,7 @@ mod tests {
         let mock_server = MockServer::start().await;
 
         Mock::given(method("GET"))
-            .and(path("/api/v1/athlete/12345/hr-curves"))
+            .and(path_regex("/api/v1/athlete/.*/hr-curves"))
             .respond_with(
                 ResponseTemplate::new(401)
                     .set_body_json(serde_json::json!({

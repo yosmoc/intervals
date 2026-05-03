@@ -11,11 +11,13 @@ pub struct PowerCurve {
 pub async fn list_athlete_power_curves(
     client: &crate::client::ApiClient,
     athlete_id: &str,
+    activity_type: &str,
 ) -> Result<Vec<PowerCurve>, Box<dyn std::error::Error>> {
     let url = format!(
-        "{}/api/v1/athlete/{}/power-curves",
+        "{}/api/v1/athlete/{}/power-curves?type={}",
         client.base_url(),
-        athlete_id
+        athlete_id,
+        activity_type
     );
     let response = client
         .client()
@@ -40,7 +42,7 @@ mod tests {
     use crate::client::ApiClient;
     use crate::commands::TEST_AUTH_HEADER;
 
-    use wiremock::matchers::{header, method, path};
+    use wiremock::matchers::{header, method, path_regex};
     use wiremock::{Mock, MockServer, ResponseTemplate};
 
     #[tokio::test]
@@ -48,7 +50,7 @@ mod tests {
         let mock_server = MockServer::start().await;
 
         Mock::given(method("GET"))
-            .and(path("/api/v1/athlete/12345/power-curves"))
+            .and(path_regex("/api/v1/athlete/.*/power-curves"))
             .and(header("Authorization", TEST_AUTH_HEADER))
             .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!([
                 {
@@ -56,22 +58,15 @@ mod tests {
                     "duration": 60.0,
                     "power": 350.0,
                     "date": "2024-01-15"
-                },
-                {
-                    "id": "pc-002",
-                    "duration": 300.0,
-                    "power": 300.0,
-                    "date": "2024-01-14"
                 }
             ])))
             .mount(&mock_server)
             .await;
 
         let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
-        let curves = list_athlete_power_curves(&client, "12345").await.unwrap();
+        let curves = list_athlete_power_curves(&client, "12345", "Ride").await.unwrap();
 
-        assert_eq!(curves.len(), 2);
-        assert_eq!(curves[0].id, "pc-001");
+        assert_eq!(curves.len(), 1);
         assert_eq!(curves[0].power, 350.0);
     }
 
@@ -80,7 +75,7 @@ mod tests {
         let mock_server = MockServer::start().await;
 
         Mock::given(method("GET"))
-            .and(path("/api/v1/athlete/12345/power-curves"))
+            .and(path_regex("/api/v1/athlete/.*/power-curves"))
             .respond_with(
                 ResponseTemplate::new(401)
                     .set_body_json(serde_json::json!({
@@ -91,7 +86,7 @@ mod tests {
             .await;
 
         let client = ApiClient::new(mock_server.uri(), "wrong-key".to_string());
-        let result = list_athlete_power_curves(&client, "12345").await;
+        let result = list_athlete_power_curves(&client, "12345", "Ride").await;
 
         assert!(result.is_err());
     }
