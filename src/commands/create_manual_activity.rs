@@ -68,6 +68,8 @@ pub async fn create_manual_activity(
 mod tests {
     use super::*;
     use crate::client::ApiClient;
+    use crate::commands::TEST_AUTH_HEADER;
+
     use wiremock::matchers::{body_partial_json, header, method, path};
     use wiremock::{Mock, MockServer, ResponseTemplate};
 
@@ -77,7 +79,7 @@ mod tests {
 
         Mock::given(method("POST"))
             .and(path("/api/v1/athlete/12345/activities/manual"))
-            .and(header("Authorization", "Basic QVBJX0tFWTp0ZXN0LWFwaS1rZXk="))
+            .and(header("Authorization", TEST_AUTH_HEADER))
             .and(body_partial_json(serde_json::json!({
                 "start_date_local": "2024-01-15T08:00:00",
                 "type": "Ride"

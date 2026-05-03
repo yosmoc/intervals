@@ -69,6 +69,8 @@ pub async fn create_event(
 mod tests {
     use super::*;
     use crate::client::ApiClient;
+    use crate::commands::TEST_AUTH_HEADER;
+
     use wiremock::matchers::{body_partial_json, header, method, path_regex};
     use wiremock::{Mock, MockServer, ResponseTemplate};
 
@@ -78,7 +80,7 @@ mod tests {
 
         Mock::given(method("POST"))
             .and(path_regex("/api/v1/athlete/.*/events"))
-            .and(header("Authorization", "Basic QVBJX0tFWTp0ZXN0LWFwaS1rZXk="))
+            .and(header("Authorization", TEST_AUTH_HEADER))
             .and(body_partial_json(serde_json::json!({
                 "start_date_local": "2024-01-15T08:00:00",
                 "type": "WORKOUT",

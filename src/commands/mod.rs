@@ -23,3 +23,6 @@ pub mod list_wellness;
 pub mod list_workouts;
 pub mod search_activities;
 pub mod update_activity;
+
+#[cfg(test)]
+pub const TEST_AUTH_HEADER: &str = "Basic QVBJX0tFWTp0ZXN0LWFwaS1rZXk=";

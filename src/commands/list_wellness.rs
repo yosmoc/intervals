@@ -64,6 +64,8 @@ pub async fn list_wellness(
 mod tests {
     use super::*;
     use crate::client::ApiClient;
+    use crate::commands::TEST_AUTH_HEADER;
+
     use wiremock::matchers::{header, method, path_regex};
     use wiremock::{Mock, MockServer, ResponseTemplate};
 
@@ -73,7 +75,7 @@ mod tests {
 
         Mock::given(method("GET"))
             .and(path_regex("/api/v1/athlete/.*/wellness"))
-            .and(header("Authorization", "Basic QVBJX0tFWTp0ZXN0LWFwaS1rZXk="))
+            .and(header("Authorization", TEST_AUTH_HEADER))
             .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!([
                 {
                     "id": "2024-01-15",

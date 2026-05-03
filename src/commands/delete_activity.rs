@@ -36,6 +36,8 @@ pub async fn delete_activity(
 mod tests {
     use super::*;
     use crate::client::ApiClient;
+    use crate::commands::TEST_AUTH_HEADER;
+
     use wiremock::matchers::{header, method, path};
     use wiremock::{Mock, MockServer, ResponseTemplate};
 
@@ -45,7 +47,7 @@ mod tests {
 
         Mock::given(method("DELETE"))
             .and(path("/api/v1/activity/act-001"))
-            .and(header("Authorization", "Basic QVBJX0tFWTp0ZXN0LWFwaS1rZXk="))
+            .and(header("Authorization", TEST_AUTH_HEADER))
             .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!({
                 "id": "act-001"
             })))
