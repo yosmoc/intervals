@@ -134,6 +134,7 @@ intervals download-activity-fit-file <activity-id> output.fit
 | `list-chats <id>` | List chats |
 | `get-chat <chat-id>` | Get a chat by id |
 | `list-chat-messages <chat-id>` | List messages for a chat (`--before-id`, `--limit`) |
+| `send-chat-message <athlete-id> <content>` | Send a chat message (`--chat-id`) |
 
 ### Other
 

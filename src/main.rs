@@ -513,6 +513,15 @@ enum Commands {
         #[arg(long, help = "Max messages to return")]
         limit: Option<i32>,
     },
+    #[command(about = "Send a chat message")]
+    SendChatMessage {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Message content")]
+        content: String,
+        #[arg(long, help = "Chat ID to send to")]
+        chat_id: Option<i64>,
+    },
     #[command(about = "List fitness model events for an athlete")]
     ListFitnessModelEvents {
         #[arg(help = "Athlete ID")]
@@ -1118,6 +1127,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             };
             let messages = chat_and_fitness::list_chat_messages(&client, &params).await?;
             println!("{}", serde_json::to_string_pretty(&messages)?);
+        }
+        Commands::SendChatMessage {
+            athlete_id,
+            content,
+            chat_id,
+        } => {
+            let result =
+                chat_and_fitness::send_chat_message(&client, &athlete_id, &content, chat_id)
+                    .await?;
+            println!("{}", serde_json::to_string_pretty(&result)?);
         }
         Commands::ListFitnessModelEvents { id } => {
             let events = chat_and_fitness::list_fitness_model_events(&client, &id).await?;

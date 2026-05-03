@@ -126,6 +126,45 @@ pub async fn list_chat_messages(
     Ok(messages)
 }
 
+#[derive(Debug, Deserialize, Serialize)]
+pub struct SendResponse {
+    pub message_id: Option<i64>,
+    pub chat_id: Option<i64>,
+}
+
+pub async fn send_chat_message(
+    client: &crate::client::ApiClient,
+    athlete_id: &str,
+    content: &str,
+    chat_id: Option<i64>,
+) -> Result<SendResponse, Box<dyn std::error::Error>> {
+    let url = format!("{}/api/v1/chats/send-message", client.base_url());
+    let mut body = serde_json::json!({
+        "athlete_id": athlete_id,
+        "content": content
+    });
+    if let Some(cid) = chat_id {
+        body["chat_id"] = serde_json::json!(cid);
+    }
+
+    let response = client
+        .client()
+        .post(&url)
+        .basic_auth("API_KEY", Some(client.api_key()))
+        .json(&body)
+        .send()
+        .await?;
+
+    if !response.status().is_success() {
+        let status = response.status().as_u16();
+        let body_text = response.text().await.unwrap_or_default();
+        return Err(format!("API error: {} - {}", status, body_text).into());
+    }
+
+    let result = response.json::<SendResponse>().await?;
+    Ok(result)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -230,5 +269,27 @@ mod tests {
         let result = list_fitness_model_events(&client, "a-001").await;
 
         assert!(result.is_err());
+    }
+
+    #[tokio::test]
+    async fn test_send_chat_message_success() {
+        let mock_server = MockServer::start().await;
+
+        Mock::given(method("POST"))
+            .and(path("/api/v1/chats/send-message"))
+            .and(header("Authorization", TEST_AUTH_HEADER))
+            .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!({
+                "message_id": 123,
+                "chat_id": 456
+            })))
+            .mount(&mock_server)
+            .await;
+
+        let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
+        let result = send_chat_message(&client, "a-001", "Hello!", Some(456))
+            .await
+            .unwrap();
+
+        assert_eq!(result.message_id, Some(123));
     }
 }

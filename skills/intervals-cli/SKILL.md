@@ -125,6 +125,7 @@ All commands output JSON by default.
 | `intervals list-chats <athlete-id>` | List chats |
 | `intervals get-chat <chat-id>` | Get a chat by id |
 | `intervals list-chat-messages <chat-id>` | List messages for a chat (options: `--before-id`, `--limit`) |
+| `intervals send-chat-message <athlete-id> <content>` | Send a chat message (option: `--chat-id`) |
 
 ### Other
 

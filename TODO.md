@@ -295,7 +295,7 @@ All 65+ commands implemented and verified against live API. 125+ tests passing.
 
 - [x] `get-chat <chat-id>` — `GET /api/v1/chats/{id}` — Get a chat by id
 - [x] `list-chat-messages <chat-id>` — `GET /api/v1/chats/{id}/messages` — List messages for a chat
-- [ ] `send-chat-message <chat-id> <content>` — `POST /api/v1/chats/send-message` — Send a message
+- [x] `send-chat-message <athlete-id> <content>` — `POST /api/v1/chats/send-message` — Send a message
 - [ ] `update-chat-message <chat-id> <msg-id>` — `PUT /api/v1/chats/{id}/messages/{msgId}` — Update a message
 - [ ] `delete-chat-message <chat-id> <msg-id>` — `DELETE /api/v1/chats/{id}/messages/{msgId}` — Delete a message
 - [ ] `mark-chat-messages-seen <chat-id> <msg-id>` — `PUT /api/v1/chats/{id}/messages/{msgId}/seen` — Mark messages as seen
