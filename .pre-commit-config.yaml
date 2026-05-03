@@ -26,6 +26,6 @@ repos:
         pass_filenames: false
       - id: markdownlint
         name: markdownlint
-        entry: markdownlint
+        entry: npx --no-install markdownlint
         language: system
         types: [markdown]
