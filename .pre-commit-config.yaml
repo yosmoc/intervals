@@ -24,3 +24,8 @@ repos:
         language: system
         types: [yaml]
         pass_filenames: false
+      - id: markdownlint
+        name: markdownlint
+        entry: markdownlint
+        language: system
+        types: [markdown]
