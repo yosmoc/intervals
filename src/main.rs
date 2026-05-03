@@ -12,7 +12,7 @@ use intervals::commands::{
     list_athlete_power_curves, list_athlete_routes, list_chats, list_event_workout_tags,
     list_events, list_folders, list_gear, list_sport_settings, list_wellness, list_workouts,
     mark_event_done, misc_endpoints, post_activity_message, search_activities,
-    search_activities_full, update_activity,
+    search_activities_full, search_activity_intervals, update_activity,
 };
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
@@ -312,6 +312,27 @@ enum Commands {
         #[arg(help = "Search query (use # for tag search)")]
         query: String,
         #[arg(long, help = "Maximum number of results")]
+        limit: Option<i32>,
+    },
+    #[command(about = "Find activities with intervals matching duration and intensity")]
+    SearchActivityIntervals {
+        #[arg(help = "Athlete ID")]
+        id: String,
+        #[arg(long, help = "Min interval duration in seconds")]
+        min_secs: i32,
+        #[arg(long, help = "Max interval duration in seconds")]
+        max_secs: i32,
+        #[arg(long, help = "Min intensity percentage")]
+        min_intensity: i32,
+        #[arg(long, help = "Max intensity percentage")]
+        max_intensity: i32,
+        #[arg(long, help = "Interval type (AUTO, POWER, HR, PACE)")]
+        interval_type: Option<String>,
+        #[arg(long, help = "Min number of matching intervals")]
+        min_reps: Option<i32>,
+        #[arg(long, help = "Max number of matching intervals")]
+        max_reps: Option<i32>,
+        #[arg(long, help = "Max results to return")]
         limit: Option<i32>,
     },
     #[command(about = "List workout folders, plans, and workouts")]
@@ -818,6 +839,31 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let activities =
                 search_activities_full::search_activities_full(&client, &id, &query, limit).await?;
             println!("{}", serde_json::to_string_pretty(&activities)?);
+        }
+        Commands::SearchActivityIntervals {
+            id,
+            min_secs,
+            max_secs,
+            min_intensity,
+            max_intensity,
+            interval_type,
+            min_reps,
+            max_reps,
+            limit,
+        } => {
+            let params = search_activity_intervals::IntervalSearchParams {
+                min_secs,
+                max_secs,
+                min_intensity,
+                max_intensity,
+                interval_type,
+                min_reps,
+                max_reps,
+                limit,
+            };
+            let results =
+                search_activity_intervals::search_activity_intervals(&client, &id, &params).await?;
+            println!("{}", serde_json::to_string_pretty(&results)?);
         }
         Commands::ListFolders { id } => {
             let folders = list_folders::list_folders(&client, &id).await?;

@@ -64,6 +64,7 @@ intervals download-activity-fit-file <activity-id> output.fit
 | `delete-activity <activity-id>` | Delete an activity |
 | `search-activities <id> <query>` | Search activities by name or tag |
 | `search-activities-full <id> <query>` | Search activities returning full details (`--limit`) |
+| `search-activity-intervals <id>` | Find activities with matching intervals (`--min-secs`, `--max-secs`, `--min-intensity`, `--max-intensity`) |
 | `list-activity-messages <activity-id>` | List messages/comments on an activity |
 | `post-activity-message <activity-id> <content>` | Post a message to an activity |
 | `list-activity-intervals <activity-id>` | List auto-detected intervals within an activity |

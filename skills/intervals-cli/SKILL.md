@@ -55,6 +55,7 @@ All commands output JSON by default.
 | `intervals delete-activity <activity-id>` | Delete an activity |
 | `intervals search-activities <athlete-id> <query>` | Search activities by name or tag |
 | `intervals search-activities-full <athlete-id> <query>` | Search activities returning full details (option: `--limit`) |
+| `intervals search-activity-intervals <athlete-id>` | Find activities with matching intervals (options: `--min-secs`, `--max-secs`, `--min-intensity`, `--max-intensity`, `--interval-type`) |
 | `intervals list-activity-messages <activity-id>` | List messages/comments on an activity |
 | `intervals post-activity-message <activity-id> <content>` | Post a message/comment to an activity |
 | `intervals list-activity-intervals <activity-id>` | List auto-detected intervals within an activity |
