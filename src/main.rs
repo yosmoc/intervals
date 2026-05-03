@@ -3,11 +3,12 @@ use intervals::client::ApiClient;
 use intervals::commands::{
     create_event, create_manual_activity, delete_activity, get_activity, get_activity_best_efforts,
     get_activity_map, get_activity_segments, get_activity_streams, get_activity_weather_summary,
-    get_athlete, get_athlete_profile, get_athlete_training_plan, get_weather_forecast, get_workout,
-    list_activities, list_activity_intervals, list_activity_messages, list_athlete_hr_curves,
-    list_athlete_pace_curves, list_athlete_power_curves, list_athlete_routes, list_chats,
-    list_events, list_folders, list_gear, list_sport_settings, list_wellness, list_workouts,
-    post_activity_message, search_activities, update_activity,
+    get_athlete, get_athlete_profile, get_athlete_training_plan, get_delete_event,
+    get_weather_forecast, get_workout, list_activities, list_activity_intervals,
+    list_activity_messages, list_athlete_hr_curves, list_athlete_pace_curves,
+    list_athlete_power_curves, list_athlete_routes, list_chats, list_events, list_folders,
+    list_gear, list_sport_settings, list_wellness, list_workouts, post_activity_message,
+    search_activities, update_activity,
 };
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
@@ -76,6 +77,33 @@ enum Commands {
     GetActivitySegments {
         #[arg(help = "Activity ID")]
         activity_id: String,
+    },
+    #[command(about = "Get an event (planned workout, note etc.)")]
+    GetEvent {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Event ID")]
+        event_id: i64,
+    },
+    #[command(about = "Delete an event from athlete's calendar")]
+    DeleteEvent {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Event ID")]
+        event_id: i64,
+    },
+    #[command(about = "Update an event (planned workout, note etc.)")]
+    UpdateEvent {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Event ID")]
+        event_id: i64,
+        #[arg(long, help = "Event name")]
+        name: Option<String>,
+        #[arg(long, help = "Event description")]
+        description: Option<String>,
+        #[arg(long, help = "Event notes")]
+        notes: Option<String>,
     },
     #[command(about = "List wellness records for a date range")]
     ListWellness {
@@ -341,6 +369,42 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let segments =
                 get_activity_segments::get_activity_segments(&client, &activity_id).await?;
             println!("{}", serde_json::to_string_pretty(&segments)?);
+        }
+        Commands::GetEvent {
+            athlete_id,
+            event_id,
+        } => {
+            let event = get_delete_event::get_event(&client, &athlete_id, event_id).await?;
+            println!("{}", serde_json::to_string_pretty(&event)?);
+        }
+        Commands::DeleteEvent {
+            athlete_id,
+            event_id,
+        } => {
+            get_delete_event::delete_event(&client, &athlete_id, event_id).await?;
+            println!("Event deleted successfully");
+        }
+        Commands::UpdateEvent {
+            athlete_id,
+            event_id,
+            name,
+            description,
+            notes,
+        } => {
+            let update = get_delete_event::EventEx {
+                id: Some(event_id),
+                start_date_local: None,
+                event_type: None,
+                category: None,
+                name,
+                description,
+                uid: None,
+                notes,
+                workout: None,
+            };
+            let event =
+                get_delete_event::update_event(&client, &athlete_id, event_id, &update).await?;
+            println!("{}", serde_json::to_string_pretty(&event)?);
         }
         Commands::ListWellness { id, oldest, newest } => {
             let params = list_wellness::ListWellnessParams { oldest, newest };
