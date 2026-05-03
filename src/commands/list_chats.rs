@@ -2,10 +2,14 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Chat {
-    pub id: String,
-    pub name: String,
-    pub last_message: String,
-    pub updated_at: String,
+    pub id: i64,
+    #[serde(rename = "type")]
+    pub chat_type: Option<String>,
+    pub name: Option<String>,
+    pub updated: Option<String>,
+    pub description: Option<String>,
+    pub new_message_count: Option<i64>,
+    pub role: Option<String>,
 }
 
 pub async fn list_chats(
@@ -48,10 +52,12 @@ mod tests {
             .and(header("Authorization", TEST_AUTH_HEADER))
             .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!([
                 {
-                    "id": "chat-001",
+                    "id": 1,
+                    "type": "PRIVATE",
                     "name": "Coach Chat",
-                    "last_message": "Looks good!",
-                    "updated_at": "2024-01-15T10:00:00Z"
+                    "updated": "2024-01-15T10:00:00Z",
+                    "new_message_count": 2,
+                    "role": "MEMBER"
                 }
             ])))
             .mount(&mock_server)
@@ -61,7 +67,7 @@ mod tests {
         let chats = list_chats(&client, "12345").await.unwrap();
 
         assert_eq!(chats.len(), 1);
-        assert_eq!(chats[0].name, "Coach Chat");
+        assert_eq!(chats[0].name.as_deref(), Some("Coach Chat"));
     }
 
     #[tokio::test]

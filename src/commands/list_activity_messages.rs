@@ -2,10 +2,16 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct ActivityMessage {
-    pub id: String,
-    pub message: String,
-    pub created_at: String,
-    pub author: String,
+    pub id: i64,
+    pub athlete_id: Option<String>,
+    pub name: Option<String>,
+    pub created: Option<String>,
+    #[serde(rename = "type")]
+    pub message_type: Option<String>,
+    pub content: Option<String>,
+    pub activity_id: Option<i64>,
+    pub start_index: Option<i64>,
+    pub end_index: Option<i64>,
 }
 
 pub async fn list_activity_messages(
@@ -52,10 +58,12 @@ mod tests {
             .and(header("Authorization", TEST_AUTH_HEADER))
             .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!([
                 {
-                    "id": "msg-001",
-                    "message": "Great ride!",
-                    "created_at": "2024-01-15T10:00:00Z",
-                    "author": "Coach"
+                    "id": 1,
+                    "athlete_id": "a-001",
+                    "name": "Coach",
+                    "created": "2024-01-15T10:00:00Z",
+                    "type": "TEXT",
+                    "content": "Great ride!"
                 }
             ])))
             .mount(&mock_server)
@@ -65,7 +73,7 @@ mod tests {
         let messages = list_activity_messages(&client, "act-001").await.unwrap();
 
         assert_eq!(messages.len(), 1);
-        assert_eq!(messages[0].message, "Great ride!");
+        assert_eq!(messages[0].content.as_deref(), Some("Great ride!"));
     }
 
     #[tokio::test]
