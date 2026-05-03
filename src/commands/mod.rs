@@ -3,6 +3,7 @@ pub mod create_manual_activity;
 pub mod delete_activity;
 pub mod get_activity;
 pub mod get_activity_best_efforts;
+pub mod get_activity_map;
 pub mod get_activity_streams;
 pub mod get_athlete;
 pub mod get_athlete_profile;
