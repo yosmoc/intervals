@@ -1,3 +1,3 @@
 {
-  "ignores": ["skills/"]
+  "ignores": ["skills/", "node_modules/", "TODO.md"],
 }
