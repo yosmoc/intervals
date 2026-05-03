@@ -57,6 +57,7 @@ intervals download-activity-fit-file <activity-id> output.fit
 |---------|-------------|
 | `list-activities <id> --oldest <date>` | List activities (required: `--oldest`, optional: `--newest`, `--limit`, `--route-id`) |
 | `get-activity <id> <activity-id>` | Get an activity's details |
+| `get-activities <id> <ids>` | Fetch multiple activities by id (comma-separated, optional: `--intervals`) |
 | `update-activity <activity-id>` | Update activity (`--name`, `--description`, `--activity-type`, `--sport`, `--distance`, `--elapsed-time`) |
 | `create-manual-activity <id>` | Create manual activity (`--start-date-local`, `--activity-type`, `--name`, `--description`, `--sport`, `--distance`, `--elapsed-time`) |
 | `delete-activity <activity-id>` | Delete an activity |

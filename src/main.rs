@@ -2,16 +2,16 @@ use clap::{Parser, Subcommand};
 use intervals::client::ApiClient;
 use intervals::commands::{
     athlete_settings, create_event, create_manual_activity, custom_items, delete_activity,
-    download_activity_file, folder_operations, get_activity, get_activity_best_efforts,
-    get_activity_map, get_activity_segments, get_activity_streams, get_activity_weather_summary,
-    get_athlete, get_athlete_models, get_athlete_profile, get_athlete_summary,
-    get_athlete_training_plan, get_delete_event, get_interval_stats, get_route,
-    get_update_weather_config, get_weather_forecast, get_wellness, get_workout, list_activities,
-    list_activity_intervals, list_activity_messages, list_activity_tags, list_athlete_hr_curves,
-    list_athlete_pace_curves, list_athlete_power_curves, list_athlete_routes, list_chats,
-    list_event_workout_tags, list_events, list_folders, list_gear, list_sport_settings,
-    list_wellness, list_workouts, mark_event_done, misc_endpoints, post_activity_message,
-    search_activities, update_activity,
+    download_activity_file, folder_operations, get_activities, get_activity,
+    get_activity_best_efforts, get_activity_map, get_activity_segments, get_activity_streams,
+    get_activity_weather_summary, get_athlete, get_athlete_models, get_athlete_profile,
+    get_athlete_summary, get_athlete_training_plan, get_delete_event, get_interval_stats,
+    get_route, get_update_weather_config, get_weather_forecast, get_wellness, get_workout,
+    list_activities, list_activity_intervals, list_activity_messages, list_activity_tags,
+    list_athlete_hr_curves, list_athlete_pace_curves, list_athlete_power_curves,
+    list_athlete_routes, list_chats, list_event_workout_tags, list_events, list_folders, list_gear,
+    list_sport_settings, list_wellness, list_workouts, mark_event_done, misc_endpoints,
+    post_activity_message, search_activities, update_activity,
 };
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
@@ -52,6 +52,15 @@ enum Commands {
         id: String,
         #[arg(help = "Activity ID")]
         activity_id: String,
+    },
+    #[command(about = "Fetch multiple activities by id")]
+    GetActivities {
+        #[arg(help = "Athlete ID")]
+        id: String,
+        #[arg(help = "Activity IDs (comma-separated)")]
+        ids: String,
+        #[arg(long, help = "Include interval data", default_value = "false")]
+        intervals: bool,
     },
     #[command(about = "Find best efforts in an activity")]
     GetActivityBestEfforts {
@@ -494,6 +503,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Commands::GetActivity { id, activity_id } => {
             let activity = get_activity::get_activity(&client, &id, &activity_id).await?;
             println!("{}", serde_json::to_string_pretty(&activity)?);
+        }
+        Commands::GetActivities { id, ids, intervals } => {
+            let ids_list: Vec<String> = ids.split(',').map(|s| s.trim().to_string()).collect();
+            let activities =
+                get_activities::get_activities(&client, &id, &ids_list, intervals).await?;
+            println!("{}", serde_json::to_string_pretty(&activities)?);
         }
         Commands::GetActivityBestEfforts {
             activity_id,

@@ -5,6 +5,7 @@ pub mod custom_items;
 pub mod delete_activity;
 pub mod download_activity_file;
 pub mod folder_operations;
+pub mod get_activities;
 pub mod get_activity;
 pub mod get_activity_best_efforts;
 pub mod get_activity_map;
