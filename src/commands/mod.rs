@@ -10,6 +10,7 @@ pub mod get_activity_segments;
 pub mod get_activity_streams;
 pub mod get_activity_weather_summary;
 pub mod get_athlete;
+pub mod get_athlete_models;
 pub mod get_athlete_profile;
 pub mod get_athlete_summary;
 pub mod get_athlete_training_plan;
