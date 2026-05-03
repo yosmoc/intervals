@@ -120,6 +120,8 @@ All commands output JSON by default.
 | Command | Description |
 |---------|-------------|
 | `intervals list-chats <athlete-id>` | List chats |
+| `intervals get-chat <chat-id>` | Get a chat by id |
+| `intervals list-chat-messages <chat-id>` | List messages for a chat (options: `--before-id`, `--limit`) |
 
 ### Other
 
@@ -127,6 +129,7 @@ All commands output JSON by default.
 |---------|-------------|
 | `intervals disconnect-app` | Disconnect the app from intervals.icu |
 | `intervals get-shared-event <event-id>` | Get a shared event (e.g. race) |
+| `intervals list-fitness-model-events <athlete-id>` | List events that influence fitness calculation |
 
 ## Examples
 

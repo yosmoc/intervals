@@ -129,6 +129,8 @@ intervals download-activity-fit-file <activity-id> output.fit
 | Command | Description |
 |---------|-------------|
 | `list-chats <id>` | List chats |
+| `get-chat <chat-id>` | Get a chat by id |
+| `list-chat-messages <chat-id>` | List messages for a chat (`--before-id`, `--limit`) |
 
 ### Other
 
@@ -136,6 +138,7 @@ intervals download-activity-fit-file <activity-id> output.fit
 |---------|-------------|
 | `disconnect-app` | Disconnect the app from intervals.icu |
 | `get-shared-event <event-id>` | Get a shared event (e.g. race) |
+| `list-fitness-model-events <id>` | List events that influence fitness calculation |
 
 ## Development
 

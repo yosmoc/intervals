@@ -1,8 +1,8 @@
 use clap::{Parser, Subcommand};
 use intervals::client::ApiClient;
 use intervals::commands::{
-    athlete_settings, create_event, create_manual_activity, custom_items, delete_activity,
-    download_activity_file, folder_operations, get_activities, get_activity,
+    athlete_settings, chat_and_fitness, create_event, create_manual_activity, custom_items,
+    delete_activity, download_activity_file, folder_operations, get_activities, get_activity,
     get_activity_best_efforts, get_activity_map, get_activity_segments, get_activity_streams,
     get_activity_weather_summary, get_athlete, get_athlete_models, get_athlete_profile,
     get_athlete_summary, get_athlete_training_plan, get_delete_event, get_interval_stats,
@@ -453,6 +453,25 @@ enum Commands {
     },
     #[command(about = "List chats")]
     ListChats {
+        #[arg(help = "Athlete ID")]
+        id: String,
+    },
+    #[command(about = "Get a chat by id")]
+    GetChat {
+        #[arg(help = "Chat ID")]
+        chat_id: i64,
+    },
+    #[command(about = "List messages for a chat")]
+    ListChatMessages {
+        #[arg(help = "Chat ID")]
+        chat_id: i64,
+        #[arg(long, help = "Return messages before this ID")]
+        before_id: Option<i64>,
+        #[arg(long, help = "Max messages to return")]
+        limit: Option<i32>,
+    },
+    #[command(about = "List fitness model events for an athlete")]
+    ListFitnessModelEvents {
         #[arg(help = "Athlete ID")]
         id: String,
     },
@@ -983,6 +1002,27 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Commands::ListChats { id } => {
             let chats = list_chats::list_chats(&client, &id).await?;
             println!("{}", serde_json::to_string_pretty(&chats)?);
+        }
+        Commands::GetChat { chat_id } => {
+            let chat = chat_and_fitness::get_chat(&client, chat_id).await?;
+            println!("{}", serde_json::to_string_pretty(&chat)?);
+        }
+        Commands::ListChatMessages {
+            chat_id,
+            before_id,
+            limit,
+        } => {
+            let params = chat_and_fitness::ListChatMessagesParams {
+                chat_id,
+                before_id,
+                limit,
+            };
+            let messages = chat_and_fitness::list_chat_messages(&client, &params).await?;
+            println!("{}", serde_json::to_string_pretty(&messages)?);
+        }
+        Commands::ListFitnessModelEvents { id } => {
+            let events = chat_and_fitness::list_fitness_model_events(&client, &id).await?;
+            println!("{}", serde_json::to_string_pretty(&events)?);
         }
         Commands::ListCustomItems { id } => {
             let items = custom_items::list_custom_items(&client, &id).await?;

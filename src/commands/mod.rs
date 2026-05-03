@@ -1,4 +1,5 @@
 pub mod athlete_settings;
+pub mod chat_and_fitness;
 pub mod create_event;
 pub mod create_manual_activity;
 pub mod custom_items;

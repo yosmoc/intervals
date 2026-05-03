@@ -293,8 +293,8 @@ All 65+ commands implemented and verified against live API. 125+ tests passing.
 
 ### Chats (4)
 
-- [ ] `get-chat <chat-id>` — `GET /api/v1/chats/{id}` — Get a chat by id
-- [ ] `list-chat-messages <chat-id>` — `GET /api/v1/chats/{id}/messages` — List messages for a chat
+- [x] `get-chat <chat-id>` — `GET /api/v1/chats/{id}` — Get a chat by id
+- [x] `list-chat-messages <chat-id>` — `GET /api/v1/chats/{id}/messages` — List messages for a chat
 - [ ] `send-chat-message <chat-id> <content>` — `POST /api/v1/chats/send-message` — Send a message
 - [ ] `update-chat-message <chat-id> <msg-id>` — `PUT /api/v1/chats/{id}/messages/{msgId}` — Update a message
 - [ ] `delete-chat-message <chat-id> <msg-id>` — `DELETE /api/v1/chats/{id}/messages/{msgId}` — Delete a message
@@ -311,5 +311,5 @@ All 65+ commands implemented and verified against live API. 125+ tests passing.
 
 ### Other (1)
 
-- [ ] `fitness-model-events <athlete-id>` — `GET /api/v1/athlete/{id}/fitness-model-events` — List events that influence fitness calculation
+- [x] `list-fitness-model-events <athlete-id>` — `GET /api/v1/athlete/{id}/fitness-model-events` — List events that influence fitness calculation
 - [ ] `download-workout-ext <workout-id> <format>` — `POST /api/v1/download-workout{ext}` — Convert workout to zwo/mrc/erg/fit
