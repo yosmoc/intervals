@@ -5,11 +5,11 @@ use intervals::commands::{
     get_activity_best_efforts, get_activity_map, get_activity_segments, get_activity_streams,
     get_activity_weather_summary, get_athlete, get_athlete_profile, get_athlete_summary,
     get_athlete_training_plan, get_delete_event, get_interval_stats, get_route,
-    get_weather_forecast, get_workout, list_activities, list_activity_intervals,
-    list_activity_messages, list_athlete_hr_curves, list_athlete_pace_curves,
-    list_athlete_power_curves, list_athlete_routes, list_chats, list_events, list_folders,
-    list_gear, list_sport_settings, list_wellness, list_workouts, mark_event_done,
-    post_activity_message, search_activities, update_activity,
+    get_update_weather_config, get_weather_forecast, get_workout, list_activities,
+    list_activity_intervals, list_activity_messages, list_athlete_hr_curves,
+    list_athlete_pace_curves, list_athlete_power_curves, list_athlete_routes, list_chats,
+    list_events, list_folders, list_gear, list_sport_settings, list_wellness, list_workouts,
+    mark_event_done, post_activity_message, search_activities, update_activity,
 };
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
@@ -332,6 +332,18 @@ enum Commands {
     GetWeatherForecast {
         #[arg(help = "Athlete ID")]
         id: String,
+    },
+    #[command(about = "Get weather forecast configuration")]
+    GetWeatherConfig {
+        #[arg(help = "Athlete ID")]
+        id: String,
+    },
+    #[command(about = "Update weather forecast configuration")]
+    UpdateWeatherConfig {
+        #[arg(help = "Athlete ID")]
+        id: String,
+        #[arg(long, help = "Forecasts config (JSON)")]
+        forecasts: Option<String>,
     },
     #[command(about = "List sport settings")]
     ListSportSettings {
@@ -711,6 +723,22 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Commands::GetWeatherForecast { id } => {
             let forecast = get_weather_forecast::get_weather_forecast(&client, &id).await?;
             println!("{}", serde_json::to_string_pretty(&forecast)?);
+        }
+        Commands::GetWeatherConfig { id } => {
+            let config = get_update_weather_config::get_weather_config(&client, &id).await?;
+            println!("{}", serde_json::to_string_pretty(&config)?);
+        }
+        Commands::UpdateWeatherConfig { id, forecasts } => {
+            let forecasts_parsed = forecasts
+                .map(|f| serde_json::from_str(&f))
+                .transpose()?
+                .unwrap_or_default();
+            let config = get_update_weather_config::WeatherConfig {
+                forecasts: Some(forecasts_parsed),
+            };
+            let result =
+                get_update_weather_config::update_weather_config(&client, &id, &config).await?;
+            println!("{}", serde_json::to_string_pretty(&result)?);
         }
         Commands::ListSportSettings { id } => {
             let settings = list_sport_settings::list_sport_settings(&client, &id).await?;

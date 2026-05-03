@@ -15,6 +15,7 @@ pub mod get_athlete_training_plan;
 pub mod get_delete_event;
 pub mod get_interval_stats;
 pub mod get_route;
+pub mod get_update_weather_config;
 pub mod get_weather_forecast;
 pub mod get_workout;
 pub mod list_activities;
