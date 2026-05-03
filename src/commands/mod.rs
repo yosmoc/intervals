@@ -21,6 +21,7 @@ pub mod get_workout;
 pub mod list_activities;
 pub mod list_activity_intervals;
 pub mod list_activity_messages;
+pub mod list_activity_tags;
 pub mod list_athlete_hr_curves;
 pub mod list_athlete_pace_curves;
 pub mod list_athlete_power_curves;

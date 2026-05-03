@@ -6,7 +6,7 @@ use intervals::commands::{
     get_activity_weather_summary, get_athlete, get_athlete_profile, get_athlete_summary,
     get_athlete_training_plan, get_delete_event, get_interval_stats, get_route,
     get_update_weather_config, get_weather_forecast, get_workout, list_activities,
-    list_activity_intervals, list_activity_messages, list_athlete_hr_curves,
+    list_activity_intervals, list_activity_messages, list_activity_tags, list_athlete_hr_curves,
     list_athlete_pace_curves, list_athlete_power_curves, list_athlete_routes, list_chats,
     list_events, list_folders, list_gear, list_sport_settings, list_wellness, list_workouts,
     mark_event_done, post_activity_message, search_activities, update_activity,
@@ -143,6 +143,11 @@ enum Commands {
         route_id: Option<i64>,
         #[arg(long, help = "Maximum number of activities")]
         limit: Option<i32>,
+    },
+    #[command(about = "List activity tags for an athlete")]
+    ListActivityTags {
+        #[arg(help = "Athlete ID")]
+        id: String,
     },
     #[command(about = "List workouts in athlete's library")]
     ListWorkouts {
@@ -523,6 +528,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             };
             let activities = list_activities::list_activities(&client, &id, &params).await?;
             println!("{}", serde_json::to_string_pretty(&activities)?);
+        }
+        Commands::ListActivityTags { id } => {
+            let tags = list_activity_tags::list_activity_tags(&client, &id).await?;
+            println!("{}", serde_json::to_string_pretty(&tags)?);
         }
         Commands::ListWorkouts { id } => {
             let workouts = list_workouts::list_workouts(&client, &id).await?;
