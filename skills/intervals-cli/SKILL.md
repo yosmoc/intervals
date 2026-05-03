@@ -81,6 +81,7 @@ All commands output JSON by default.
 | Command | Description |
 |---------|-------------|
 | `intervals list-wellness <athlete-id>` | List wellness records (weight, resting HR, HRV, mood, CTL/ATL) |
+| `intervals get-wellness <athlete-id> <date>` | Get wellness record for a specific date |
 | `intervals get-weather-forecast <athlete-id>` | Get weather forecast for athlete's location |
 | `intervals get-weather-config <athlete-id>` | Get weather forecast configuration |
 | `intervals update-weather-config <athlete-id>` | Update weather forecast configuration (`--forecasts <json>`) |

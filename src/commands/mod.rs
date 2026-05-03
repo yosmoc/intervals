@@ -21,6 +21,7 @@ pub mod get_interval_stats;
 pub mod get_route;
 pub mod get_update_weather_config;
 pub mod get_weather_forecast;
+pub mod get_wellness;
 pub mod get_workout;
 pub mod list_activities;
 pub mod list_activity_intervals;

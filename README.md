@@ -80,6 +80,7 @@ intervals download-activity-fit-file <activity-id> output.fit
 | Command | Description |
 |---------|-------------|
 | `list-wellness <id>` | List wellness records (weight, resting HR, HRV, CTL/ATL) |
+| `get-wellness <id> <date>` | Get wellness record for a specific date |
 | `get-weather-forecast <id>` | Get weather forecast for athlete's location |
 | `get-weather-config <id>` | Get weather forecast configuration |
 | `update-weather-config <id>` | Update weather forecast configuration (`--forecasts <json>`) |

@@ -6,7 +6,7 @@ use intervals::commands::{
     get_activity_map, get_activity_segments, get_activity_streams, get_activity_weather_summary,
     get_athlete, get_athlete_models, get_athlete_profile, get_athlete_summary,
     get_athlete_training_plan, get_delete_event, get_interval_stats, get_route,
-    get_update_weather_config, get_weather_forecast, get_workout, list_activities,
+    get_update_weather_config, get_weather_forecast, get_wellness, get_workout, list_activities,
     list_activity_intervals, list_activity_messages, list_activity_tags, list_athlete_hr_curves,
     list_athlete_pace_curves, list_athlete_power_curves, list_athlete_routes, list_chats,
     list_event_workout_tags, list_events, list_folders, list_gear, list_sport_settings,
@@ -144,6 +144,13 @@ enum Commands {
         oldest: Option<String>,
         #[arg(long, help = "Newest date (ISO-8601)")]
         newest: Option<String>,
+    },
+    #[command(about = "Get wellness record for a specific date")]
+    GetWellness {
+        #[arg(help = "Athlete ID")]
+        id: String,
+        #[arg(help = "Date (ISO-8601)")]
+        date: String,
     },
     #[command(about = "List activities for a date range")]
     ListActivities {
@@ -603,6 +610,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let params = list_wellness::ListWellnessParams { oldest, newest };
             let records = list_wellness::list_wellness(&client, &id, &params).await?;
             println!("{}", serde_json::to_string_pretty(&records)?);
+        }
+        Commands::GetWellness { id, date } => {
+            let record = get_wellness::get_wellness(&client, &id, &date).await?;
+            println!("{}", serde_json::to_string_pretty(&record)?);
         }
         Commands::ListActivities {
             id,
