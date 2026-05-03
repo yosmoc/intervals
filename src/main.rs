@@ -1,8 +1,8 @@
 use clap::{Parser, Subcommand};
 use intervals::client::ApiClient;
 use intervals::commands::{
-    create_event, create_manual_activity, delete_activity, get_activity, get_athlete,
-    get_athlete_profile, get_athlete_training_plan, get_weather_forecast, get_workout,
+    create_event, create_manual_activity, delete_activity, get_activity, get_activity_best_efforts,
+    get_athlete, get_athlete_profile, get_athlete_training_plan, get_weather_forecast, get_workout,
     list_activities, list_activity_intervals, list_activity_messages, list_athlete_hr_curves,
     list_athlete_pace_curves, list_athlete_power_curves, list_athlete_routes, list_chats,
     list_events, list_folders, list_gear, list_sport_settings, list_wellness, list_workouts,
@@ -35,6 +35,19 @@ enum Commands {
         id: String,
         #[arg(help = "Activity ID")]
         activity_id: String,
+    },
+    #[command(about = "Find best efforts in an activity")]
+    GetActivityBestEfforts {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+        #[arg(help = "Stream to search (e.g., watts, speed, heartrate)")]
+        stream: String,
+        #[arg(long, help = "Duration of each effort in seconds")]
+        duration: Option<i64>,
+        #[arg(long, help = "Distance of each effort in meters")]
+        distance: Option<f64>,
+        #[arg(long, help = "Number of efforts to return")]
+        count: Option<i64>,
     },
     #[command(about = "List wellness records for a date range")]
     ListWellness {
@@ -246,6 +259,31 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Commands::GetActivity { id, activity_id } => {
             let activity = get_activity::get_activity(&client, &id, &activity_id).await?;
             println!("{}", serde_json::to_string_pretty(&activity)?);
+        }
+        Commands::GetActivityBestEfforts {
+            activity_id,
+            stream,
+            duration,
+            distance,
+            count,
+        } => {
+            let params = get_activity_best_efforts::BestEffortsParams {
+                stream,
+                duration,
+                distance,
+                count,
+                min_value: None,
+                exclude_intervals: None,
+                start_index: None,
+                end_index: None,
+            };
+            let efforts = get_activity_best_efforts::get_activity_best_efforts(
+                &client,
+                &activity_id,
+                &params,
+            )
+            .await?;
+            println!("{}", serde_json::to_string_pretty(&efforts)?);
         }
         Commands::ListWellness { id, oldest, newest } => {
             let params = list_wellness::ListWellnessParams { oldest, newest };
