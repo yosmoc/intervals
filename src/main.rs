@@ -1,7 +1,7 @@
 use clap::{Parser, Subcommand};
 use intervals::client::ApiClient;
 use intervals::commands::{
-    create_event, create_manual_activity, delete_activity, download_activity_file,
+    create_event, create_manual_activity, custom_items, delete_activity, download_activity_file,
     folder_operations, get_activity, get_activity_best_efforts, get_activity_map,
     get_activity_segments, get_activity_streams, get_activity_weather_summary, get_athlete,
     get_athlete_models, get_athlete_profile, get_athlete_summary, get_athlete_training_plan,
@@ -384,6 +384,25 @@ enum Commands {
     ListChats {
         #[arg(help = "Athlete ID")]
         id: String,
+    },
+    #[command(about = "List custom items for an athlete")]
+    ListCustomItems {
+        #[arg(help = "Athlete ID")]
+        id: String,
+    },
+    #[command(about = "Get a custom item")]
+    GetCustomItem {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Item ID")]
+        item_id: i64,
+    },
+    #[command(about = "Delete a custom item")]
+    DeleteCustomItem {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Item ID")]
+        item_id: i64,
     },
     #[command(about = "List athlete HR curves")]
     ListAthleteHrCurves {
@@ -820,6 +839,24 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Commands::ListChats { id } => {
             let chats = list_chats::list_chats(&client, &id).await?;
             println!("{}", serde_json::to_string_pretty(&chats)?);
+        }
+        Commands::ListCustomItems { id } => {
+            let items = custom_items::list_custom_items(&client, &id).await?;
+            println!("{}", serde_json::to_string_pretty(&items)?);
+        }
+        Commands::GetCustomItem {
+            athlete_id,
+            item_id,
+        } => {
+            let item = custom_items::get_custom_item(&client, &athlete_id, item_id).await?;
+            println!("{}", serde_json::to_string_pretty(&item)?);
+        }
+        Commands::DeleteCustomItem {
+            athlete_id,
+            item_id,
+        } => {
+            custom_items::delete_custom_item(&client, &athlete_id, item_id).await?;
+            println!("Custom item deleted successfully");
         }
         Commands::ListAthleteHrCurves { id } => {
             let curves = list_athlete_hr_curves::list_athlete_hr_curves(&client, &id).await?;
