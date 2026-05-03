@@ -18,3 +18,9 @@ repos:
         language: system
         types: [rust]
         pass_filenames: false
+      - id: pinact
+        name: pinact
+        entry: pinact run
+        language: system
+        types: [yaml]
+        pass_filenames: false
