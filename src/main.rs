@@ -7,11 +7,12 @@ use intervals::commands::{
     get_activity_weather_summary, get_athlete, get_athlete_models, get_athlete_profile,
     get_athlete_summary, get_athlete_training_plan, get_delete_event, get_interval_stats,
     get_route, get_update_weather_config, get_weather_forecast, get_wellness, get_workout,
-    list_activities, list_activity_intervals, list_activity_messages, list_activity_tags,
-    list_athlete_hr_curves, list_athlete_pace_curves, list_athlete_power_curves,
-    list_athlete_routes, list_chats, list_event_workout_tags, list_events, list_folders, list_gear,
-    list_sport_settings, list_wellness, list_workouts, mark_event_done, misc_endpoints,
-    post_activity_message, search_activities, search_activities_full, update_activity,
+    list_activities, list_activities_around, list_activity_intervals, list_activity_messages,
+    list_activity_tags, list_athlete_hr_curves, list_athlete_pace_curves,
+    list_athlete_power_curves, list_athlete_routes, list_chats, list_event_workout_tags,
+    list_events, list_folders, list_gear, list_sport_settings, list_wellness, list_workouts,
+    mark_event_done, misc_endpoints, post_activity_message, search_activities,
+    search_activities_full, update_activity,
 };
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
@@ -169,6 +170,17 @@ enum Commands {
         oldest: String,
         #[arg(long, help = "Newest date (ISO-8601)")]
         newest: Option<String>,
+        #[arg(long, help = "Filter by route ID")]
+        route_id: Option<i64>,
+        #[arg(long, help = "Maximum number of activities")]
+        limit: Option<i32>,
+    },
+    #[command(about = "List activities before and after another activity")]
+    ListActivitiesAround {
+        #[arg(help = "Athlete ID")]
+        id: String,
+        #[arg(help = "Activity ID at the center")]
+        activity_id: String,
         #[arg(long, help = "Filter by route ID")]
         route_id: Option<i64>,
         #[arg(long, help = "Maximum number of activities")]
@@ -653,6 +665,21 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 limit,
             };
             let activities = list_activities::list_activities(&client, &id, &params).await?;
+            println!("{}", serde_json::to_string_pretty(&activities)?);
+        }
+        Commands::ListActivitiesAround {
+            id,
+            activity_id,
+            route_id,
+            limit,
+        } => {
+            let params = list_activities_around::ListActivitiesAroundParams {
+                activity_id,
+                route_id,
+                limit,
+            };
+            let activities =
+                list_activities_around::list_activities_around(&client, &id, &params).await?;
             println!("{}", serde_json::to_string_pretty(&activities)?);
         }
         Commands::ListActivityTags { id } => {

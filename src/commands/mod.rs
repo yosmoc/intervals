@@ -25,6 +25,7 @@ pub mod get_weather_forecast;
 pub mod get_wellness;
 pub mod get_workout;
 pub mod list_activities;
+pub mod list_activities_around;
 pub mod list_activity_intervals;
 pub mod list_activity_messages;
 pub mod list_activity_tags;

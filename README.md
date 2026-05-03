@@ -56,6 +56,7 @@ intervals download-activity-fit-file <activity-id> output.fit
 | Command | Description |
 |---------|-------------|
 | `list-activities <id> --oldest <date>` | List activities (required: `--oldest`, optional: `--newest`, `--limit`, `--route-id`) |
+| `list-activities-around <id> <activity-id>` | List activities before/after another (`--route-id`, `--limit`) |
 | `get-activity <id> <activity-id>` | Get an activity's details |
 | `get-activities <id> <ids>` | Fetch multiple activities by id (comma-separated, optional: `--intervals`) |
 | `update-activity <activity-id>` | Update activity (`--name`, `--description`, `--activity-type`, `--sport`, `--distance`, `--elapsed-time`) |

@@ -47,6 +47,7 @@ All commands output JSON by default.
 | Command | Description |
 |---------|-------------|
 | `intervals list-activities <athlete-id> --oldest <date>` | List activities (required: `--oldest`, optional: `--newest`, `--limit`, `--route-id`) |
+| `intervals list-activities-around <athlete-id> <activity-id>` | List activities before/after another (options: `--route-id`, `--limit`) |
 | `intervals get-activity <athlete-id> <activity-id>` | Get a single activity's details |
 | `intervals get-activities <athlete-id> <ids>` | Fetch multiple activities by id (comma-separated, option: `--intervals`) |
 | `intervals update-activity <activity-id> [options]` | Update activity (options: `--name`, `--description`, `--activity-type`, `--sport`, `--distance`, `--elapsed-time`) |
