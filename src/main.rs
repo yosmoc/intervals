@@ -8,8 +8,9 @@ use intervals::commands::{
     get_update_weather_config, get_weather_forecast, get_workout, list_activities,
     list_activity_intervals, list_activity_messages, list_activity_tags, list_athlete_hr_curves,
     list_athlete_pace_curves, list_athlete_power_curves, list_athlete_routes, list_chats,
-    list_events, list_folders, list_gear, list_sport_settings, list_wellness, list_workouts,
-    mark_event_done, post_activity_message, search_activities, update_activity,
+    list_event_workout_tags, list_events, list_folders, list_gear, list_sport_settings,
+    list_wellness, list_workouts, mark_event_done, post_activity_message, search_activities,
+    update_activity,
 };
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
@@ -166,6 +167,16 @@ enum Commands {
         category: Option<String>,
         #[arg(long, help = "Maximum number of events")]
         limit: Option<i32>,
+    },
+    #[command(about = "List event tags for an athlete")]
+    ListEventTags {
+        #[arg(help = "Athlete ID")]
+        id: String,
+    },
+    #[command(about = "List workout tags for an athlete")]
+    ListWorkoutTags {
+        #[arg(help = "Athlete ID")]
+        id: String,
     },
     #[command(about = "Update an activity")]
     UpdateActivity {
@@ -552,6 +563,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             };
             let events = list_events::list_events(&client, &id, &params).await?;
             println!("{}", serde_json::to_string_pretty(&events)?);
+        }
+        Commands::ListEventTags { id } => {
+            let tags = list_event_workout_tags::list_event_tags(&client, &id).await?;
+            println!("{}", serde_json::to_string_pretty(&tags)?);
+        }
+        Commands::ListWorkoutTags { id } => {
+            let tags = list_event_workout_tags::list_workout_tags(&client, &id).await?;
+            println!("{}", serde_json::to_string_pretty(&tags)?);
         }
         Commands::UpdateActivity {
             activity_id,

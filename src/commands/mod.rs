@@ -27,6 +27,7 @@ pub mod list_athlete_pace_curves;
 pub mod list_athlete_power_curves;
 pub mod list_athlete_routes;
 pub mod list_chats;
+pub mod list_event_workout_tags;
 pub mod list_events;
 pub mod list_folders;
 pub mod list_gear;
