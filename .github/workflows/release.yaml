@@ -33,7 +33,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Install Rust
         run: rustup update stable
-      - uses: taiki-e/setup-cross-toolchain-action@c83875895b1099d3e1f6c4277e1717d09ac0b02d # v1
+      - uses: taiki-e/setup-cross-toolchain-action@74847e552ab5bf79fa4393ed975e297ea57d53fa # v1.40.0
         with:
           target: ${{ matrix.target }}
       - name: Build
