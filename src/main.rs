@@ -1,11 +1,11 @@
 use clap::{Parser, Subcommand};
 use intervals::client::ApiClient;
 use intervals::commands::{
-    create_event, create_manual_activity, delete_activity, get_activity, get_activity_best_efforts,
-    get_activity_map, get_activity_segments, get_activity_streams, get_activity_weather_summary,
-    get_athlete, get_athlete_profile, get_athlete_summary, get_athlete_training_plan,
-    get_delete_event, get_route, get_weather_forecast, get_workout, list_activities,
-    list_activity_intervals, list_activity_messages, list_athlete_hr_curves,
+    create_event, create_manual_activity, delete_activity, download_activity_file, get_activity,
+    get_activity_best_efforts, get_activity_map, get_activity_segments, get_activity_streams,
+    get_activity_weather_summary, get_athlete, get_athlete_profile, get_athlete_summary,
+    get_athlete_training_plan, get_delete_event, get_route, get_weather_forecast, get_workout,
+    list_activities, list_activity_intervals, list_activity_messages, list_athlete_hr_curves,
     list_athlete_pace_curves, list_athlete_power_curves, list_athlete_routes, list_chats,
     list_events, list_folders, list_gear, list_sport_settings, list_wellness, list_workouts,
     mark_event_done, post_activity_message, search_activities, update_activity,
@@ -192,6 +192,35 @@ enum Commands {
     DeleteActivity {
         #[arg(help = "Activity ID")]
         activity_id: String,
+    },
+    #[command(about = "Download original activity file")]
+    DownloadActivityFile {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+        #[arg(help = "Output file path")]
+        output: String,
+    },
+    #[command(about = "Download FIT file for an activity")]
+    DownloadActivityFitFile {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+        #[arg(help = "Output file path")]
+        output: String,
+        #[arg(long, help = "Include power data", default_value = "true")]
+        power: bool,
+        #[arg(long, help = "Include heart rate data", default_value = "true")]
+        hr: bool,
+    },
+    #[command(about = "Download GPX file for an activity")]
+    DownloadActivityGpxFile {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+        #[arg(help = "Output file path")]
+        output: String,
+        #[arg(long, help = "Include power data", default_value = "true")]
+        power: bool,
+        #[arg(long, help = "Include heart rate data", default_value = "true")]
+        hr: bool,
     },
     #[command(about = "List athlete gear")]
     ListGear {
@@ -525,6 +554,45 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Commands::DeleteActivity { activity_id } => {
             let result = delete_activity::delete_activity(&client, &activity_id).await?;
             println!("{}", serde_json::to_string_pretty(&result)?);
+        }
+        Commands::DownloadActivityFile {
+            activity_id,
+            output,
+        } => {
+            download_activity_file::download_activity_file(&client, &activity_id, &output).await?;
+            println!("File downloaded to {}", output);
+        }
+        Commands::DownloadActivityFitFile {
+            activity_id,
+            output,
+            power,
+            hr,
+        } => {
+            download_activity_file::download_activity_fit_file(
+                &client,
+                &activity_id,
+                &output,
+                power,
+                hr,
+            )
+            .await?;
+            println!("FIT file downloaded to {}", output);
+        }
+        Commands::DownloadActivityGpxFile {
+            activity_id,
+            output,
+            power,
+            hr,
+        } => {
+            download_activity_file::download_activity_gpx_file(
+                &client,
+                &activity_id,
+                &output,
+                power,
+                hr,
+            )
+            .await?;
+            println!("GPX file downloaded to {}", output);
         }
         Commands::ListGear { id } => {
             let gear = list_gear::list_gear(&client, &id).await?;
