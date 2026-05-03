@@ -7,8 +7,8 @@ use intervals::commands::{
     get_weather_forecast, get_workout, list_activities, list_activity_intervals,
     list_activity_messages, list_athlete_hr_curves, list_athlete_pace_curves,
     list_athlete_power_curves, list_athlete_routes, list_chats, list_events, list_folders,
-    list_gear, list_sport_settings, list_wellness, list_workouts, post_activity_message,
-    search_activities, update_activity,
+    list_gear, list_sport_settings, list_wellness, list_workouts, mark_event_done,
+    post_activity_message, search_activities, update_activity,
 };
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
@@ -104,6 +104,13 @@ enum Commands {
         description: Option<String>,
         #[arg(long, help = "Event notes")]
         notes: Option<String>,
+    },
+    #[command(about = "Mark event as done (create manual activity from planned workout)")]
+    MarkEventDone {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Event ID")]
+        event_id: i64,
     },
     #[command(about = "List wellness records for a date range")]
     ListWellness {
@@ -405,6 +412,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let event =
                 get_delete_event::update_event(&client, &athlete_id, event_id, &update).await?;
             println!("{}", serde_json::to_string_pretty(&event)?);
+        }
+        Commands::MarkEventDone {
+            athlete_id,
+            event_id,
+        } => {
+            let activity = mark_event_done::mark_event_done(&client, &athlete_id, event_id).await?;
+            println!("{}", serde_json::to_string_pretty(&activity)?);
         }
         Commands::ListWellness { id, oldest, newest } => {
             let params = list_wellness::ListWellnessParams { oldest, newest };

@@ -27,6 +27,7 @@ pub mod list_gear;
 pub mod list_sport_settings;
 pub mod list_wellness;
 pub mod list_workouts;
+pub mod mark_event_done;
 pub mod post_activity_message;
 pub mod search_activities;
 pub mod update_activity;
