@@ -1,16 +1,16 @@
 use clap::{Parser, Subcommand};
 use intervals::client::ApiClient;
 use intervals::commands::{
-    create_event, create_manual_activity, delete_activity, download_activity_file, get_activity,
-    get_activity_best_efforts, get_activity_map, get_activity_segments, get_activity_streams,
-    get_activity_weather_summary, get_athlete, get_athlete_profile, get_athlete_summary,
-    get_athlete_training_plan, get_delete_event, get_interval_stats, get_route,
-    get_update_weather_config, get_weather_forecast, get_workout, list_activities,
-    list_activity_intervals, list_activity_messages, list_activity_tags, list_athlete_hr_curves,
-    list_athlete_pace_curves, list_athlete_power_curves, list_athlete_routes, list_chats,
-    list_event_workout_tags, list_events, list_folders, list_gear, list_sport_settings,
-    list_wellness, list_workouts, mark_event_done, post_activity_message, search_activities,
-    update_activity,
+    create_event, create_manual_activity, delete_activity, download_activity_file,
+    folder_operations, get_activity, get_activity_best_efforts, get_activity_map,
+    get_activity_segments, get_activity_streams, get_activity_weather_summary, get_athlete,
+    get_athlete_profile, get_athlete_summary, get_athlete_training_plan, get_delete_event,
+    get_interval_stats, get_route, get_update_weather_config, get_weather_forecast, get_workout,
+    list_activities, list_activity_intervals, list_activity_messages, list_activity_tags,
+    list_athlete_hr_curves, list_athlete_pace_curves, list_athlete_power_curves,
+    list_athlete_routes, list_chats, list_event_workout_tags, list_events, list_folders, list_gear,
+    list_sport_settings, list_wellness, list_workouts, mark_event_done, post_activity_message,
+    search_activities, update_activity,
 };
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
@@ -268,6 +268,20 @@ enum Commands {
     ListFolders {
         #[arg(help = "Athlete ID")]
         id: String,
+    },
+    #[command(about = "List athletes a folder is shared with")]
+    ListFolderSharedWith {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Folder ID")]
+        folder_id: i64,
+    },
+    #[command(about = "Delete a folder and all its workouts")]
+    DeleteFolder {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Folder ID")]
+        folder_id: i64,
     },
     #[command(about = "Create a calendar event (workout, note, race)")]
     CreateEvent {
@@ -675,6 +689,21 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Commands::ListFolders { id } => {
             let folders = list_folders::list_folders(&client, &id).await?;
             println!("{}", serde_json::to_string_pretty(&folders)?);
+        }
+        Commands::ListFolderSharedWith {
+            athlete_id,
+            folder_id,
+        } => {
+            let shared =
+                folder_operations::list_folder_shared_with(&client, &athlete_id, folder_id).await?;
+            println!("{}", serde_json::to_string_pretty(&shared)?);
+        }
+        Commands::DeleteFolder {
+            athlete_id,
+            folder_id,
+        } => {
+            folder_operations::delete_folder(&client, &athlete_id, folder_id).await?;
+            println!("Folder deleted successfully");
         }
         Commands::CreateEvent {
             id,
