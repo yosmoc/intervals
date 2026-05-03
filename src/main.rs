@@ -10,7 +10,7 @@ use intervals::commands::{
     list_activity_messages, list_activity_tags, list_athlete_hr_curves, list_athlete_pace_curves,
     list_athlete_power_curves, list_athlete_routes, list_chats, list_event_workout_tags,
     list_events, list_folders, list_gear, list_sport_settings, list_wellness, list_workouts,
-    mark_event_done, post_activity_message, search_activities, update_activity,
+    mark_event_done, misc_endpoints, post_activity_message, search_activities, update_activity,
 };
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
@@ -440,6 +440,15 @@ enum Commands {
         #[arg(help = "Activity ID")]
         activity_id: String,
     },
+    #[command(about = "Disconnect the app")]
+    DisconnectApp,
+    #[command(about = "Get a shared event")]
+    GetSharedEvent {
+        #[arg(help = "Event ID")]
+        event_id: i64,
+    },
+    #[command(about = "List pace distances")]
+    ListPaceDistances,
 }
 
 #[tokio::main]
@@ -883,6 +892,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let intervals =
                 list_activity_intervals::list_activity_intervals(&client, &activity_id).await?;
             println!("{}", serde_json::to_string_pretty(&intervals)?);
+        }
+        Commands::DisconnectApp => {
+            misc_endpoints::disconnect_app(&client).await?;
+            println!("App disconnected successfully");
+        }
+        Commands::GetSharedEvent { event_id } => {
+            let event = misc_endpoints::get_shared_event(&client, event_id).await?;
+            println!("{}", serde_json::to_string_pretty(&event)?);
+        }
+        Commands::ListPaceDistances => {
+            let distances = misc_endpoints::list_pace_distances(&client).await?;
+            println!("{}", serde_json::to_string_pretty(&distances)?);
         }
     }
 
