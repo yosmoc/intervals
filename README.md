@@ -24,50 +24,113 @@ intervals create-manual-activity <athlete-id> \
   --name "Morning Run" \
   --distance 5000 \
   --elapsed-time 1500
+
+# Get activity streams
+intervals get-activity-streams <activity-id> --types heartrate,time
+
+# Download FIT file
+intervals download-activity-fit-file <activity-id> output.fit
 ```
 
 ## Commands
 
-### Athlete
+### Athlete & Profile
 
-- `get-athlete <id>` - Get athlete profile
-- `get-athlete-profile <id>` - Get detailed athlete profile
-- `get-athlete-training-plan <id>` - Get athlete training plan
-- `list-athlete-power-curves <id> <activity_type>` - List athlete power curves
-- `list-athlete-hr-curves <id>` - List athlete HR curves
-- `list-athlete-pace-curves <id>` - List athlete pace curves
-- `list-athlete-routes <id>` - List athlete routes
-- `list-sport-settings <id>` - List sport settings
-- `list-gear <id>` - List athlete gear
-- `get-weather-forecast <id>` - Get weather forecast
+| Command | Description |
+|---------|-------------|
+| `get-athlete <id>` | Get basic athlete profile |
+| `get-athlete-profile <id>` | Get detailed athlete profile (city, country, timezone, sex) |
+| `get-athlete-summary <id> [--start <date>] [--end <date>]` | Get athlete summary (fitness data, CTL/ATL, training load) |
+| `get-athlete-settings <id> <device-class>` | Get settings for phone/tablet/desktop |
+| `get-athlete-training-plan <id>` | Get current training plan |
+| `apply-plan-changes <id>` | Apply plan changes to calendar |
+| `get-athlete-mmp-model <id> <activity-type>` | Get MMP power model for a sport |
+| `list-sport-settings <id>` | List sport settings (FTP, LTHR per sport) |
+| `list-gear <id>` | List athlete gear |
+| `list-custom-items <id>` | List custom items (charts, custom fields) |
+| `get-custom-item <athlete-id> <item-id>` | Get a specific custom item |
+| `delete-custom-item <athlete-id> <item-id>` | Delete a custom item |
 
 ### Activities
 
-- `list-activities <id> --oldest <date> --limit <n>` - List activities
-- `get-activity <id> <activityId>` - Get an activity
-- `update-activity <activityId>` - Update an activity
-- `create-manual-activity <id>` - Create a manual activity
-- `delete-activity <activityId>` - Delete an activity
-- `search-activities <id> <query>` - Search activities
-- `list-activity-messages <activityId>` - List activity messages
-- `post-activity-message <activityId> <content>` - Post a message to an activity
-- `list-activity-intervals <activityId>` - List activity intervals
+| Command | Description |
+|---------|-------------|
+| `list-activities <id> --oldest <date>` | List activities (required: `--oldest`, optional: `--newest`, `--limit`, `--route-id`) |
+| `get-activity <id> <activity-id>` | Get an activity's details |
+| `update-activity <activity-id>` | Update activity (`--name`, `--description`, `--activity-type`, `--sport`, `--distance`, `--elapsed-time`) |
+| `create-manual-activity <id>` | Create manual activity (`--start-date-local`, `--activity-type`, `--name`, `--description`, `--sport`, `--distance`, `--elapsed-time`) |
+| `delete-activity <activity-id>` | Delete an activity |
+| `search-activities <id> <query>` | Search activities by name or tag |
+| `list-activity-messages <activity-id>` | List messages/comments on an activity |
+| `post-activity-message <activity-id> <content>` | Post a message to an activity |
+| `list-activity-intervals <activity-id>` | List auto-detected intervals within an activity |
+| `list-activity-tags <id>` | List all activity tags for an athlete |
+| `get-interval-stats <activity-id> <start-index> <end-index>` | Get interval stats for a portion of an activity |
+| `get-activity-best-efforts <activity-id> <stream>` | Find best efforts (`--duration`, `--distance`, `--count`) |
+| `get-activity-streams <activity-id>` | Get time series data (`--types`, `--include-defaults`) |
+| `get-activity-map <activity-id>` | Get activity map data (lat/lng, bounds) |
+| `get-activity-weather-summary <activity-id>` | Get weather summary for an activity |
+| `get-activity-segments <activity-id>` | Get activity segments |
+| `download-activity-file <activity-id> <output>` | Download original activity file |
+| `download-activity-fit-file <activity-id> <output>` | Download FIT file (`--power`, `--hr`) |
+| `download-activity-gpx-file <activity-id> <output>` | Download GPX file (`--power`, `--hr`) |
 
-### Wellness
+### Wellness & Weather
 
-- `list-wellness <id>` - List wellness records
+| Command | Description |
+|---------|-------------|
+| `list-wellness <id>` | List wellness records (weight, resting HR, HRV, CTL/ATL) |
+| `get-weather-forecast <id>` | Get weather forecast for athlete's location |
+| `get-weather-config <id>` | Get weather forecast configuration |
+| `update-weather-config <id>` | Update weather forecast configuration (`--forecasts <json>`) |
 
-### Workouts & Events
+### Workouts, Events & Calendar
 
-- `list-workouts <id>` - List workouts
-- `get-workout <id> <workoutId>` - Get a workout
-- `list-folders <id>` - List workout folders
-- `list-events <id>` - List calendar events
-- `create-event <id>` - Create a calendar event
+| Command | Description |
+|---------|-------------|
+| `list-workouts <id>` | List workouts in athlete's library |
+| `get-workout <id> <workout-id>` | Get a specific workout |
+| `list-folders <id>` | List workout folders and plans |
+| `list-folder-shared-with <athlete-id> <folder-id>` | List athletes a folder is shared with |
+| `delete-folder <athlete-id> <folder-id>` | Delete a folder and all its workouts |
+| `list-events <id>` | List calendar events (`--oldest`, `--newest`, `--category`, `--limit`) |
+| `create-event <id>` | Create calendar event (`--start-date-local`, `--event-type`, `--category`, `--name`, `--description`, `--uid`, `--upsert-on-uid`) |
+| `get-event <athlete-id> <event-id>` | Get an event (planned workout, note, etc.) |
+| `update-event <athlete-id> <event-id>` | Update an event (`--name`, `--description`, `--notes`) |
+| `delete-event <athlete-id> <event-id>` | Delete an event from calendar |
+| `mark-event-done <athlete-id> <event-id>` | Mark event as done (create manual activity from planned workout) |
+| `list-event-tags <id>` | List event tags for an athlete |
+| `list-workout-tags <id>` | List workout tags for an athlete |
+
+### Performance Curves & Models
+
+| Command | Description |
+|---------|-------------|
+| `list-athlete-power-curves <id> <activity-type>` | List power curves for a sport type (e.g., Ride, Run) |
+| `list-athlete-hr-curves <id>` | List heart rate curves |
+| `list-athlete-pace-curves <id>` | List pace curves |
+| `get-power-hr-curve <id> --start <date> --end <date>` | Get power vs heart rate curve |
+| `list-pace-distances` | List pace curve distances |
+
+### Routes
+
+| Command | Description |
+|---------|-------------|
+| `list-athlete-routes <id>` | List saved routes |
+| `get-route <athlete-id> <route-id>` | Get a route (`--include-path` for GPS data) |
 
 ### Chats
 
-- `list-chats <id>` - List chats
+| Command | Description |
+|---------|-------------|
+| `list-chats <id>` | List chats |
+
+### Other
+
+| Command | Description |
+|---------|-------------|
+| `disconnect-app` | Disconnect the app from intervals.icu |
+| `get-shared-event <event-id>` | Get a shared event (e.g. race) |
 
 ## Development
 
@@ -76,5 +139,5 @@ intervals create-manual-activity <athlete-id> \
 cargo test
 
 # Format code
-cargo fmt
+cargo fmt --all
 ```

@@ -1,3 +1,4 @@
 {
-  "ignores": ["skills/", "node_modules/", "TODO.md"],
+  "MD013": false,
+  "ignores": ["skills/", "node_modules/", "TODO.md"]
 }
