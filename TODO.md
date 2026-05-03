@@ -167,3 +167,149 @@ All 65+ commands implemented and verified against live API. 125+ tests passing.
 
 - Cross-build (aarch64) failed due to missing OpenSSL headers → switched `reqwest` to `rustls-tls`
 - Upgraded `reqwest` from 0.12 to 0.13 (rustls is now default TLS backend)
+
+## Unimplemented API Endpoints (91 total)
+
+### Activity Analysis — Histograms & Curves (12)
+
+- [ ] `get-activity-hr-curve <activity-id>` — `GET /api/v1/activity/{id}/hr-curve{ext}` — Activity heart rate curve (JSON/CSV)
+- [ ] `get-activity-hr-histogram <activity-id>` — `GET /api/v1/activity/{id}/hr-histogram` — Activity heart rate histogram
+- [ ] `get-activity-hr-load-model <activity-id>` — `GET /api/v1/activity/{id}/hr-load-model` — Activity heart rate training load model
+- [ ] `get-activity-pace-curve <activity-id>` — `GET /api/v1/activity/{id}/pace-curve{ext}` — Activity pace curve (JSON/CSV)
+- [ ] `get-activity-pace-histogram <activity-id>` — `GET /api/v1/activity/{id}/pace-histogram` — Activity pace histogram
+- [ ] `get-activity-power-curves <activity-id>` — `GET /api/v1/activity/{id}/power-curves{ext}` — Activity power curves (JSON/CSV)
+- [ ] `get-activity-power-curve <activity-id>` — `GET /api/v1/activity/{id}/power-curve{ext}` — Activity power curve (JSON/CSV)
+- [ ] `get-activity-power-histogram <activity-id>` — `GET /api/v1/activity/{id}/power-histogram` — Activity power histogram
+- [ ] `get-activity-power-spike-model <activity-id>` — `GET /api/v1/activity/{id}/power-spike-model` — Activity power spike detection model
+- [ ] `get-activity-power-vs-hr <activity-id>` — `GET /api/v1/activity/{id}/power-vs-hr{ext}` — Activity power vs heart rate (JSON/CSV)
+- [ ] `get-activity-gap-histogram <activity-id>` — `GET /api/v1/activity/{id}/gap-histogram` — Activity gradient-adjusted pace histogram
+- [ ] `get-activity-time-at-hr <activity-id>` — `GET /api/v1/activity/{id}/time-at-hr` — Activity time at heart rate data
+
+### Athlete Best Curves (3)
+
+- [ ] `list-athlete-hr-curves-best <id>` — `GET /api/v1/athlete/{id}/hr-curves{ext}` — List best heart rate curves
+- [ ] `list-athlete-power-curves-best <id>` — `GET /api/v1/athlete/{id}/power-curves{ext}` — List best power curves
+- [ ] `list-athlete-pace-curves-best <id>` — `GET /api/v1/athlete/{id}/pace-curves{ext}` — List best pace curves
+
+### Activity Interval Editing (6)
+
+- [ ] `update-activity-intervals <activity-id>` — `PUT /api/v1/activity/{id}/intervals` — Update intervals for an activity
+- [ ] `update-activity-interval <activity-id> <interval-id>` — `PUT /api/v1/activity/{id}/intervals/{intervalId}` — Update/create an interval
+- [ ] `split-activity-interval <activity-id>` — `PUT /api/v1/activity/{id}/split-interval` — Split an interval
+- [ ] `delete-activity-intervals <activity-id>` — `PUT /api/v1/activity/{id}/delete-intervals` — Delete intervals
+- [ ] `update-activity-streams <activity-id>` — `PUT /api/v1/activity/{id}/streams` — Update streams from JSON
+- [ ] `update-activity-streams-csv <activity-id>` — `PUT /api/v1/activity/{id}/streams.csv` — Update streams from CSV
+
+### Activity Upload & Download (3)
+
+- [ ] `upload-activity <athlete-id> <file>` — `POST /api/v1/athlete/{id}/activities` — Upload activity file (fit/tcx/gpx/zip)
+- [ ] `create-manual-activities-bulk <athlete-id>` — `POST /api/v1/athlete/{id}/activities/manual/bulk` — Bulk create manual activities
+- [ ] `download-activity-fit-files <athlete-id>` — `POST /api/v1/athlete/{id}/download-fit-files` — Download zip of FIT files
+
+### Activity Search & Lists (4)
+
+- [ ] `get-activities <athlete-id> <ids>` — `GET /api/v1/athlete/{athleteId}/activities/{ids}` — Fetch multiple activities by id
+- [ ] `search-activities-full <athlete-id> <query>` — `GET /api/v1/athlete/{id}/activities/search-full` — Search activities, returns full objects
+- [ ] `search-activity-intervals <athlete-id>` — `GET /api/v1/athlete/{id}/activities/interval-search` — Find activities with intervals matching duration/intensity
+- [ ] `list-activities-around <athlete-id> <activity-id>` — `GET /api/v1/athlete/{id}/activities-around` — List activities before/after another
+
+### CSV Downloads (5)
+
+- [ ] `download-activities-csv <athlete-id>` — `GET /api/v1/athlete/{id}/activities.csv` — Download activities as CSV
+- [ ] `download-gear-csv <athlete-id>` — `GET /api/v1/athlete/{id}/gear{ext}` — List gear in CSV format
+- [ ] `download-events-csv <athlete-id>` — `GET /api/v1/athlete/{id}/events{format}` — List events in CSV format
+- [ ] `download-wellness-csv <athlete-id>` — `GET /api/v1/athlete/{id}/wellness{ext}` — List wellness in CSV format
+- [ ] `list-activity-streams-ext <activity-id>` — `GET /api/v1/activity/{id}/streams{ext}` — List streams for the activity
+
+### Gear CRUD (8)
+
+- [ ] `get-gear <athlete-id> <gear-id>` — `GET /api/v1/athlete/{id}/gear/{gearId}` — Get a specific gear item
+- [ ] `create-gear <athlete-id>` — `POST /api/v1/athlete/{id}/gear` — Create new gear or component
+- [ ] `update-gear <athlete-id> <gear-id>` — `PUT /api/v1/athlete/{id}/gear/{gearId}` — Update gear or component
+- [ ] `delete-gear <athlete-id> <gear-id>` — `DELETE /api/v1/athlete/{id}/gear/{gearId}` — Delete gear or component
+- [ ] `calc-gear <athlete-id> <gear-id>` — `GET /api/v1/athlete/{id}/gear/{gearId}/calc` — Recalculate gear stats
+- [ ] `create-gear-reminder <athlete-id> <gear-id>` — `POST /api/v1/athlete/{id}/gear/{gearId}/reminder` — Create a reminder
+- [ ] `update-gear-reminder <athlete-id> <gear-id> <reminder-id>` — `PUT /api/v1/athlete/{id}/gear/{gearId}/reminder/{reminderId}` — Update a reminder
+- [ ] `delete-gear-reminder <athlete-id> <gear-id> <reminder-id>` — `DELETE /api/v1/athlete/{id}/gear/{gearId}/reminder/{reminderId}` — Delete a reminder
+- [ ] `replace-gear <athlete-id> <gear-id>` — `POST /api/v1/athlete/{id}/gear/{gearId}/replace` — Retire and replace component
+
+### Wellness CRUD (4)
+
+- [ ] `get-wellness <athlete-id> <date>` — `GET /api/v1/athlete/{id}/wellness/{date}` — Get wellness record for a specific date
+- [ ] `update-wellness <athlete-id> <date>` — `PUT /api/v1/athlete/{id}/wellness/{date}` — Update wellness record for date
+- [ ] `update-wellness-bulk <athlete-id>` — `PUT /api/v1/athlete/{id}/wellness-bulk` — Bulk update wellness records
+- [ ] `upload-wellness-csv <athlete-id> <file>` — `POST /api/v1/athlete/{id}/wellness` — Upload wellness records CSV
+
+### Workout CRUD (7)
+
+- [ ] `create-workout <athlete-id>` — `POST /api/v1/athlete/{id}/workouts` — Create a new workout
+- [ ] `update-workout <athlete-id> <workout-id>` — `PUT /api/v1/athlete/{id}/workouts/{workoutId}` — Update a workout
+- [ ] `delete-workout <athlete-id> <workout-id>` — `DELETE /api/v1/athlete/{id}/workouts/{workoutId}` — Delete a workout
+- [ ] `create-workouts-bulk <athlete-id>` — `POST /api/v1/athlete/{id}/workouts/bulk` — Create multiple workouts
+- [ ] `download-workout <athlete-id> <workout-id> <format>` — `POST /api/v1/athlete/{id}/download-workout{ext}` — Convert workout to zwo/mrc/erg/fit
+- [ ] `duplicate-workouts <athlete-id>` — `POST /api/v1/athlete/{id}/duplicate-workouts` — Duplicate workouts on a plan
+- [ ] `import-workout <athlete-id> <folder-id> <file>` — `POST /api/v1/athlete/{id}/folders/{folderId}/import-workout` — Import workout from file
+- [ ] `download-workouts-zip <athlete-id>` — `GET /api/v1/athlete/{id}/workouts.zip` — Download workouts as zip
+
+### Folder CRUD (3)
+
+- [ ] `create-folder <athlete-id>` — `POST /api/v1/athlete/{id}/folders` — Create a new folder or plan
+- [ ] `update-folder <athlete-id> <folder-id>` — `PUT /api/v1/athlete/{id}/folders/{folderId}` — Update a folder or plan
+- [ ] `update-folder-shared-with <athlete-id> <folder-id>` — `PUT /api/v1/athlete/{id}/folders/{folderId}/shared-with` — Update folder sharing
+- [ ] `update-folder-workouts <athlete-id> <folder-id>` — `PUT /api/v1/athlete/{id}/folders/{folderId}/workouts` — Update plan workouts
+
+### Event Bulk Operations (6)
+
+- [ ] `delete-events-range <athlete-id>` — `DELETE /api/v1/athlete/{id}/events` — Delete a range of events
+- [ ] `update-events-range <athlete-id>` — `PUT /api/v1/athlete/{id}/events` — Update all events for date range
+- [ ] `delete-events-bulk <athlete-id>` — `PUT /api/v1/athlete/{id}/events/bulk-delete` — Bulk delete events by id/external_id
+- [ ] `create-events-bulk <athlete-id>` — `POST /api/v1/athlete/{id}/events/bulk` — Create multiple events
+- [ ] `duplicate-events <athlete-id>` — `POST /api/v1/athlete/{id}/duplicate-events` — Duplicate events
+- [ ] `apply-plan-to-events <athlete-id>` — `POST /api/v1/athlete/{id}/events/apply-plan` — Apply plan to events
+- [ ] `download-event-workout <athlete-id> <event-id> <format>` — `GET /api/v1/athlete/{id}/events/{eventId}/download{ext}` — Download planned workout
+
+### Sport Settings CRUD (5)
+
+- [ ] `get-sport-setting <athlete-id> <id>` — `GET /api/v1/athlete/{athleteId}/sport-settings/{id}` — Get sport settings by id or type
+- [ ] `create-sport-setting <athlete-id>` — `POST /api/v1/athlete/{athleteId}/sport-settings` — Create sport settings
+- [ ] `update-sport-settings <athlete-id>` — `PUT /api/v1/athlete/{athleteId}/sport-settings` — Update multiple sport settings
+- [ ] `update-sport-setting <athlete-id> <id>` — `PUT /api/v1/athlete/{athleteId}/sport-settings/{id}` — Update sport settings
+- [ ] `delete-sport-setting <athlete-id> <id>` — `DELETE /api/v1/athlete/{athleteId}/sport-settings/{id}` — Delete sport settings
+- [ ] `apply-sport-setting <athlete-id> <id>` — `PUT /api/v1/athlete/{athleteId}/sport-settings/{id}/apply` — Apply settings to matching activities
+- [ ] `list-sport-setting-matching <athlete-id> <id>` — `GET /api/v1/athlete/{athleteId}/sport-settings/{id}/matching-activities` — List activities matching settings
+- [ ] `list-sport-setting-pace-distances <athlete-id> <id>` — `GET /api/v1/athlete/{athleteId}/sport-settings/{id}/pace_distances` — List pace distances for sport
+
+### Training Plans (2)
+
+- [ ] `update-training-plan <athlete-id>` — `PUT /api/v1/athlete/{id}/training-plan` — Change athlete's training plan
+- [ ] `update-athlete-plans` — `PUT /api/v1/athlete-plans` — Change training plans for multiple athletes
+
+### Custom Items (4)
+
+- [ ] `create-custom-item <athlete-id>` — `POST /api/v1/athlete/{id}/custom-item` — Create a custom item
+- [ ] `update-custom-item <athlete-id> <item-id>` — `PUT /api/v1/athlete/{id}/custom-item/{itemId}` — Update a custom item
+- [ ] `update-custom-item-indexes <athlete-id>` — `PUT /api/v1/athlete/{id}/custom-item-indexes` — Re-order custom items
+- [ ] `upload-custom-item-image <athlete-id> <item-id> <file>` — `POST /api/v1/athlete/{id}/custom-item/{itemId}/image` — Upload image for custom item
+
+### Chats (4)
+
+- [ ] `get-chat <chat-id>` — `GET /api/v1/chats/{id}` — Get a chat by id
+- [ ] `list-chat-messages <chat-id>` — `GET /api/v1/chats/{id}/messages` — List messages for a chat
+- [ ] `send-chat-message <chat-id> <content>` — `POST /api/v1/chats/send-message` — Send a message
+- [ ] `update-chat-message <chat-id> <msg-id>` — `PUT /api/v1/chats/{id}/messages/{msgId}` — Update a message
+- [ ] `delete-chat-message <chat-id> <msg-id>` — `DELETE /api/v1/chats/{id}/messages/{msgId}` — Delete a message
+- [ ] `mark-chat-messages-seen <chat-id> <msg-id>` — `PUT /api/v1/chats/{id}/messages/{msgId}/seen` — Mark messages as seen
+
+### Routes (2)
+
+- [ ] `update-route <athlete-id> <route-id>` — `PUT /api/v1/athlete/{id}/routes/{route_id}` — Update a route
+- [ ] `compare-routes <athlete-id> <route-id> <other-id>` — `GET /api/v1/athlete/{id}/routes/{route_id}/similarity/{other_id}` — Route similarity comparison
+
+### Athlete (1)
+
+- [ ] `update-athlete <athlete-id>` — `PUT /api/v1/athlete/{id}` — Update an athlete
+
+### Other (1)
+
+- [ ] `fitness-model-events <athlete-id>` — `GET /api/v1/athlete/{id}/fitness-model-events` — List events that influence fitness calculation
+- [ ] `download-workout-ext <workout-id> <format>` — `POST /api/v1/download-workout{ext}` — Convert workout to zwo/mrc/erg/fit
