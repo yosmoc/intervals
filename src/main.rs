@@ -4,11 +4,11 @@ use intervals::commands::{
     create_event, create_manual_activity, delete_activity, get_activity, get_activity_best_efforts,
     get_activity_map, get_activity_segments, get_activity_streams, get_activity_weather_summary,
     get_athlete, get_athlete_profile, get_athlete_summary, get_athlete_training_plan,
-    get_delete_event, get_weather_forecast, get_workout, list_activities, list_activity_intervals,
-    list_activity_messages, list_athlete_hr_curves, list_athlete_pace_curves,
-    list_athlete_power_curves, list_athlete_routes, list_chats, list_events, list_folders,
-    list_gear, list_sport_settings, list_wellness, list_workouts, mark_event_done,
-    post_activity_message, search_activities, update_activity,
+    get_delete_event, get_route, get_weather_forecast, get_workout, list_activities,
+    list_activity_intervals, list_activity_messages, list_athlete_hr_curves,
+    list_athlete_pace_curves, list_athlete_power_curves, list_athlete_routes, list_chats,
+    list_events, list_folders, list_gear, list_sport_settings, list_wellness, list_workouts,
+    mark_event_done, post_activity_message, search_activities, update_activity,
 };
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
@@ -253,6 +253,15 @@ enum Commands {
     ListAthleteRoutes {
         #[arg(help = "Athlete ID")]
         id: String,
+    },
+    #[command(about = "Get a route for an athlete")]
+    GetRoute {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Route ID")]
+        route_id: i64,
+        #[arg(long, help = "Include GPS path", default_value = "false")]
+        include_path: bool,
     },
     #[command(about = "Get athlete profile")]
     GetAthleteProfile {
@@ -571,6 +580,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Commands::ListAthleteRoutes { id } => {
             let routes = list_athlete_routes::list_athlete_routes(&client, &id).await?;
             println!("{}", serde_json::to_string_pretty(&routes)?);
+        }
+        Commands::GetRoute {
+            athlete_id,
+            route_id,
+            include_path,
+        } => {
+            let route = get_route::get_route(&client, &athlete_id, route_id, include_path).await?;
+            println!("{}", serde_json::to_string_pretty(&route)?);
         }
         Commands::GetAthleteProfile { id } => {
             let profile = get_athlete_profile::get_athlete_profile(&client, &id).await?;

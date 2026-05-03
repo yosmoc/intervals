@@ -12,6 +12,7 @@ pub mod get_athlete_profile;
 pub mod get_athlete_summary;
 pub mod get_athlete_training_plan;
 pub mod get_delete_event;
+pub mod get_route;
 pub mod get_weather_forecast;
 pub mod get_workout;
 pub mod list_activities;
