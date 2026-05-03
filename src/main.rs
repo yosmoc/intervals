@@ -2,8 +2,8 @@ use clap::{Parser, Subcommand};
 use intervals::client::ApiClient;
 use intervals::commands::{
     create_event, create_manual_activity, delete_activity, get_activity, get_activity_best_efforts,
-    get_activity_map, get_activity_streams, get_activity_weather_summary, get_athlete,
-    get_athlete_profile, get_athlete_training_plan, get_weather_forecast, get_workout,
+    get_activity_map, get_activity_segments, get_activity_streams, get_activity_weather_summary,
+    get_athlete, get_athlete_profile, get_athlete_training_plan, get_weather_forecast, get_workout,
     list_activities, list_activity_intervals, list_activity_messages, list_athlete_hr_curves,
     list_athlete_pace_curves, list_athlete_power_curves, list_athlete_routes, list_chats,
     list_events, list_folders, list_gear, list_sport_settings, list_wellness, list_workouts,
@@ -69,6 +69,11 @@ enum Commands {
     },
     #[command(about = "Get activity weather summary")]
     GetActivityWeatherSummary {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+    },
+    #[command(about = "Get activity segments")]
+    GetActivitySegments {
         #[arg(help = "Activity ID")]
         activity_id: String,
     },
@@ -331,6 +336,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 get_activity_weather_summary::get_activity_weather_summary(&client, &activity_id)
                     .await?;
             println!("{}", serde_json::to_string_pretty(&summary)?);
+        }
+        Commands::GetActivitySegments { activity_id } => {
+            let segments =
+                get_activity_segments::get_activity_segments(&client, &activity_id).await?;
+            println!("{}", serde_json::to_string_pretty(&segments)?);
         }
         Commands::ListWellness { id, oldest, newest } => {
             let params = list_wellness::ListWellnessParams { oldest, newest };
