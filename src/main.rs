@@ -11,7 +11,7 @@ use intervals::commands::{
     list_athlete_hr_curves, list_athlete_pace_curves, list_athlete_power_curves,
     list_athlete_routes, list_chats, list_event_workout_tags, list_events, list_folders, list_gear,
     list_sport_settings, list_wellness, list_workouts, mark_event_done, misc_endpoints,
-    post_activity_message, search_activities, update_activity,
+    post_activity_message, search_activities, search_activities_full, update_activity,
 };
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
@@ -292,6 +292,15 @@ enum Commands {
         limit: Option<i32>,
         #[arg(long, help = "Return full activity details")]
         full: bool,
+    },
+    #[command(about = "Search activities returning full activity details")]
+    SearchActivitiesFull {
+        #[arg(help = "Athlete ID")]
+        id: String,
+        #[arg(help = "Search query (use # for tag search)")]
+        query: String,
+        #[arg(long, help = "Maximum number of results")]
+        limit: Option<i32>,
     },
     #[command(about = "List workout folders, plans, and workouts")]
     ListFolders {
@@ -777,6 +786,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let params = search_activities::SearchActivitiesParams { query, limit, full };
             let results = search_activities::search_activities(&client, &id, &params).await?;
             println!("{}", serde_json::to_string_pretty(&results)?);
+        }
+        Commands::SearchActivitiesFull { id, query, limit } => {
+            let activities =
+                search_activities_full::search_activities_full(&client, &id, &query, limit).await?;
+            println!("{}", serde_json::to_string_pretty(&activities)?);
         }
         Commands::ListFolders { id } => {
             let folders = list_folders::list_folders(&client, &id).await?;

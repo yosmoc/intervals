@@ -209,7 +209,7 @@ All 65+ commands implemented and verified against live API. 125+ tests passing.
 ### Activity Search & Lists (4)
 
 - [x] `get-activities <athlete-id> <ids>` — `GET /api/v1/athlete/{athleteId}/activities/{ids}` — Fetch multiple activities by id
-- [ ] `search-activities-full <athlete-id> <query>` — `GET /api/v1/athlete/{id}/activities/search-full` — Search activities, returns full objects
+- [x] `search-activities-full <athlete-id> <query>` — `GET /api/v1/athlete/{id}/activities/search-full` — Search activities, returns full objects
 - [ ] `search-activity-intervals <athlete-id>` — `GET /api/v1/athlete/{id}/activities/interval-search` — Find activities with intervals matching duration/intensity
 - [ ] `list-activities-around <athlete-id> <activity-id>` — `GET /api/v1/athlete/{id}/activities-around` — List activities before/after another
 

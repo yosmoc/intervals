@@ -44,6 +44,7 @@ pub mod mark_event_done;
 pub mod misc_endpoints;
 pub mod post_activity_message;
 pub mod search_activities;
+pub mod search_activities_full;
 pub mod update_activity;
 
 #[cfg(test)]

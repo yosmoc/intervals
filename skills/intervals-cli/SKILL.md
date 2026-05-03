@@ -53,6 +53,7 @@ All commands output JSON by default.
 | `intervals create-manual-activity <athlete-id> --start-date-local <datetime> --activity-type <type>` | Create manual activity (options: `--name`, `--description`, `--sport`, `--distance`, `--elapsed-time`) |
 | `intervals delete-activity <activity-id>` | Delete an activity |
 | `intervals search-activities <athlete-id> <query>` | Search activities by name or tag |
+| `intervals search-activities-full <athlete-id> <query>` | Search activities returning full details (option: `--limit`) |
 | `intervals list-activity-messages <activity-id>` | List messages/comments on an activity |
 | `intervals post-activity-message <activity-id> <content>` | Post a message/comment to an activity |
 | `intervals list-activity-intervals <activity-id>` | List auto-detected intervals within an activity |

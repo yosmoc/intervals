@@ -62,6 +62,7 @@ intervals download-activity-fit-file <activity-id> output.fit
 | `create-manual-activity <id>` | Create manual activity (`--start-date-local`, `--activity-type`, `--name`, `--description`, `--sport`, `--distance`, `--elapsed-time`) |
 | `delete-activity <activity-id>` | Delete an activity |
 | `search-activities <id> <query>` | Search activities by name or tag |
+| `search-activities-full <id> <query>` | Search activities returning full details (`--limit`) |
 | `list-activity-messages <activity-id>` | List messages/comments on an activity |
 | `post-activity-message <activity-id> <content>` | Post a message to an activity |
 | `list-activity-intervals <activity-id>` | List auto-detected intervals within an activity |
