@@ -1,14 +1,14 @@
 use clap::{Parser, Subcommand};
 use intervals::client::ApiClient;
 use intervals::commands::{
-    athlete_settings, chat_and_fitness, create_event, create_manual_activity, custom_items,
-    delete_activity, download_activity_file, folder_operations, get_activities, get_activity,
-    get_activity_best_efforts, get_activity_map, get_activity_segments, get_activity_streams,
-    get_activity_weather_summary, get_athlete, get_athlete_models, get_athlete_profile,
-    get_athlete_summary, get_athlete_training_plan, get_delete_event, get_interval_stats,
-    get_route, get_update_weather_config, get_weather_forecast, get_wellness, get_workout,
-    list_activities, list_activities_around, list_activity_intervals, list_activity_messages,
-    list_activity_tags, list_athlete_hr_curves, list_athlete_pace_curves,
+    athlete_settings, chat_and_fitness, create_event, create_manual_activity, csv_and_wellness,
+    custom_items, delete_activity, download_activity_file, folder_operations, get_activities,
+    get_activity, get_activity_best_efforts, get_activity_map, get_activity_segments,
+    get_activity_streams, get_activity_weather_summary, get_athlete, get_athlete_models,
+    get_athlete_profile, get_athlete_summary, get_athlete_training_plan, get_delete_event,
+    get_interval_stats, get_route, get_update_weather_config, get_weather_forecast, get_wellness,
+    get_workout, list_activities, list_activities_around, list_activity_intervals,
+    list_activity_messages, list_activity_tags, list_athlete_hr_curves, list_athlete_pace_curves,
     list_athlete_power_curves, list_athlete_routes, list_chats, list_event_workout_tags,
     list_events, list_folders, list_gear, list_sport_settings, list_wellness, list_workouts,
     mark_event_done, misc_endpoints, post_activity_message, search_activities,
@@ -161,6 +161,36 @@ enum Commands {
         id: String,
         #[arg(help = "Date (ISO-8601)")]
         date: String,
+    },
+    #[command(about = "Update wellness record for a date")]
+    UpdateWellness {
+        #[arg(help = "Athlete ID")]
+        id: String,
+        #[arg(help = "Date (ISO-8601)")]
+        date: String,
+        #[arg(long, help = "Weight in kg")]
+        weight: Option<f64>,
+        #[arg(long, help = "Resting heart rate")]
+        resting_hr: Option<i64>,
+        #[arg(long, help = "HRV")]
+        hrv: Option<f64>,
+        #[arg(long, help = "Mood (1-5)")]
+        mood: Option<i64>,
+        #[arg(long, help = "Fatigue (1-5)")]
+        fatigue: Option<i64>,
+        #[arg(long, help = "Motivation (1-5)")]
+        motivation: Option<i64>,
+        #[arg(long, help = "Sleep hours")]
+        sleep: Option<f64>,
+        #[arg(long, help = "Sleep quality (1-5)")]
+        sleep_quality: Option<i64>,
+    },
+    #[command(about = "Download activities as CSV")]
+    DownloadActivitiesCsv {
+        #[arg(help = "Athlete ID")]
+        id: String,
+        #[arg(help = "Output file path")]
+        output: String,
     },
     #[command(about = "List activities for a date range")]
     ListActivities {
@@ -690,6 +720,41 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Commands::GetWellness { id, date } => {
             let record = get_wellness::get_wellness(&client, &id, &date).await?;
             println!("{}", serde_json::to_string_pretty(&record)?);
+        }
+        Commands::UpdateWellness {
+            id,
+            date,
+            weight,
+            resting_hr,
+            hrv,
+            mood,
+            fatigue,
+            motivation,
+            sleep,
+            sleep_quality,
+        } => {
+            let record = csv_and_wellness::WellnessUpdate {
+                ctl: None,
+                atl: None,
+                weight,
+                resting_hr,
+                hrv,
+                mood,
+                fatigue,
+                motivation,
+                sleep,
+                sleep_quality,
+                soreness: None,
+                stress: None,
+                fitness: None,
+                readiness: None,
+            };
+            let result = csv_and_wellness::update_wellness(&client, &id, &date, &record).await?;
+            println!("{}", serde_json::to_string_pretty(&result)?);
+        }
+        Commands::DownloadActivitiesCsv { id, output } => {
+            csv_and_wellness::download_activities_csv(&client, &id, &output).await?;
+            println!("Activities CSV downloaded to {}", output);
         }
         Commands::ListActivities {
             id,

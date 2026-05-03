@@ -2,6 +2,7 @@ pub mod athlete_settings;
 pub mod chat_and_fitness;
 pub mod create_event;
 pub mod create_manual_activity;
+pub mod csv_and_wellness;
 pub mod custom_items;
 pub mod delete_activity;
 pub mod download_activity_file;

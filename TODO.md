@@ -215,7 +215,7 @@ All 65+ commands implemented and verified against live API. 125+ tests passing.
 
 ### CSV Downloads (5)
 
-- [ ] `download-activities-csv <athlete-id>` — `GET /api/v1/athlete/{id}/activities.csv` — Download activities as CSV
+- [x] `download-activities-csv <athlete-id>` — `GET /api/v1/athlete/{id}/activities.csv` — Download activities as CSV
 - [ ] `download-gear-csv <athlete-id>` — `GET /api/v1/athlete/{id}/gear{ext}` — List gear in CSV format
 - [ ] `download-events-csv <athlete-id>` — `GET /api/v1/athlete/{id}/events{format}` — List events in CSV format
 - [ ] `download-wellness-csv <athlete-id>` — `GET /api/v1/athlete/{id}/wellness{ext}` — List wellness in CSV format
@@ -236,7 +236,7 @@ All 65+ commands implemented and verified against live API. 125+ tests passing.
 ### Wellness CRUD (4)
 
 - [x] `get-wellness <athlete-id> <date>` — `GET /api/v1/athlete/{id}/wellness/{date}` — Get wellness record for a specific date
-- [ ] `update-wellness <athlete-id> <date>` — `PUT /api/v1/athlete/{id}/wellness/{date}` — Update wellness record for date
+- [x] `update-wellness <athlete-id> <date>` — `PUT /api/v1/athlete/{id}/wellness/{date}` — Update wellness record for date
 - [ ] `update-wellness-bulk <athlete-id>` — `PUT /api/v1/athlete/{id}/wellness-bulk` — Bulk update wellness records
 - [ ] `upload-wellness-csv <athlete-id> <file>` — `POST /api/v1/athlete/{id}/wellness` — Upload wellness records CSV
 

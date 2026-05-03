@@ -69,6 +69,7 @@ All commands output JSON by default.
 | `intervals download-activity-file <activity-id> <output>` | Download original activity file |
 | `intervals download-activity-fit-file <activity-id> <output>` | Download FIT file (options: `--power`, `--hr`) |
 | `intervals download-activity-gpx-file <activity-id> <output>` | Download GPX file (options: `--power`, `--hr`) |
+| `intervals download-activities-csv <athlete-id> <output>` | Download all activities as CSV |
 
 ### Performance Curves
 
@@ -86,6 +87,7 @@ All commands output JSON by default.
 |---------|-------------|
 | `intervals list-wellness <athlete-id>` | List wellness records (weight, resting HR, HRV, mood, CTL/ATL) |
 | `intervals get-wellness <athlete-id> <date>` | Get wellness record for a specific date |
+| `intervals update-wellness <athlete-id> <date>` | Update wellness record (options: `--weight`, `--resting-hr`, `--hrv`, `--mood`, `--sleep`) |
 | `intervals get-weather-forecast <athlete-id>` | Get weather forecast for athlete's location |
 | `intervals get-weather-config <athlete-id>` | Get weather forecast configuration |
 | `intervals update-weather-config <athlete-id>` | Update weather forecast configuration (`--forecasts <json>`) |

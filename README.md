@@ -78,6 +78,7 @@ intervals download-activity-fit-file <activity-id> output.fit
 | `download-activity-file <activity-id> <output>` | Download original activity file |
 | `download-activity-fit-file <activity-id> <output>` | Download FIT file (`--power`, `--hr`) |
 | `download-activity-gpx-file <activity-id> <output>` | Download GPX file (`--power`, `--hr`) |
+| `download-activities-csv <athlete-id> <output>` | Download all activities as CSV |
 
 ### Wellness & Weather
 
@@ -85,6 +86,7 @@ intervals download-activity-fit-file <activity-id> output.fit
 |---------|-------------|
 | `list-wellness <id>` | List wellness records (weight, resting HR, HRV, CTL/ATL) |
 | `get-wellness <id> <date>` | Get wellness record for a specific date |
+| `update-wellness <id> <date>` | Update wellness record (`--weight`, `--resting-hr`, `--hrv`, `--mood`, `--sleep`) |
 | `get-weather-forecast <id>` | Get weather forecast for athlete's location |
 | `get-weather-config <id>` | Get weather forecast configuration |
 | `update-weather-config <id>` | Update weather forecast configuration (`--forecasts <json>`) |
