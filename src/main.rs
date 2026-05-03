@@ -1,16 +1,17 @@
 use clap::{Parser, Subcommand};
 use intervals::client::ApiClient;
 use intervals::commands::{
-    create_event, create_manual_activity, custom_items, delete_activity, download_activity_file,
-    folder_operations, get_activity, get_activity_best_efforts, get_activity_map,
-    get_activity_segments, get_activity_streams, get_activity_weather_summary, get_athlete,
-    get_athlete_models, get_athlete_profile, get_athlete_summary, get_athlete_training_plan,
-    get_delete_event, get_interval_stats, get_route, get_update_weather_config,
-    get_weather_forecast, get_workout, list_activities, list_activity_intervals,
-    list_activity_messages, list_activity_tags, list_athlete_hr_curves, list_athlete_pace_curves,
-    list_athlete_power_curves, list_athlete_routes, list_chats, list_event_workout_tags,
-    list_events, list_folders, list_gear, list_sport_settings, list_wellness, list_workouts,
-    mark_event_done, misc_endpoints, post_activity_message, search_activities, update_activity,
+    athlete_settings, create_event, create_manual_activity, custom_items, delete_activity,
+    download_activity_file, folder_operations, get_activity, get_activity_best_efforts,
+    get_activity_map, get_activity_segments, get_activity_streams, get_activity_weather_summary,
+    get_athlete, get_athlete_models, get_athlete_profile, get_athlete_summary,
+    get_athlete_training_plan, get_delete_event, get_interval_stats, get_route,
+    get_update_weather_config, get_weather_forecast, get_workout, list_activities,
+    list_activity_intervals, list_activity_messages, list_activity_tags, list_athlete_hr_curves,
+    list_athlete_pace_curves, list_athlete_power_curves, list_athlete_routes, list_chats,
+    list_event_workout_tags, list_events, list_folders, list_gear, list_sport_settings,
+    list_wellness, list_workouts, mark_event_done, misc_endpoints, post_activity_message,
+    search_activities, update_activity,
 };
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
@@ -30,6 +31,18 @@ struct Cli {
 enum Commands {
     #[command(about = "Get athlete profile")]
     GetAthlete {
+        #[arg(help = "Athlete ID")]
+        id: String,
+    },
+    #[command(about = "Get athlete settings for a device class")]
+    GetAthleteSettings {
+        #[arg(help = "Athlete ID")]
+        id: String,
+        #[arg(help = "Device class (phone, tablet, desktop)")]
+        device_class: String,
+    },
+    #[command(about = "Apply plan changes to calendar")]
+    ApplyPlanChanges {
         #[arg(help = "Athlete ID")]
         id: String,
     },
@@ -461,6 +474,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Commands::GetAthlete { id } => {
             let athlete = get_athlete::get_athlete(&client, &id).await?;
             println!("{}", serde_json::to_string_pretty(&athlete)?);
+        }
+        Commands::GetAthleteSettings { id, device_class } => {
+            let settings =
+                athlete_settings::get_athlete_settings(&client, &id, &device_class).await?;
+            println!("{}", serde_json::to_string_pretty(&settings)?);
+        }
+        Commands::ApplyPlanChanges { id } => {
+            let result = athlete_settings::apply_plan_changes(&client, &id).await?;
+            println!("{}", serde_json::to_string_pretty(&result)?);
         }
         Commands::GetActivity { id, activity_id } => {
             let activity = get_activity::get_activity(&client, &id, &activity_id).await?;
