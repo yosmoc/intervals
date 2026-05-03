@@ -8,6 +8,12 @@ pub struct PowerCurve {
     pub date: String,
 }
 
+#[derive(Debug, Deserialize, Serialize)]
+pub struct PowerCurveResponse {
+    #[serde(default)]
+    pub list: Vec<PowerCurve>,
+}
+
 pub async fn list_athlete_power_curves(
     client: &crate::client::ApiClient,
     athlete_id: &str,
@@ -32,8 +38,8 @@ pub async fn list_athlete_power_curves(
         return Err(format!("API error: {} - {}", status, body).into());
     }
 
-    let curves = response.json::<Vec<PowerCurve>>().await?;
-    Ok(curves)
+    let wrapper = response.json::<PowerCurveResponse>().await?;
+    Ok(wrapper.list)
 }
 
 #[cfg(test)]
@@ -52,14 +58,16 @@ mod tests {
         Mock::given(method("GET"))
             .and(path_regex("/api/v1/athlete/.*/power-curves"))
             .and(header("Authorization", TEST_AUTH_HEADER))
-            .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!([
-                {
-                    "id": "pc-001",
-                    "duration": 60.0,
-                    "power": 350.0,
-                    "date": "2024-01-15"
-                }
-            ])))
+            .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!({
+                "list": [
+                    {
+                        "id": "pc-001",
+                        "duration": 60.0,
+                        "power": 350.0,
+                        "date": "2024-01-15"
+                    }
+                ]
+            })))
             .mount(&mock_server)
             .await;
 
