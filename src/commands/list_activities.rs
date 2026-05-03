@@ -103,12 +103,18 @@ mod tests {
             .await;
 
         let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
-        let activities = list_activities(&client, "12345", &ListActivitiesParams {
-            oldest: "2024-01-01".to_string(),
-            newest: None,
-            route_id: None,
-            limit: None,
-        }).await.unwrap();
+        let activities = list_activities(
+            &client,
+            "12345",
+            &ListActivitiesParams {
+                oldest: "2024-01-01".to_string(),
+                newest: None,
+                route_id: None,
+                limit: None,
+            },
+        )
+        .await
+        .unwrap();
 
         assert_eq!(activities.len(), 2);
         assert_eq!(activities[0].id, "act-001");
@@ -136,12 +142,18 @@ mod tests {
             .await;
 
         let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
-        let activities = list_activities(&client, "12345", &ListActivitiesParams {
-            oldest: "2024-01-01".to_string(),
-            newest: Some("2024-01-31".to_string()),
-            route_id: Some(42),
-            limit: Some(10),
-        }).await.unwrap();
+        let activities = list_activities(
+            &client,
+            "12345",
+            &ListActivitiesParams {
+                oldest: "2024-01-01".to_string(),
+                newest: Some("2024-01-31".to_string()),
+                route_id: Some(42),
+                limit: Some(10),
+            },
+        )
+        .await
+        .unwrap();
 
         assert_eq!(activities.len(), 1);
     }
@@ -157,12 +169,18 @@ mod tests {
             .await;
 
         let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
-        let activities = list_activities(&client, "12345", &ListActivitiesParams {
-            oldest: "2024-01-01".to_string(),
-            newest: None,
-            route_id: None,
-            limit: None,
-        }).await.unwrap();
+        let activities = list_activities(
+            &client,
+            "12345",
+            &ListActivitiesParams {
+                oldest: "2024-01-01".to_string(),
+                newest: None,
+                route_id: None,
+                limit: None,
+            },
+        )
+        .await
+        .unwrap();
 
         assert!(activities.is_empty());
     }
@@ -173,22 +191,24 @@ mod tests {
 
         Mock::given(method("GET"))
             .and(path_regex("/api/v1/athlete/.*/activities"))
-            .respond_with(
-                ResponseTemplate::new(401)
-                    .set_body_json(serde_json::json!({
-                        "error": "Unauthorized"
-                    })),
-            )
+            .respond_with(ResponseTemplate::new(401).set_body_json(serde_json::json!({
+                "error": "Unauthorized"
+            })))
             .mount(&mock_server)
             .await;
 
         let client = ApiClient::new(mock_server.uri(), "wrong-key".to_string());
-        let result = list_activities(&client, "12345", &ListActivitiesParams {
-            oldest: "2024-01-01".to_string(),
-            newest: None,
-            route_id: None,
-            limit: None,
-        }).await;
+        let result = list_activities(
+            &client,
+            "12345",
+            &ListActivitiesParams {
+                oldest: "2024-01-01".to_string(),
+                newest: None,
+                route_id: None,
+                limit: None,
+            },
+        )
+        .await;
 
         assert!(result.is_err());
     }

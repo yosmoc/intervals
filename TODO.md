@@ -54,4 +54,44 @@
 - Output JSON by default
 
 ## Current Status
-All planned commands implemented. 75 tests passing.
+All 26 commands implemented and verified against live API. 75 tests passing.
+
+### Live API Verification Results
+| Command | Status | Notes |
+|---------|--------|-------|
+| `get-athlete` | ✅ Verified | Returns athlete data |
+| `get-activity` | ✅ Verified | Returns activity data |
+| `list-activities` | ✅ Verified | Returns activities for date range |
+| `list-wellness` | ✅ Verified | Returns wellness records |
+| `update-activity` | ✅ Verified | Updates activity name |
+| `list-gear` | ✅ Verified | Returns empty (no gear) |
+| `search-activities` | ✅ Verified | Finds activities by name |
+| `list-folders` | ✅ Verified | Returns workout folders |
+| `list-athlete-power-curves` | ✅ Verified | Fixed: requires activity_type param |
+| `list-athlete-routes` | ✅ Verified | Returns empty (no routes) |
+| `get-athlete-profile` | ✅ Verified | Fixed: parses nested athlete field |
+| `list-activity-messages` | ✅ Verified | Returns empty (no messages) |
+| `get-weather-forecast` | ✅ Verified | Fixed: parses forecasts wrapper |
+| `list-sport-settings` | ✅ Verified | Fixed: id is i64 |
+| `list-chats` | ✅ Verified | Returns empty (no chats) |
+| `list-athlete-hr-curves` | ✅ Verified | Fixed: parses list wrapper |
+| `list-athlete-pace-curves` | ✅ Verified | Fixed: parses list wrapper |
+| `get-athlete-training-plan` | ✅ Verified | Fixed: matches actual schema |
+| `list-activity-intervals` | ✅ Verified | Fixed: parses icu_intervals wrapper |
+| `list-events` | ✅ Verified | Returns empty (no events) |
+| `list-workouts` | ✅ Verified | Returns empty (no workouts) |
+| `create-event` | ✅ Verified | Creates calendar event |
+| `create-manual-activity` | ✅ Verified | Creates manual activity |
+| `delete-activity` | ✅ Verified | Deletes activity |
+| `get-workout` | ⚠️ No data | Athlete has no workouts |
+| `create-event` (cleanup) | ✅ Cleaned | Test event deleted |
+
+### Fixed Commands (8 total)
+1. `list-athlete-power-curves` - Added required `activity_type` param
+2. `get-athlete-profile` - Parse nested `athlete` field
+3. `get-weather-forecast` - Parse `{forecasts: [...]}` wrapper
+4. `list-sport-settings` - Changed `id` from String to i64
+5. `list-athlete-hr-curves` - Parse `{list: [...]}` wrapper
+6. `list-athlete-pace-curves` - Parse `{list: [...]}` wrapper
+7. `get-athlete-training-plan` - Match actual schema with optional fields
+8. `list-activity-intervals` - Parse `{icu_intervals: [...]}` wrapper

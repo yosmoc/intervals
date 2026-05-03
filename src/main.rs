@@ -1,6 +1,13 @@
 use clap::{Parser, Subcommand};
 use intervals_cli::client::ApiClient;
-use intervals_cli::commands::{create_event, create_manual_activity, delete_activity, get_activity, get_athlete, get_athlete_profile, get_athlete_training_plan, get_weather_forecast, get_workout, list_activities, list_activity_intervals, list_activity_messages, list_athlete_hr_curves, list_athlete_pace_curves, list_athlete_power_curves, list_athlete_routes, list_chats, list_events, list_folders, list_gear, list_sport_settings, list_wellness, list_workouts, search_activities, update_activity};
+use intervals_cli::commands::{
+    create_event, create_manual_activity, delete_activity, get_activity, get_athlete,
+    get_athlete_profile, get_athlete_training_plan, get_weather_forecast, get_workout,
+    list_activities, list_activity_intervals, list_activity_messages, list_athlete_hr_curves,
+    list_athlete_pace_curves, list_athlete_power_curves, list_athlete_routes, list_chats,
+    list_events, list_folders, list_gear, list_sport_settings, list_wellness, list_workouts,
+    search_activities, update_activity,
+};
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
 
@@ -238,8 +245,19 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let records = list_wellness::list_wellness(&client, &id, &params).await?;
             println!("{}", serde_json::to_string_pretty(&records)?);
         }
-        Commands::ListActivities { id, oldest, newest, route_id, limit } => {
-            let params = list_activities::ListActivitiesParams { oldest, newest, route_id, limit };
+        Commands::ListActivities {
+            id,
+            oldest,
+            newest,
+            route_id,
+            limit,
+        } => {
+            let params = list_activities::ListActivitiesParams {
+                oldest,
+                newest,
+                route_id,
+                limit,
+            };
             let activities = list_activities::list_activities(&client, &id, &params).await?;
             println!("{}", serde_json::to_string_pretty(&activities)?);
         }
@@ -247,19 +265,63 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let workouts = list_workouts::list_workouts(&client, &id).await?;
             println!("{}", serde_json::to_string_pretty(&workouts)?);
         }
-        Commands::ListEvents { id, oldest, newest, category, limit } => {
-            let params = list_events::ListEventsParams { oldest, newest, category, limit };
+        Commands::ListEvents {
+            id,
+            oldest,
+            newest,
+            category,
+            limit,
+        } => {
+            let params = list_events::ListEventsParams {
+                oldest,
+                newest,
+                category,
+                limit,
+            };
             let events = list_events::list_events(&client, &id, &params).await?;
             println!("{}", serde_json::to_string_pretty(&events)?);
         }
-        Commands::UpdateActivity { activity_id, name, description, activity_type, sport, distance, elapsed_time } => {
-            let input = update_activity::UpdateActivityInput { name, description, activity_type, sport, distance, elapsed_time };
+        Commands::UpdateActivity {
+            activity_id,
+            name,
+            description,
+            activity_type,
+            sport,
+            distance,
+            elapsed_time,
+        } => {
+            let input = update_activity::UpdateActivityInput {
+                name,
+                description,
+                activity_type,
+                sport,
+                distance,
+                elapsed_time,
+            };
             let activity = update_activity::update_activity(&client, &activity_id, &input).await?;
             println!("{}", serde_json::to_string_pretty(&activity)?);
         }
-        Commands::CreateManualActivity { id, start_date_local, activity_type, name, description, sport, distance, elapsed_time } => {
-            let input = create_manual_activity::CreateManualActivityInput { start_date_local, activity_type, name, description, sport, distance, elapsed_time };
-            let activity = create_manual_activity::create_manual_activity(&client, &id, &input).await?;
+        Commands::CreateManualActivity {
+            id,
+            start_date_local,
+            activity_type,
+            name,
+            description,
+            sport,
+            distance,
+            elapsed_time,
+        } => {
+            let input = create_manual_activity::CreateManualActivityInput {
+                start_date_local,
+                activity_type,
+                name,
+                description,
+                sport,
+                distance,
+                elapsed_time,
+            };
+            let activity =
+                create_manual_activity::create_manual_activity(&client, &id, &input).await?;
             println!("{}", serde_json::to_string_pretty(&activity)?);
         }
         Commands::DeleteActivity { activity_id } => {
@@ -270,7 +332,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let gear = list_gear::list_gear(&client, &id).await?;
             println!("{}", serde_json::to_string_pretty(&gear)?);
         }
-        Commands::SearchActivities { id, query, limit, full } => {
+        Commands::SearchActivities {
+            id,
+            query,
+            limit,
+            full,
+        } => {
             let params = search_activities::SearchActivitiesParams { query, limit, full };
             let results = search_activities::search_activities(&client, &id, &params).await?;
             println!("{}", serde_json::to_string_pretty(&results)?);
@@ -279,8 +346,26 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let folders = list_folders::list_folders(&client, &id).await?;
             println!("{}", serde_json::to_string_pretty(&folders)?);
         }
-        Commands::CreateEvent { id, start_date_local, event_type, category, name, description, uid, calendar_id, upsert_on_uid } => {
-            let input = create_event::CreateEventInput { start_date_local, event_type, category, name, description, uid, calendar_id };
+        Commands::CreateEvent {
+            id,
+            start_date_local,
+            event_type,
+            category,
+            name,
+            description,
+            uid,
+            calendar_id,
+            upsert_on_uid,
+        } => {
+            let input = create_event::CreateEventInput {
+                start_date_local,
+                event_type,
+                category,
+                name,
+                description,
+                uid,
+                calendar_id,
+            };
             let event = create_event::create_event(&client, &id, &input, upsert_on_uid).await?;
             println!("{}", serde_json::to_string_pretty(&event)?);
         }
@@ -289,7 +374,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             println!("{}", serde_json::to_string_pretty(&workout)?);
         }
         Commands::ListAthletePowerCurves { id, activity_type } => {
-            let curves = list_athlete_power_curves::list_athlete_power_curves(&client, &id, &activity_type).await?;
+            let curves =
+                list_athlete_power_curves::list_athlete_power_curves(&client, &id, &activity_type)
+                    .await?;
             println!("{}", serde_json::to_string_pretty(&curves)?);
         }
         Commands::ListAthleteRoutes { id } => {
@@ -301,7 +388,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             println!("{}", serde_json::to_string_pretty(&profile)?);
         }
         Commands::ListActivityMessages { activity_id } => {
-            let messages = list_activity_messages::list_activity_messages(&client, &activity_id).await?;
+            let messages =
+                list_activity_messages::list_activity_messages(&client, &activity_id).await?;
             println!("{}", serde_json::to_string_pretty(&messages)?);
         }
         Commands::GetWeatherForecast { id } => {
@@ -329,7 +417,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             println!("{}", serde_json::to_string_pretty(&plan)?);
         }
         Commands::ListActivityIntervals { activity_id } => {
-            let intervals = list_activity_intervals::list_activity_intervals(&client, &activity_id).await?;
+            let intervals =
+                list_activity_intervals::list_activity_intervals(&client, &activity_id).await?;
             println!("{}", serde_json::to_string_pretty(&intervals)?);
         }
     }

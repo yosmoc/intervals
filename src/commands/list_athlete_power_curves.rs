@@ -72,7 +72,9 @@ mod tests {
             .await;
 
         let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
-        let curves = list_athlete_power_curves(&client, "12345", "Ride").await.unwrap();
+        let curves = list_athlete_power_curves(&client, "12345", "Ride")
+            .await
+            .unwrap();
 
         assert_eq!(curves.len(), 1);
         assert_eq!(curves[0].power, 350.0);
@@ -84,12 +86,9 @@ mod tests {
 
         Mock::given(method("GET"))
             .and(path_regex("/api/v1/athlete/.*/power-curves"))
-            .respond_with(
-                ResponseTemplate::new(401)
-                    .set_body_json(serde_json::json!({
-                        "error": "Unauthorized"
-                    })),
-            )
+            .respond_with(ResponseTemplate::new(401).set_body_json(serde_json::json!({
+                "error": "Unauthorized"
+            })))
             .mount(&mock_server)
             .await;
 

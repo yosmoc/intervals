@@ -30,11 +30,7 @@ pub async fn list_events(
     athlete_id: &str,
     params: &ListEventsParams,
 ) -> Result<Vec<Event>, Box<dyn std::error::Error>> {
-    let mut url = format!(
-        "{}/api/v1/athlete/{}/events",
-        client.base_url(),
-        athlete_id
-    );
+    let mut url = format!("{}/api/v1/athlete/{}/events", client.base_url(), athlete_id);
     let mut query_params = Vec::new();
 
     if let Some(ref oldest) = params.oldest {
@@ -112,12 +108,18 @@ mod tests {
             .await;
 
         let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
-        let events = list_events(&client, "12345", &ListEventsParams {
-            oldest: None,
-            newest: None,
-            category: None,
-            limit: None,
-        }).await.unwrap();
+        let events = list_events(
+            &client,
+            "12345",
+            &ListEventsParams {
+                oldest: None,
+                newest: None,
+                category: None,
+                limit: None,
+            },
+        )
+        .await
+        .unwrap();
 
         assert_eq!(events.len(), 2);
         assert_eq!(events[0].id, 101);
@@ -146,12 +148,18 @@ mod tests {
             .await;
 
         let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
-        let events = list_events(&client, "12345", &ListEventsParams {
-            oldest: Some("2024-01-01".to_string()),
-            newest: Some("2024-01-31".to_string()),
-            category: Some("WORKOUT".to_string()),
-            limit: Some(10),
-        }).await.unwrap();
+        let events = list_events(
+            &client,
+            "12345",
+            &ListEventsParams {
+                oldest: Some("2024-01-01".to_string()),
+                newest: Some("2024-01-31".to_string()),
+                category: Some("WORKOUT".to_string()),
+                limit: Some(10),
+            },
+        )
+        .await
+        .unwrap();
 
         assert_eq!(events.len(), 1);
     }
@@ -167,12 +175,18 @@ mod tests {
             .await;
 
         let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
-        let events = list_events(&client, "12345", &ListEventsParams {
-            oldest: None,
-            newest: None,
-            category: None,
-            limit: None,
-        }).await.unwrap();
+        let events = list_events(
+            &client,
+            "12345",
+            &ListEventsParams {
+                oldest: None,
+                newest: None,
+                category: None,
+                limit: None,
+            },
+        )
+        .await
+        .unwrap();
 
         assert!(events.is_empty());
     }
@@ -183,22 +197,24 @@ mod tests {
 
         Mock::given(method("GET"))
             .and(path_regex("/api/v1/athlete/.*/events"))
-            .respond_with(
-                ResponseTemplate::new(401)
-                    .set_body_json(serde_json::json!({
-                        "error": "Unauthorized"
-                    })),
-            )
+            .respond_with(ResponseTemplate::new(401).set_body_json(serde_json::json!({
+                "error": "Unauthorized"
+            })))
             .mount(&mock_server)
             .await;
 
         let client = ApiClient::new(mock_server.uri(), "wrong-key".to_string());
-        let result = list_events(&client, "12345", &ListEventsParams {
-            oldest: None,
-            newest: None,
-            category: None,
-            limit: None,
-        }).await;
+        let result = list_events(
+            &client,
+            "12345",
+            &ListEventsParams {
+                oldest: None,
+                newest: None,
+                category: None,
+                limit: None,
+            },
+        )
+        .await;
 
         assert!(result.is_err());
     }

@@ -45,7 +45,7 @@ mod tests {
         Mock::given(method("GET"))
             .and(path("/api/v1/athlete/12345"))
             .and(header("Authorization", TEST_AUTH_HEADER))
-                .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!({
+            .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!({
                 "id": "i12345",
                 "name": "Test Athlete"
             })))
@@ -65,12 +65,9 @@ mod tests {
 
         Mock::given(method("GET"))
             .and(path("/api/v1/athlete/99999"))
-            .respond_with(
-                ResponseTemplate::new(404)
-                    .set_body_json(serde_json::json!({
-                        "error": "Athlete not found"
-                    })),
-            )
+            .respond_with(ResponseTemplate::new(404).set_body_json(serde_json::json!({
+                "error": "Athlete not found"
+            })))
             .mount(&mock_server)
             .await;
 
@@ -86,12 +83,9 @@ mod tests {
 
         Mock::given(method("GET"))
             .and(path("/api/v1/athlete/12345"))
-            .respond_with(
-                ResponseTemplate::new(401)
-                    .set_body_json(serde_json::json!({
-                        "error": "Unauthorized"
-                    })),
-            )
+            .respond_with(ResponseTemplate::new(401).set_body_json(serde_json::json!({
+                "error": "Unauthorized"
+            })))
             .mount(&mock_server)
             .await;
 

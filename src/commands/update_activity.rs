@@ -40,11 +40,7 @@ pub async fn update_activity(
     activity_id: &str,
     input: &UpdateActivityInput,
 ) -> Result<Activity, Box<dyn std::error::Error>> {
-    let url = format!(
-        "{}/api/v1/activity/{}",
-        client.base_url(),
-        activity_id
-    );
+    let url = format!("{}/api/v1/activity/{}", client.base_url(), activity_id);
 
     let response = client
         .client()
@@ -116,12 +112,9 @@ mod tests {
 
         Mock::given(method("PUT"))
             .and(path("/api/v1/activity/nonexistent"))
-            .respond_with(
-                ResponseTemplate::new(404)
-                    .set_body_json(serde_json::json!({
-                        "error": "Activity not found"
-                    })),
-            )
+            .respond_with(ResponseTemplate::new(404).set_body_json(serde_json::json!({
+                "error": "Activity not found"
+            })))
             .mount(&mock_server)
             .await;
 
@@ -145,12 +138,9 @@ mod tests {
 
         Mock::given(method("PUT"))
             .and(path("/api/v1/activity/act-001"))
-            .respond_with(
-                ResponseTemplate::new(401)
-                    .set_body_json(serde_json::json!({
-                        "error": "Unauthorized"
-                    })),
-            )
+            .respond_with(ResponseTemplate::new(401).set_body_json(serde_json::json!({
+                "error": "Unauthorized"
+            })))
             .mount(&mock_server)
             .await;
 

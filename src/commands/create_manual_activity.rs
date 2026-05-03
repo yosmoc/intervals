@@ -106,7 +106,9 @@ mod tests {
             distance: Some(25000.0),
             elapsed_time: Some(3600),
         };
-        let activity = create_manual_activity(&client, "12345", &input).await.unwrap();
+        let activity = create_manual_activity(&client, "12345", &input)
+            .await
+            .unwrap();
 
         assert_eq!(activity.id, "act-new-001");
         assert_eq!(activity.name, Some("Morning Ride".to_string()));
@@ -141,7 +143,9 @@ mod tests {
             distance: None,
             elapsed_time: None,
         };
-        let activity = create_manual_activity(&client, "12345", &input).await.unwrap();
+        let activity = create_manual_activity(&client, "12345", &input)
+            .await
+            .unwrap();
 
         assert_eq!(activity.id, "act-new-002");
         assert_eq!(activity.activity_type, Some("Run".to_string()));
@@ -153,12 +157,9 @@ mod tests {
 
         Mock::given(method("POST"))
             .and(path("/api/v1/athlete/12345/activities/manual"))
-            .respond_with(
-                ResponseTemplate::new(401)
-                    .set_body_json(serde_json::json!({
-                        "error": "Unauthorized"
-                    })),
-            )
+            .respond_with(ResponseTemplate::new(401).set_body_json(serde_json::json!({
+                "error": "Unauthorized"
+            })))
             .mount(&mock_server)
             .await;
 

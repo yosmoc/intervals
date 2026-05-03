@@ -28,7 +28,11 @@ pub async fn list_wellness(
     athlete_id: &str,
     params: &ListWellnessParams,
 ) -> Result<Vec<WellnessRecord>, Box<dyn std::error::Error>> {
-    let mut url = format!("{}/api/v1/athlete/{}/wellness", client.base_url(), athlete_id);
+    let mut url = format!(
+        "{}/api/v1/athlete/{}/wellness",
+        client.base_url(),
+        athlete_id
+    );
     let mut query_params = Vec::new();
 
     if let Some(ref oldest) = params.oldest {
@@ -100,10 +104,16 @@ mod tests {
             .await;
 
         let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
-        let records = list_wellness(&client, "12345", &ListWellnessParams {
-            oldest: None,
-            newest: None,
-        }).await.unwrap();
+        let records = list_wellness(
+            &client,
+            "12345",
+            &ListWellnessParams {
+                oldest: None,
+                newest: None,
+            },
+        )
+        .await
+        .unwrap();
 
         assert_eq!(records.len(), 2);
         assert_eq!(records[0].id, "2024-01-15");
@@ -123,10 +133,16 @@ mod tests {
             .await;
 
         let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
-        let records = list_wellness(&client, "12345", &ListWellnessParams {
-            oldest: Some("2024-01-01".to_string()),
-            newest: Some("2024-01-31".to_string()),
-        }).await.unwrap();
+        let records = list_wellness(
+            &client,
+            "12345",
+            &ListWellnessParams {
+                oldest: Some("2024-01-01".to_string()),
+                newest: Some("2024-01-31".to_string()),
+            },
+        )
+        .await
+        .unwrap();
 
         assert!(records.is_empty());
     }
@@ -137,20 +153,22 @@ mod tests {
 
         Mock::given(method("GET"))
             .and(path_regex("/api/v1/athlete/.*/wellness"))
-            .respond_with(
-                ResponseTemplate::new(401)
-                    .set_body_json(serde_json::json!({
-                        "error": "Unauthorized"
-                    })),
-            )
+            .respond_with(ResponseTemplate::new(401).set_body_json(serde_json::json!({
+                "error": "Unauthorized"
+            })))
             .mount(&mock_server)
             .await;
 
         let client = ApiClient::new(mock_server.uri(), "wrong-key".to_string());
-        let result = list_wellness(&client, "12345", &ListWellnessParams {
-            oldest: None,
-            newest: None,
-        }).await;
+        let result = list_wellness(
+            &client,
+            "12345",
+            &ListWellnessParams {
+                oldest: None,
+                newest: None,
+            },
+        )
+        .await;
 
         assert!(result.is_err());
     }

@@ -29,11 +29,7 @@ pub async fn search_activities(
     athlete_id: &str,
     params: &SearchActivitiesParams,
 ) -> Result<Vec<ActivitySearchResult>, Box<dyn std::error::Error>> {
-    let endpoint = if params.full {
-        "search-full"
-    } else {
-        "search"
-    };
+    let endpoint = if params.full { "search-full" } else { "search" };
     let mut url = format!(
         "{}/api/v1/athlete/{}/activities/{}?q={}",
         client.base_url(),
@@ -95,11 +91,17 @@ mod tests {
             .await;
 
         let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
-        let results = search_activities(&client, "12345", &SearchActivitiesParams {
-            query: "morning".to_string(),
-            limit: None,
-            full: false,
-        }).await.unwrap();
+        let results = search_activities(
+            &client,
+            "12345",
+            &SearchActivitiesParams {
+                query: "morning".to_string(),
+                limit: None,
+                full: false,
+            },
+        )
+        .await
+        .unwrap();
 
         assert_eq!(results.len(), 1);
         assert_eq!(results[0].id, "act-001");
@@ -128,14 +130,23 @@ mod tests {
             .await;
 
         let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
-        let results = search_activities(&client, "12345", &SearchActivitiesParams {
-            query: "#training".to_string(),
-            limit: None,
-            full: false,
-        }).await.unwrap();
+        let results = search_activities(
+            &client,
+            "12345",
+            &SearchActivitiesParams {
+                query: "#training".to_string(),
+                limit: None,
+                full: false,
+            },
+        )
+        .await
+        .unwrap();
 
         assert_eq!(results.len(), 1);
-        assert_eq!(results[0].tags, Some(vec!["training".to_string(), "easy".to_string()]));
+        assert_eq!(
+            results[0].tags,
+            Some(vec!["training".to_string(), "easy".to_string()])
+        );
     }
 
     #[tokio::test]
@@ -150,11 +161,17 @@ mod tests {
             .await;
 
         let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
-        let results = search_activities(&client, "12345", &SearchActivitiesParams {
-            query: "ride".to_string(),
-            limit: Some(5),
-            full: false,
-        }).await.unwrap();
+        let results = search_activities(
+            &client,
+            "12345",
+            &SearchActivitiesParams {
+                query: "ride".to_string(),
+                limit: Some(5),
+                full: false,
+            },
+        )
+        .await
+        .unwrap();
 
         assert!(results.is_empty());
     }
@@ -165,21 +182,23 @@ mod tests {
 
         Mock::given(method("GET"))
             .and(path_regex("/api/v1/athlete/.*/activities/search"))
-            .respond_with(
-                ResponseTemplate::new(401)
-                    .set_body_json(serde_json::json!({
-                        "error": "Unauthorized"
-                    })),
-            )
+            .respond_with(ResponseTemplate::new(401).set_body_json(serde_json::json!({
+                "error": "Unauthorized"
+            })))
             .mount(&mock_server)
             .await;
 
         let client = ApiClient::new(mock_server.uri(), "wrong-key".to_string());
-        let result = search_activities(&client, "12345", &SearchActivitiesParams {
-            query: "test".to_string(),
-            limit: None,
-            full: false,
-        }).await;
+        let result = search_activities(
+            &client,
+            "12345",
+            &SearchActivitiesParams {
+                query: "test".to_string(),
+                limit: None,
+                full: false,
+            },
+        )
+        .await;
 
         assert!(result.is_err());
     }

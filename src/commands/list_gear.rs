@@ -20,11 +20,7 @@ pub async fn list_gear(
     client: &crate::client::ApiClient,
     athlete_id: &str,
 ) -> Result<Vec<Gear>, Box<dyn std::error::Error>> {
-    let url = format!(
-        "{}/api/v1/athlete/{}/gear",
-        client.base_url(),
-        athlete_id
-    );
+    let url = format!("{}/api/v1/athlete/{}/gear", client.base_url(), athlete_id);
 
     let response = client
         .client()
@@ -111,12 +107,9 @@ mod tests {
 
         Mock::given(method("GET"))
             .and(path("/api/v1/athlete/12345/gear"))
-            .respond_with(
-                ResponseTemplate::new(401)
-                    .set_body_json(serde_json::json!({
-                        "error": "Unauthorized"
-                    })),
-            )
+            .respond_with(ResponseTemplate::new(401).set_body_json(serde_json::json!({
+                "error": "Unauthorized"
+            })))
             .mount(&mock_server)
             .await;
 
