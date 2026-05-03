@@ -50,7 +50,7 @@ pub async fn create_event(
     let response = client
         .client()
         .post(&url)
-        .header("Authorization", format!("Bearer {}", client.api_key()))
+        .basic_auth("API_KEY", Some(client.api_key()))
         .json(input)
         .send()
         .await?;
@@ -78,7 +78,7 @@ mod tests {
 
         Mock::given(method("POST"))
             .and(path_regex("/api/v1/athlete/.*/events"))
-            .and(header("Authorization", "Bearer test-api-key"))
+            .and(header("Authorization", "Basic QVBJX0tFWTp0ZXN0LWFwaS1rZXk="))
             .and(body_partial_json(serde_json::json!({
                 "start_date_local": "2024-01-15T08:00:00",
                 "type": "WORKOUT",

@@ -21,7 +21,7 @@ pub async fn list_athlete_routes(
     let response = client
         .client()
         .get(&url)
-        .header("Authorization", format!("Bearer {}", client.api_key()))
+        .basic_auth("API_KEY", Some(client.api_key()))
         .send()
         .await?;
 
@@ -48,7 +48,7 @@ mod tests {
 
         Mock::given(method("GET"))
             .and(path("/api/v1/athlete/12345/routes"))
-            .and(header("Authorization", "Bearer test-api-key"))
+            .and(header("Authorization", "Basic QVBJX0tFWTp0ZXN0LWFwaS1rZXk="))
             .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!([
                 {
                     "id": "route-001",

@@ -49,7 +49,7 @@ pub async fn update_activity(
     let response = client
         .client()
         .put(&url)
-        .header("Authorization", format!("Bearer {}", client.api_key()))
+        .basic_auth("API_KEY", Some(client.api_key()))
         .json(input)
         .send()
         .await?;
@@ -77,7 +77,7 @@ mod tests {
 
         Mock::given(method("PUT"))
             .and(path("/api/v1/activity/act-001"))
-            .and(header("Authorization", "Bearer test-api-key"))
+            .and(header("Authorization", "Basic QVBJX0tFWTp0ZXN0LWFwaS1rZXk="))
             .and(body_partial_json(serde_json::json!({
                 "name": "Updated Ride"
             })))

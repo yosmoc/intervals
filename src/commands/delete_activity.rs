@@ -18,7 +18,7 @@ pub async fn delete_activity(
     let response = client
         .client()
         .delete(&url)
-        .header("Authorization", format!("Bearer {}", client.api_key()))
+        .basic_auth("API_KEY", Some(client.api_key()))
         .send()
         .await?;
 
@@ -45,7 +45,7 @@ mod tests {
 
         Mock::given(method("DELETE"))
             .and(path("/api/v1/activity/act-001"))
-            .and(header("Authorization", "Bearer test-api-key"))
+            .and(header("Authorization", "Basic QVBJX0tFWTp0ZXN0LWFwaS1rZXk="))
             .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!({
                 "id": "act-001"
             })))
