@@ -2,7 +2,7 @@ use serde::Deserialize;
 
 #[derive(Debug, Deserialize, serde::Serialize)]
 pub struct Athlete {
-    pub id: i64,
+    pub id: String,
     #[serde(default)]
     pub name: Option<String>,
 }
@@ -43,8 +43,8 @@ mod tests {
         Mock::given(method("GET"))
             .and(path("/api/v1/athlete/12345"))
             .and(header("Authorization", "Basic QVBJX0tFWTp0ZXN0LWFwaS1rZXk="))
-            .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!({
-                "id": 12345,
+                .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!({
+                "id": "i12345",
                 "name": "Test Athlete"
             })))
             .mount(&mock_server)
@@ -53,7 +53,7 @@ mod tests {
         let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
         let athlete = get_athlete(&client, "12345").await.unwrap();
 
-        assert_eq!(athlete.id, 12345);
+        assert_eq!(athlete.id, "i12345");
         assert_eq!(athlete.name, Some("Test Athlete".to_string()));
     }
 
