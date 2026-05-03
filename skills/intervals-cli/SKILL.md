@@ -116,6 +116,7 @@ All commands output JSON by default.
 |---------|-------------|
 | `intervals list-athlete-routes <athlete-id>` | List saved routes |
 | `intervals get-route <athlete-id> <route-id>` | Get a route (option: `--include-path` for GPS data) |
+| `intervals update-route <athlete-id> <route-id>` | Update a route (options: `--name`, `--description`, `--commute`) |
 
 ### Chats
 

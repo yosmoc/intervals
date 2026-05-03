@@ -125,6 +125,7 @@ intervals download-activity-fit-file <activity-id> output.fit
 |---------|-------------|
 | `list-athlete-routes <id>` | List saved routes |
 | `get-route <athlete-id> <route-id>` | Get a route (`--include-path` for GPS data) |
+| `update-route <athlete-id> <route-id>` | Update a route (`--name`, `--description`, `--commute`) |
 
 ### Chats
 

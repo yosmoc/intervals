@@ -302,7 +302,7 @@ All 65+ commands implemented and verified against live API. 125+ tests passing.
 
 ### Routes (2)
 
-- [ ] `update-route <athlete-id> <route-id>` — `PUT /api/v1/athlete/{id}/routes/{route_id}` — Update a route
+- [x] `update-route <athlete-id> <route-id>` — `PUT /api/v1/athlete/{id}/routes/{route_id}` — Update a route
 - [ ] `compare-routes <athlete-id> <route-id> <other-id>` — `GET /api/v1/athlete/{id}/routes/{route_id}/similarity/{other_id}` — Route similarity comparison
 
 ### Athlete (1)

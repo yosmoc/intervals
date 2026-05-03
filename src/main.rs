@@ -433,6 +433,19 @@ enum Commands {
         #[arg(long, help = "Include GPS path", default_value = "false")]
         include_path: bool,
     },
+    #[command(about = "Update a route for an athlete")]
+    UpdateRoute {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Route ID")]
+        route_id: i64,
+        #[arg(long, help = "Route name")]
+        name: Option<String>,
+        #[arg(long, help = "Route description")]
+        description: Option<String>,
+        #[arg(long, help = "Mark as commute", default_value = "false")]
+        commute: bool,
+    },
     #[command(about = "Get athlete profile")]
     GetAthleteProfile {
         #[arg(help = "Athlete ID")]
@@ -1012,6 +1025,27 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         } => {
             let route = get_route::get_route(&client, &athlete_id, route_id, include_path).await?;
             println!("{}", serde_json::to_string_pretty(&route)?);
+        }
+        Commands::UpdateRoute {
+            athlete_id,
+            route_id,
+            name,
+            description,
+            commute,
+        } => {
+            let route = get_route::AthleteRoute {
+                athlete_id: None,
+                route_id: Some(route_id),
+                name: name.clone(),
+                rename_activities: None,
+                commute: Some(commute),
+                tags: None,
+                description: description.clone(),
+                replaced_by_route_id: None,
+                latlngs: None,
+            };
+            let result = get_route::update_route(&client, &athlete_id, route_id, &route).await?;
+            println!("{}", serde_json::to_string_pretty(&result)?);
         }
         Commands::GetAthleteProfile { id } => {
             let profile = get_athlete_profile::get_athlete_profile(&client, &id).await?;
