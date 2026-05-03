@@ -50,6 +50,7 @@ intervals create-manual-activity <athlete-id> \
 - `delete-activity <activityId>` - Delete an activity
 - `search-activities <id> <query>` - Search activities
 - `list-activity-messages <activityId>` - List activity messages
+- `post-activity-message <activityId> <content>` - Post a message to an activity
 - `list-activity-intervals <activityId>` - List activity intervals
 
 ### Wellness

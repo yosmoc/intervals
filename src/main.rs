@@ -6,7 +6,7 @@ use intervals::commands::{
     list_activities, list_activity_intervals, list_activity_messages, list_athlete_hr_curves,
     list_athlete_pace_curves, list_athlete_power_curves, list_athlete_routes, list_chats,
     list_events, list_folders, list_gear, list_sport_settings, list_wellness, list_workouts,
-    search_activities, update_activity,
+    post_activity_message, search_activities, update_activity,
 };
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
@@ -187,6 +187,13 @@ enum Commands {
     ListActivityMessages {
         #[arg(help = "Activity ID")]
         activity_id: String,
+    },
+    #[command(about = "Post a message to an activity")]
+    PostActivityMessage {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+        #[arg(help = "Message content")]
+        content: String,
     },
     #[command(about = "Get weather forecast")]
     GetWeatherForecast {
@@ -391,6 +398,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let messages =
                 list_activity_messages::list_activity_messages(&client, &activity_id).await?;
             println!("{}", serde_json::to_string_pretty(&messages)?);
+        }
+        Commands::PostActivityMessage {
+            activity_id,
+            content,
+        } => {
+            let result =
+                post_activity_message::post_activity_message(&client, &activity_id, &content)
+                    .await?;
+            println!("{}", serde_json::to_string_pretty(&result)?);
         }
         Commands::GetWeatherForecast { id } => {
             let forecast = get_weather_forecast::get_weather_forecast(&client, &id).await?;

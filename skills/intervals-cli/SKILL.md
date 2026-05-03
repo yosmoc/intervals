@@ -46,6 +46,7 @@ All commands output JSON by default.
 | `intervals delete-activity <activity-id>` | Delete an activity |
 | `intervals search-activities <athlete-id> <query>` | Search activities by name |
 | `intervals list-activity-messages <activity-id>` | List messages/comments on an activity |
+| `intervals post-activity-message <activity-id> <content>` | Post a message/comment to an activity |
 | `intervals list-activity-intervals <activity-id>` | List auto-detected intervals within an activity |
 
 ### Performance Curves

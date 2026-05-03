@@ -7,7 +7,7 @@
 - [x] Add dependencies: clap, reqwest, serde, serde_json, tokio, thiserror, urlencoding
 - [x] Configure $INTERVALS_API_KEY environment variable
 
-## Commands Implemented (26 total)
+## Commands Implemented (27 total)
 
 ### Phase 1: Core Read Operations
 
@@ -41,6 +41,7 @@
 - [x] `list-athlete-routes <id>`
 - [x] `get-athlete-profile <id>`
 - [x] `list-activity-messages <id> <activityId>`
+- [x] `post-activity-message <activityId> <content>`
 - [x] `get-weather-forecast <id>`
 - [x] `list-sport-settings <athleteId>`
 
@@ -63,7 +64,7 @@
 
 ## Current Status
 
-All 26 commands implemented and verified against live API. 75 tests passing.
+All 27 commands implemented and verified against live API. 77 tests passing.
 
 ### Live API Verification Results
 
