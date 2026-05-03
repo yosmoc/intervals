@@ -2,11 +2,12 @@ use clap::{Parser, Subcommand};
 use intervals::client::ApiClient;
 use intervals::commands::{
     create_event, create_manual_activity, delete_activity, get_activity, get_activity_best_efforts,
-    get_athlete, get_athlete_profile, get_athlete_training_plan, get_weather_forecast, get_workout,
-    list_activities, list_activity_intervals, list_activity_messages, list_athlete_hr_curves,
-    list_athlete_pace_curves, list_athlete_power_curves, list_athlete_routes, list_chats,
-    list_events, list_folders, list_gear, list_sport_settings, list_wellness, list_workouts,
-    post_activity_message, search_activities, update_activity,
+    get_activity_streams, get_athlete, get_athlete_profile, get_athlete_training_plan,
+    get_weather_forecast, get_workout, list_activities, list_activity_intervals,
+    list_activity_messages, list_athlete_hr_curves, list_athlete_pace_curves,
+    list_athlete_power_curves, list_athlete_routes, list_chats, list_events, list_folders,
+    list_gear, list_sport_settings, list_wellness, list_workouts, post_activity_message,
+    search_activities, update_activity,
 };
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
@@ -48,6 +49,18 @@ enum Commands {
         distance: Option<f64>,
         #[arg(long, help = "Number of efforts to return")]
         count: Option<i64>,
+    },
+    #[command(about = "Get activity streams (time series data)")]
+    GetActivityStreams {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+        #[arg(
+            long,
+            help = "Stream types to include (e.g., heartrate, watts, cadence)"
+        )]
+        types: Option<Vec<String>>,
+        #[arg(long, help = "Include default streams")]
+        include_defaults: bool,
     },
     #[command(about = "List wellness records for a date range")]
     ListWellness {
@@ -284,6 +297,20 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             )
             .await?;
             println!("{}", serde_json::to_string_pretty(&efforts)?);
+        }
+        Commands::GetActivityStreams {
+            activity_id,
+            types,
+            include_defaults,
+        } => {
+            let streams = get_activity_streams::get_activity_streams(
+                &client,
+                &activity_id,
+                types.as_deref(),
+                include_defaults,
+            )
+            .await?;
+            println!("{}", serde_json::to_string_pretty(&streams)?);
         }
         Commands::ListWellness { id, oldest, newest } => {
             let params = list_wellness::ListWellnessParams { oldest, newest };
