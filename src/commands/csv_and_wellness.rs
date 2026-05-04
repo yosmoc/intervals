@@ -28,6 +28,116 @@ pub async fn download_activities_csv(
     Ok(())
 }
 
+pub async fn download_gear_csv(
+    client: &crate::client::ApiClient,
+    athlete_id: &str,
+    output_path: &str,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let url = format!(
+        "{}/api/v1/athlete/{}/gear.csv",
+        client.base_url(),
+        athlete_id
+    );
+    let response = client
+        .client()
+        .get(&url)
+        .basic_auth("API_KEY", Some(client.api_key()))
+        .send()
+        .await?;
+
+    if !response.status().is_success() {
+        let status = response.status().as_u16();
+        let body = response.text().await.unwrap_or_default();
+        return Err(format!("API error: {} - {}", status, body).into());
+    }
+
+    let bytes = response.bytes().await?;
+    std::fs::write(std::path::Path::new(output_path), &bytes)?;
+    Ok(())
+}
+
+pub async fn download_events_csv(
+    client: &crate::client::ApiClient,
+    athlete_id: &str,
+    output_path: &str,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let url = format!(
+        "{}/api/v1/athlete/{}/events.csv",
+        client.base_url(),
+        athlete_id
+    );
+    let response = client
+        .client()
+        .get(&url)
+        .basic_auth("API_KEY", Some(client.api_key()))
+        .send()
+        .await?;
+
+    if !response.status().is_success() {
+        let status = response.status().as_u16();
+        let body = response.text().await.unwrap_or_default();
+        return Err(format!("API error: {} - {}", status, body).into());
+    }
+
+    let bytes = response.bytes().await?;
+    std::fs::write(std::path::Path::new(output_path), &bytes)?;
+    Ok(())
+}
+
+pub async fn download_wellness_csv(
+    client: &crate::client::ApiClient,
+    athlete_id: &str,
+    output_path: &str,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let url = format!(
+        "{}/api/v1/athlete/{}/wellness.csv",
+        client.base_url(),
+        athlete_id
+    );
+    let response = client
+        .client()
+        .get(&url)
+        .basic_auth("API_KEY", Some(client.api_key()))
+        .send()
+        .await?;
+
+    if !response.status().is_success() {
+        let status = response.status().as_u16();
+        let body = response.text().await.unwrap_or_default();
+        return Err(format!("API error: {} - {}", status, body).into());
+    }
+
+    let bytes = response.bytes().await?;
+    std::fs::write(std::path::Path::new(output_path), &bytes)?;
+    Ok(())
+}
+
+pub async fn list_activity_streams_ext(
+    client: &crate::client::ApiClient,
+    activity_id: &str,
+) -> Result<serde_json::Value, Box<dyn std::error::Error>> {
+    let url = format!(
+        "{}/api/v1/activity/{}/streams",
+        client.base_url(),
+        activity_id
+    );
+    let response = client
+        .client()
+        .get(&url)
+        .basic_auth("API_KEY", Some(client.api_key()))
+        .send()
+        .await?;
+
+    if !response.status().is_success() {
+        let status = response.status().as_u16();
+        let body = response.text().await.unwrap_or_default();
+        return Err(format!("API error: {} - {}", status, body).into());
+    }
+
+    let result = response.json::<serde_json::Value>().await?;
+    Ok(result)
+}
+
 #[derive(Debug, Deserialize, Serialize)]
 pub struct WellnessUpdate {
     pub ctl: Option<f64>,
@@ -311,5 +421,88 @@ mod tests {
 
         assert!(result.is_ok());
         std::fs::remove_file(&temp_file).ok();
+    }
+
+    #[tokio::test]
+    async fn test_download_gear_csv_success() {
+        let mock_server = MockServer::start().await;
+        let temp_dir = std::env::temp_dir();
+        let output_path = temp_dir.join("test_gear.csv");
+
+        Mock::given(method("GET"))
+            .and(path("/api/v1/athlete/a-001/gear.csv"))
+            .and(header("Authorization", TEST_AUTH_HEADER))
+            .respond_with(ResponseTemplate::new(200).set_body_bytes(b"id,name,distance"))
+            .mount(&mock_server)
+            .await;
+
+        let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
+        let result = download_gear_csv(&client, "a-001", output_path.to_str().unwrap()).await;
+
+        assert!(result.is_ok());
+        assert!(output_path.exists());
+        std::fs::remove_file(output_path).ok();
+    }
+
+    #[tokio::test]
+    async fn test_download_events_csv_success() {
+        let mock_server = MockServer::start().await;
+        let temp_dir = std::env::temp_dir();
+        let output_path = temp_dir.join("test_events.csv");
+
+        Mock::given(method("GET"))
+            .and(path("/api/v1/athlete/a-001/events.csv"))
+            .and(header("Authorization", TEST_AUTH_HEADER))
+            .respond_with(ResponseTemplate::new(200).set_body_bytes(b"id,name,date"))
+            .mount(&mock_server)
+            .await;
+
+        let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
+        let result = download_events_csv(&client, "a-001", output_path.to_str().unwrap()).await;
+
+        assert!(result.is_ok());
+        assert!(output_path.exists());
+        std::fs::remove_file(output_path).ok();
+    }
+
+    #[tokio::test]
+    async fn test_download_wellness_csv_success() {
+        let mock_server = MockServer::start().await;
+        let temp_dir = std::env::temp_dir();
+        let output_path = temp_dir.join("test_wellness_download.csv");
+
+        Mock::given(method("GET"))
+            .and(path("/api/v1/athlete/a-001/wellness.csv"))
+            .and(header("Authorization", TEST_AUTH_HEADER))
+            .respond_with(ResponseTemplate::new(200).set_body_bytes(b"id,weight,resting_hr"))
+            .mount(&mock_server)
+            .await;
+
+        let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
+        let result = download_wellness_csv(&client, "a-001", output_path.to_str().unwrap()).await;
+
+        assert!(result.is_ok());
+        assert!(output_path.exists());
+        std::fs::remove_file(output_path).ok();
+    }
+
+    #[tokio::test]
+    async fn test_list_activity_streams_ext_success() {
+        let mock_server = MockServer::start().await;
+
+        Mock::given(method("GET"))
+            .and(path("/api/v1/activity/act-001/streams"))
+            .and(header("Authorization", TEST_AUTH_HEADER))
+            .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!({
+                "time": [0, 1, 2],
+                "hr": [120, 125, 130]
+            })))
+            .mount(&mock_server)
+            .await;
+
+        let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
+        let result = list_activity_streams_ext(&client, "act-001").await.unwrap();
+
+        assert!(result.get("time").is_some());
     }
 }

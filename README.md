@@ -105,6 +105,10 @@ intervals download-activity-fit-file <activity-id> output.fit
 | `upload-activity <athlete-id> <file>` | Upload activity file (fit/tcx/gpx/zip) |
 | `create-manual-activities-bulk <athlete-id> --activities <json>` | Bulk create manual activities |
 | `download-activity-fit-files <athlete-id> --output <path>` | Download all FIT files as zip |
+| `download-gear-csv <athlete-id> <output>` | Download gear as CSV |
+| `download-events-csv <athlete-id> <output>` | Download events as CSV |
+| `download-wellness-csv <athlete-id> <output>` | Download wellness as CSV |
+| `list-activity-streams-ext <activity-id>` | List activity streams |
 
 ### Wellness & Weather
 

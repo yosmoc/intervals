@@ -96,6 +96,10 @@ All commands output JSON by default.
 | `intervals upload-activity <athlete-id> <file>` | Upload activity file (fit/tcx/gpx/zip) |
 | `intervals create-manual-activities-bulk <athlete-id> --activities <json>` | Bulk create manual activities |
 | `intervals download-activity-fit-files <athlete-id> --output <path>` | Download all FIT files as zip |
+| `intervals download-gear-csv <athlete-id> <output>` | Download gear as CSV |
+| `intervals download-events-csv <athlete-id> <output>` | Download events as CSV |
+| `intervals download-wellness-csv <athlete-id> <output>` | Download wellness as CSV |
+| `intervals list-activity-streams-ext <activity-id>` | List activity streams |
 
 ### Performance Curves
 

@@ -318,6 +318,32 @@ enum Commands {
         #[arg(help = "Path to CSV file")]
         file: String,
     },
+    #[command(about = "Download gear as CSV")]
+    DownloadGearCSV {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Output CSV file path")]
+        output: String,
+    },
+    #[command(about = "Download events as CSV")]
+    DownloadEventsCSV {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Output CSV file path")]
+        output: String,
+    },
+    #[command(about = "Download wellness as CSV")]
+    DownloadWellnessCSV {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Output CSV file path")]
+        output: String,
+    },
+    #[command(about = "List activity streams")]
+    ListActivityStreamsExt {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+    },
     #[command(about = "Get an event (planned workout, note etc.)")]
     GetEvent {
         #[arg(help = "Athlete ID")]
@@ -1184,6 +1210,31 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         } => {
             csv_and_wellness::upload_wellness_csv(&client, athlete_id, file).await?;
             println!("Wellness CSV uploaded successfully");
+        }
+        Commands::DownloadGearCSV {
+            ref athlete_id,
+            ref output,
+        } => {
+            csv_and_wellness::download_gear_csv(&client, athlete_id, output).await?;
+            println!("Gear CSV downloaded to {}", output);
+        }
+        Commands::DownloadEventsCSV {
+            ref athlete_id,
+            ref output,
+        } => {
+            csv_and_wellness::download_events_csv(&client, athlete_id, output).await?;
+            println!("Events CSV downloaded to {}", output);
+        }
+        Commands::DownloadWellnessCSV {
+            ref athlete_id,
+            ref output,
+        } => {
+            csv_and_wellness::download_wellness_csv(&client, athlete_id, output).await?;
+            println!("Wellness CSV downloaded to {}", output);
+        }
+        Commands::ListActivityStreamsExt { ref activity_id } => {
+            let streams = csv_and_wellness::list_activity_streams_ext(&client, activity_id).await?;
+            println!("{}", serde_json::to_string_pretty(&streams)?);
         }
         Commands::GetEvent {
             athlete_id,

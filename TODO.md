@@ -7,7 +7,7 @@
 - [x] Add dependencies: clap, reqwest, serde, serde_json, tokio, thiserror, urlencoding
 - [x] Configure $INTERVALS_API_KEY environment variable
 
-## Commands Implemented (96+ total)
+## Commands Implemented (100+ total)
 
 ### Athlete & Profile
 
@@ -102,7 +102,7 @@
 
 ## Current Status
 
-All 96+ commands implemented and verified against live API. 182 tests passing.
+All 100+ commands implemented and verified against live API. 186 tests passing.
 
 ### Live API Verification Results (athlete: i545497)
 
@@ -168,7 +168,7 @@ All 96+ commands implemented and verified against live API. 182 tests passing.
 - Cross-build (aarch64) failed due to missing OpenSSL headers → switched `reqwest` to `rustls-tls`
 - Upgraded `reqwest` from 0.12 to 0.13 (rustls is now default TLS backend)
 
-## Unimplemented API Endpoints (60 total)
+## Unimplemented API Endpoints (56 total)
 
 ### Activity Analysis — Histograms & Curves (12)
 
@@ -216,10 +216,10 @@ All 96+ commands implemented and verified against live API. 182 tests passing.
 ### CSV Downloads (5)
 
 - [x] `download-activities-csv <athlete-id>` — `GET /api/v1/athlete/{id}/activities.csv` — Download activities as CSV
-- [ ] `download-gear-csv <athlete-id>` — `GET /api/v1/athlete/{id}/gear{ext}` — List gear in CSV format
-- [ ] `download-events-csv <athlete-id>` — `GET /api/v1/athlete/{id}/events{format}` — List events in CSV format
-- [ ] `download-wellness-csv <athlete-id>` — `GET /api/v1/athlete/{id}/wellness{ext}` — List wellness in CSV format
-- [ ] `list-activity-streams-ext <activity-id>` — `GET /api/v1/activity/{id}/streams{ext}` — List streams for the activity
+- [x] `download-gear-csv <athlete-id>` — `GET /api/v1/athlete/{id}/gear{ext}` — List gear in CSV format
+- [x] `download-events-csv <athlete-id>` — `GET /api/v1/athlete/{id}/events{format}` — List events in CSV format
+- [x] `download-wellness-csv <athlete-id>` — `GET /api/v1/athlete/{id}/wellness{ext}` — List wellness in CSV format
+- [x] `list-activity-streams-ext <activity-id>` — `GET /api/v1/activity/{id}/streams{ext}` — List streams for the activity
 
 ### Gear CRUD (8)
 
