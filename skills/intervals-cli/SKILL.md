@@ -37,6 +37,13 @@ All commands output JSON by default.
 | `intervals apply-plan-changes <athlete-id>` | Apply plan changes to calendar |
 | `intervals get-athlete-mmp-model <athlete-id> <activity-type>` | Get MMP power model for a sport |
 | `intervals list-sport-settings <athlete-id>` | Get sport settings (FTP, LTHR per sport) |
+| `intervals get-sport-setting <athlete-id> <id>` | Get sport setting by ID |
+| `intervals create-sport-setting <athlete-id>` | Create sport setting (options: `--types`, `--ftp`, `--lthr`, `--name`) |
+| `intervals update-sport-setting <athlete-id> <id>` | Update sport setting (options: `--types`, `--ftp`, `--lthr`, `--name`) |
+| `intervals delete-sport-setting <athlete-id> <id>` | Delete sport setting |
+| `intervals apply-sport-setting <athlete-id> <id>` | Apply setting to matching activities |
+| `intervals list-sport-setting-matching <athlete-id> <id>` | List activities matching setting |
+| `intervals list-sport-setting-pace-distances <athlete-id> <id>` | List pace distances for sport |
 | `intervals list-gear <athlete-id>` | List athlete gear (bikes, shoes, etc.) |
 | `intervals get-gear <athlete-id> <gear-id>` | Get a specific gear item |
 | `intervals create-gear <athlete-id>` | Create new gear (options: `--name`, `--distance`, `--retired`) |

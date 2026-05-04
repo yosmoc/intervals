@@ -13,8 +13,8 @@ use intervals::commands::{
     list_athlete_pace_curves, list_athlete_power_curves, list_athlete_routes, list_chats,
     list_event_workout_tags, list_events, list_folders, list_gear, list_sport_settings,
     list_wellness, list_workouts, mark_event_done, misc_endpoints, post_activity_message,
-    search_activities, search_activities_full, search_activity_intervals, update_activity,
-    workout_operations,
+    search_activities, search_activities_full, search_activity_intervals,
+    sport_settings_operations, update_activity, workout_operations,
 };
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
@@ -543,6 +543,77 @@ enum Commands {
             default_value = ".zwo"
         )]
         ext: String,
+    },
+    #[command(about = "Get sport settings by id")]
+    GetSportSetting {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Setting ID")]
+        id: i64,
+    },
+    #[command(about = "Create sport settings")]
+    CreateSportSetting {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(long, help = "Sport types (comma-separated)")]
+        types: Option<String>,
+        #[arg(long, help = "FTP")]
+        ftp: Option<i64>,
+        #[arg(long, help = "LTHR")]
+        lthr: Option<i64>,
+        #[arg(long, help = "Name")]
+        name: Option<String>,
+        #[arg(long, help = "W' (W Prime)")]
+        w_prime: Option<f64>,
+        #[arg(long, help = "PMax")]
+        p_max: Option<f64>,
+    },
+    #[command(about = "Update sport settings")]
+    UpdateSportSetting {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Setting ID")]
+        id: i64,
+        #[arg(long, help = "Sport types (comma-separated)")]
+        types: Option<String>,
+        #[arg(long, help = "FTP")]
+        ftp: Option<i64>,
+        #[arg(long, help = "LTHR")]
+        lthr: Option<i64>,
+        #[arg(long, help = "Name")]
+        name: Option<String>,
+        #[arg(long, help = "W' (W Prime)")]
+        w_prime: Option<f64>,
+        #[arg(long, help = "PMax")]
+        p_max: Option<f64>,
+    },
+    #[command(about = "Delete sport settings")]
+    DeleteSportSetting {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Setting ID")]
+        id: i64,
+    },
+    #[command(about = "Apply sport settings to matching activities")]
+    ApplySportSetting {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Setting ID")]
+        id: i64,
+    },
+    #[command(about = "List activities matching sport settings")]
+    ListSportSettingMatching {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Setting ID")]
+        id: i64,
+    },
+    #[command(about = "List pace distances for sport")]
+    ListSportSettingPaceDistances {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Setting ID")]
+        id: i64,
     },
     #[command(about = "Get an event (planned workout, note etc.)")]
     GetEvent {
@@ -1699,6 +1770,83 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             )
             .await?;
             println!("Event workout downloaded to {}", output);
+        }
+        Commands::GetSportSetting { ref athlete_id, id } => {
+            let setting =
+                sport_settings_operations::get_sport_setting(&client, athlete_id, id).await?;
+            println!("{}", serde_json::to_string_pretty(&setting)?);
+        }
+        Commands::CreateSportSetting {
+            ref athlete_id,
+            ref types,
+            ftp,
+            lthr,
+            ref name,
+            w_prime,
+            p_max,
+        } => {
+            let types_vec = types
+                .as_ref()
+                .map(|s| s.split(',').map(|x| x.trim().to_string()).collect());
+            let input = sport_settings_operations::CreateSportSettingInput {
+                types: types_vec,
+                ftp,
+                lthr,
+                name: name.clone(),
+                w_prime,
+                p_max,
+            };
+            let setting =
+                sport_settings_operations::create_sport_setting(&client, athlete_id, &input)
+                    .await?;
+            println!("{}", serde_json::to_string_pretty(&setting)?);
+        }
+        Commands::UpdateSportSetting {
+            ref athlete_id,
+            id,
+            ref types,
+            ftp,
+            lthr,
+            ref name,
+            w_prime,
+            p_max,
+        } => {
+            let types_vec = types
+                .as_ref()
+                .map(|s| s.split(',').map(|x| x.trim().to_string()).collect());
+            let input = sport_settings_operations::CreateSportSettingInput {
+                types: types_vec,
+                ftp,
+                lthr,
+                name: name.clone(),
+                w_prime,
+                p_max,
+            };
+            let setting =
+                sport_settings_operations::update_sport_setting(&client, athlete_id, id, &input)
+                    .await?;
+            println!("{}", serde_json::to_string_pretty(&setting)?);
+        }
+        Commands::DeleteSportSetting { ref athlete_id, id } => {
+            sport_settings_operations::delete_sport_setting(&client, athlete_id, id).await?;
+            println!("Sport setting deleted successfully");
+        }
+        Commands::ApplySportSetting { ref athlete_id, id } => {
+            sport_settings_operations::apply_sport_setting(&client, athlete_id, id).await?;
+            println!("Sport setting applied successfully");
+        }
+        Commands::ListSportSettingMatching { ref athlete_id, id } => {
+            let result =
+                sport_settings_operations::list_sport_setting_matching(&client, athlete_id, id)
+                    .await?;
+            println!("{}", serde_json::to_string_pretty(&result)?);
+        }
+        Commands::ListSportSettingPaceDistances { ref athlete_id, id } => {
+            let result = sport_settings_operations::list_sport_setting_pace_distances(
+                &client, athlete_id, id,
+            )
+            .await?;
+            println!("{}", serde_json::to_string_pretty(&result)?);
         }
         Commands::GetEvent {
             athlete_id,

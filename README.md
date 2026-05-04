@@ -46,6 +46,13 @@ intervals download-activity-fit-file <activity-id> output.fit
 | `apply-plan-changes <id>` | Apply plan changes to calendar |
 | `get-athlete-mmp-model <id> <activity-type>` | Get MMP power model for a sport |
 | `list-sport-settings <id>` | List sport settings (FTP, LTHR per sport) |
+| `get-sport-setting <athlete-id> <id>` | Get sport setting by ID |
+| `create-sport-setting <athlete-id>` | Create sport setting (`--types`, `--ftp`, `--lthr`, `--name`) |
+| `update-sport-setting <athlete-id> <id>` | Update sport setting (`--types`, `--ftp`, `--lthr`, `--name`) |
+| `delete-sport-setting <athlete-id> <id>` | Delete sport setting |
+| `apply-sport-setting <athlete-id> <id>` | Apply setting to matching activities |
+| `list-sport-setting-matching <athlete-id> <id>` | List activities matching setting |
+| `list-sport-setting-pace-distances <athlete-id> <id>` | List pace distances for sport |
 | `list-gear <id>` | List athlete gear |
 | `get-gear <athlete-id> <gear-id>` | Get a specific gear item |
 | `create-gear <athlete-id>` | Create new gear (`--name`, `--distance`, `--retired`) |

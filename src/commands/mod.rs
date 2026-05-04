@@ -54,6 +54,7 @@ pub mod post_activity_message;
 pub mod search_activities;
 pub mod search_activities_full;
 pub mod search_activity_intervals;
+pub mod sport_settings_operations;
 pub mod update_activity;
 pub mod workout_operations;
 

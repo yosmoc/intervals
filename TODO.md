@@ -7,7 +7,7 @@
 - [x] Add dependencies: clap, reqwest, serde, serde_json, tokio, thiserror, urlencoding
 - [x] Configure $INTERVALS_API_KEY environment variable
 
-## Commands Implemented (116+ total)
+## Commands Implemented (124+ total)
 
 ### Athlete & Profile
 
@@ -102,7 +102,7 @@
 
 ## Current Status
 
-All 116+ commands implemented and verified against live API. 203 tests passing.
+All 124+ commands implemented and verified against live API. 210 tests passing.
 
 ### Live API Verification Results (athlete: i545497)
 
@@ -168,7 +168,7 @@ All 116+ commands implemented and verified against live API. 203 tests passing.
 - Cross-build (aarch64) failed due to missing OpenSSL headers → switched `reqwest` to `rustls-tls`
 - Upgraded `reqwest` from 0.12 to 0.13 (rustls is now default TLS backend)
 
-## Unimplemented API Endpoints (40 total)
+## Unimplemented API Endpoints (32 total)
 
 ### Activity Analysis — Histograms & Curves (12)
 
@@ -270,14 +270,14 @@ All 116+ commands implemented and verified against live API. 203 tests passing.
 
 ### Sport Settings CRUD (5)
 
-- [ ] `get-sport-setting <athlete-id> <id>` — `GET /api/v1/athlete/{athleteId}/sport-settings/{id}` — Get sport settings by id or type
-- [ ] `create-sport-setting <athlete-id>` — `POST /api/v1/athlete/{athleteId}/sport-settings` — Create sport settings
-- [ ] `update-sport-settings <athlete-id>` — `PUT /api/v1/athlete/{athleteId}/sport-settings` — Update multiple sport settings
-- [ ] `update-sport-setting <athlete-id> <id>` — `PUT /api/v1/athlete/{athleteId}/sport-settings/{id}` — Update sport settings
-- [ ] `delete-sport-setting <athlete-id> <id>` — `DELETE /api/v1/athlete/{athleteId}/sport-settings/{id}` — Delete sport settings
-- [ ] `apply-sport-setting <athlete-id> <id>` — `PUT /api/v1/athlete/{athleteId}/sport-settings/{id}/apply` — Apply settings to matching activities
-- [ ] `list-sport-setting-matching <athlete-id> <id>` — `GET /api/v1/athlete/{athleteId}/sport-settings/{id}/matching-activities` — List activities matching settings
-- [ ] `list-sport-setting-pace-distances <athlete-id> <id>` — `GET /api/v1/athlete/{athleteId}/sport-settings/{id}/pace_distances` — List pace distances for sport
+- [x] `get-sport-setting <athlete-id> <id>` — `GET /api/v1/athlete/{athleteId}/sport-settings/{id}` — Get sport settings by id or type
+- [x] `create-sport-setting <athlete-id>` — `POST /api/v1/athlete/{athleteId}/sport-settings` — Create sport settings
+- [x] `update-sport-settings <athlete-id>` — `PUT /api/v1/athlete/{athleteId}/sport-settings` — Update multiple sport settings
+- [x] `update-sport-setting <athlete-id> <id>` — `PUT /api/v1/athlete/{athleteId}/sport-settings/{id}` — Update sport settings
+- [x] `delete-sport-setting <athlete-id> <id>` — `DELETE /api/v1/athlete/{athleteId}/sport-settings/{id}` — Delete sport settings
+- [x] `apply-sport-setting <athlete-id> <id>` — `PUT /api/v1/athlete/{athleteId}/sport-settings/{id}/apply` — Apply settings to matching activities
+- [x] `list-sport-setting-matching <athlete-id> <id>` — `GET /api/v1/athlete/{athleteId}/sport-settings/{id}/matching-activities` — List activities matching settings
+- [x] `list-sport-setting-pace-distances <athlete-id> <id>` — `GET /api/v1/athlete/{athleteId}/sport-settings/{id}/pace_distances` — List pace distances for sport
 
 ### Training Plans (2)
 
