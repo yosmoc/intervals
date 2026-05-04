@@ -7,7 +7,7 @@
 - [x] Add dependencies: clap, reqwest, serde, serde_json, tokio, thiserror, urlencoding
 - [x] Configure $INTERVALS_API_KEY environment variable
 
-## Commands Implemented (94+ total)
+## Commands Implemented (96+ total)
 
 ### Athlete & Profile
 
@@ -102,7 +102,7 @@
 
 ## Current Status
 
-All 94+ commands implemented and verified against live API. 180 tests passing.
+All 96+ commands implemented and verified against live API. 182 tests passing.
 
 ### Live API Verification Results (athlete: i545497)
 
@@ -168,7 +168,7 @@ All 94+ commands implemented and verified against live API. 180 tests passing.
 - Cross-build (aarch64) failed due to missing OpenSSL headers → switched `reqwest` to `rustls-tls`
 - Upgraded `reqwest` from 0.12 to 0.13 (rustls is now default TLS backend)
 
-## Unimplemented API Endpoints (62 total)
+## Unimplemented API Endpoints (60 total)
 
 ### Activity Analysis — Histograms & Curves (12)
 
@@ -237,8 +237,8 @@ All 94+ commands implemented and verified against live API. 180 tests passing.
 
 - [x] `get-wellness <athlete-id> <date>` — `GET /api/v1/athlete/{id}/wellness/{date}` — Get wellness record for a specific date
 - [x] `update-wellness <athlete-id> <date>` — `PUT /api/v1/athlete/{id}/wellness/{date}` — Update wellness record for date
-- [ ] `update-wellness-bulk <athlete-id>` — `PUT /api/v1/athlete/{id}/wellness-bulk` — Bulk update wellness records
-- [ ] `upload-wellness-csv <athlete-id> <file>` — `POST /api/v1/athlete/{id}/wellness` — Upload wellness records CSV
+- [x] `update-wellness-bulk <athlete-id>` — `PUT /api/v1/athlete/{id}/wellness-bulk` — Bulk update wellness records
+- [x] `upload-wellness-csv <athlete-id> <file>` — `POST /api/v1/athlete/{id}/wellness` — Upload wellness records CSV
 
 ### Workout CRUD (7)
 

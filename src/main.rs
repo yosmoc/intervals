@@ -304,6 +304,20 @@ enum Commands {
         #[arg(long, help = "Retired date")]
         retired_date: Option<String>,
     },
+    #[command(about = "Bulk update wellness records")]
+    UpdateWellnessBulk {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(long, help = "Wellness records as JSON array")]
+        records: String,
+    },
+    #[command(about = "Upload wellness records from CSV")]
+    UploadWellnessCSV {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Path to CSV file")]
+        file: String,
+    },
     #[command(about = "Get an event (planned workout, note etc.)")]
     GetEvent {
         #[arg(help = "Athlete ID")]
@@ -1154,6 +1168,22 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             };
             gear_operations::replace_gear(&client, athlete_id, gear_id, &input).await?;
             println!("Gear replaced successfully");
+        }
+        Commands::UpdateWellnessBulk {
+            ref athlete_id,
+            ref records,
+        } => {
+            let records_vec: Vec<csv_and_wellness::WellnessUpdateWithDate> =
+                serde_json::from_str(records)?;
+            csv_and_wellness::update_wellness_bulk(&client, athlete_id, &records_vec).await?;
+            println!("Wellness records updated successfully");
+        }
+        Commands::UploadWellnessCSV {
+            ref athlete_id,
+            ref file,
+        } => {
+            csv_and_wellness::upload_wellness_csv(&client, athlete_id, file).await?;
+            println!("Wellness CSV uploaded successfully");
         }
         Commands::GetEvent {
             athlete_id,

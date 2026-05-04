@@ -76,6 +76,100 @@ pub async fn update_wellness(
     Ok(result)
 }
 
+#[derive(Debug, Deserialize, Serialize)]
+pub struct BulkWellnessUpdate {
+    pub records: Vec<WellnessUpdateWithDate>,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct WellnessUpdateWithDate {
+    pub id: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub ctl: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub atl: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub weight: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub resting_hr: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub hrv: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub mood: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub fatigue: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub motivation: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub sleep: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub sleep_quality: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub soreness: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub stress: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub fitness: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub readiness: Option<i64>,
+}
+
+pub async fn update_wellness_bulk(
+    client: &crate::client::ApiClient,
+    athlete_id: &str,
+    records: &[WellnessUpdateWithDate],
+) -> Result<(), Box<dyn std::error::Error>> {
+    let url = format!(
+        "{}/api/v1/athlete/{}/wellness-bulk",
+        client.base_url(),
+        athlete_id
+    );
+    let response = client
+        .client()
+        .put(&url)
+        .basic_auth("API_KEY", Some(client.api_key()))
+        .json(records)
+        .send()
+        .await?;
+
+    if !response.status().is_success() {
+        let status = response.status().as_u16();
+        let body = response.text().await.unwrap_or_default();
+        return Err(format!("API error: {} - {}", status, body).into());
+    }
+
+    Ok(())
+}
+
+pub async fn upload_wellness_csv(
+    client: &crate::client::ApiClient,
+    athlete_id: &str,
+    file_path: &str,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let url = format!(
+        "{}/api/v1/athlete/{}/wellness",
+        client.base_url(),
+        athlete_id
+    );
+    let csv_content = std::fs::read_to_string(file_path)?;
+    let response = client
+        .client()
+        .post(&url)
+        .basic_auth("API_KEY", Some(client.api_key()))
+        .header("Content-Type", "text/csv")
+        .body(csv_content)
+        .send()
+        .await?;
+
+    if !response.status().is_success() {
+        let status = response.status().as_u16();
+        let body = response.text().await.unwrap_or_default();
+        return Err(format!("API error: {} - {}", status, body).into());
+    }
+
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -162,5 +256,60 @@ mod tests {
         let result = download_activities_csv(&client, "a-001", output_path.to_str().unwrap()).await;
 
         assert!(result.is_err());
+    }
+
+    #[tokio::test]
+    async fn test_update_wellness_bulk_success() {
+        let mock_server = MockServer::start().await;
+
+        Mock::given(method("PUT"))
+            .and(path("/api/v1/athlete/a-001/wellness-bulk"))
+            .and(header("Authorization", TEST_AUTH_HEADER))
+            .respond_with(ResponseTemplate::new(200))
+            .mount(&mock_server)
+            .await;
+
+        let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
+        let records = vec![WellnessUpdateWithDate {
+            id: "2024-01-15".to_string(),
+            ctl: None,
+            atl: None,
+            weight: Some(75.0),
+            resting_hr: None,
+            hrv: None,
+            mood: None,
+            fatigue: None,
+            motivation: None,
+            sleep: None,
+            sleep_quality: None,
+            soreness: None,
+            stress: None,
+            fitness: None,
+            readiness: None,
+        }];
+        let result = update_wellness_bulk(&client, "a-001", &records).await;
+
+        assert!(result.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_upload_wellness_csv_success() {
+        let mock_server = MockServer::start().await;
+
+        Mock::given(method("POST"))
+            .and(path("/api/v1/athlete/a-001/wellness"))
+            .and(header("Authorization", TEST_AUTH_HEADER))
+            .respond_with(ResponseTemplate::new(200))
+            .mount(&mock_server)
+            .await;
+
+        let temp_file = std::env::temp_dir().join("test_wellness.csv");
+        std::fs::write(&temp_file, "date,weight,resting_hr\n2024-01-15,75.0,50").unwrap();
+
+        let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
+        let result = upload_wellness_csv(&client, "a-001", temp_file.to_str().unwrap()).await;
+
+        assert!(result.is_ok());
+        std::fs::remove_file(&temp_file).ok();
     }
 }

@@ -113,6 +113,8 @@ intervals download-activity-fit-file <activity-id> output.fit
 | `list-wellness <id>` | List wellness records (weight, resting HR, HRV, CTL/ATL) |
 | `get-wellness <id> <date>` | Get wellness record for a specific date |
 | `update-wellness <id> <date>` | Update wellness record (`--weight`, `--resting-hr`, `--hrv`, `--mood`, `--sleep`) |
+| `update-wellness-bulk <athlete-id> --records <json>` | Bulk update wellness records |
+| `upload-wellness-csv <athlete-id> <file>` | Upload wellness records from CSV |
 | `get-weather-forecast <id>` | Get weather forecast for athlete's location |
 | `get-weather-config <id>` | Get weather forecast configuration |
 | `update-weather-config <id>` | Update weather forecast configuration (`--forecasts <json>`) |
