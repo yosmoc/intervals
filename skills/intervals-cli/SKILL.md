@@ -38,6 +38,11 @@ All commands output JSON by default.
 | `intervals get-athlete-mmp-model <athlete-id> <activity-type>` | Get MMP power model for a sport |
 | `intervals list-sport-settings <athlete-id>` | Get sport settings (FTP, LTHR per sport) |
 | `intervals list-gear <athlete-id>` | List athlete gear (bikes, shoes, etc.) |
+| `intervals get-gear <athlete-id> <gear-id>` | Get a specific gear item |
+| `intervals create-gear <athlete-id>` | Create new gear (options: `--name`, `--distance`, `--retired`) |
+| `intervals update-gear <athlete-id> <gear-id>` | Update gear (options: `--name`, `--distance`, `--retired`) |
+| `intervals delete-gear <athlete-id> <gear-id>` | Delete gear |
+| `intervals replace-gear <athlete-id> <gear-id>` | Retire and replace gear (options: `--new-gear-id`, `--retired-date`) |
 | `intervals list-custom-items <athlete-id>` | List custom items (charts, custom fields) |
 | `intervals get-custom-item <athlete-id> <item-id>` | Get a specific custom item |
 | `intervals delete-custom-item <athlete-id> <item-id>` | Delete a custom item |
@@ -66,10 +71,31 @@ All commands output JSON by default.
 | `intervals get-activity-map <activity-id>` | Get activity map data (lat/lng, bounds) |
 | `intervals get-activity-weather-summary <activity-id>` | Get weather summary for an activity |
 | `intervals get-activity-segments <activity-id>` | Get activity segments |
+| `intervals get-activity-hr-curve <activity-id>` | Get activity heart rate curve |
+| `intervals get-activity-hr-histogram <activity-id>` | Get activity heart rate histogram |
+| `intervals get-activity-hr-load-model <activity-id>` | Get activity heart rate load model |
+| `intervals get-activity-pace-curve <activity-id>` | Get activity pace curve |
+| `intervals get-activity-pace-histogram <activity-id>` | Get activity pace histogram |
+| `intervals get-activity-power-curves <activity-id>` | Get activity power curves |
+| `intervals get-activity-power-curve <activity-id>` | Get activity power curve |
+| `intervals get-activity-power-histogram <activity-id>` | Get activity power histogram |
+| `intervals get-activity-power-spike-model <activity-id>` | Get activity power spike model |
+| `intervals get-activity-power-vs-hr <activity-id>` | Get activity power vs heart rate |
+| `intervals get-activity-gap-histogram <activity-id>` | Get activity gradient-adjusted pace histogram |
+| `intervals get-activity-time-at-hr <activity-id>` | Get activity time at heart rate |
+| `intervals update-activity-intervals <activity-id> --intervals <json>` | Update intervals for an activity |
+| `intervals update-activity-interval <activity-id> <interval-id> --data <json>` | Update/create an interval |
+| `intervals split-activity-interval <activity-id> --interval-id <id>` | Split an interval |
+| `intervals delete-activity-intervals <activity-id> --interval-ids <ids>` | Delete intervals |
+| `intervals update-activity-streams <activity-id> --data <json>` | Update streams from JSON |
+| `intervals update-activity-streams-csv <activity-id> --csv-file <path>` | Update streams from CSV |
 | `intervals download-activity-file <activity-id> <output>` | Download original activity file |
 | `intervals download-activity-fit-file <activity-id> <output>` | Download FIT file (options: `--power`, `--hr`) |
 | `intervals download-activity-gpx-file <activity-id> <output>` | Download GPX file (options: `--power`, `--hr`) |
 | `intervals download-activities-csv <athlete-id> <output>` | Download all activities as CSV |
+| `intervals upload-activity <athlete-id> <file>` | Upload activity file (fit/tcx/gpx/zip) |
+| `intervals create-manual-activities-bulk <athlete-id> --activities <json>` | Bulk create manual activities |
+| `intervals download-activity-fit-files <athlete-id> --output <path>` | Download all FIT files as zip |
 
 ### Performance Curves
 
@@ -80,6 +106,9 @@ All commands output JSON by default.
 | `intervals list-athlete-pace-curves <athlete-id>` | List pace curves |
 | `intervals get-power-hr-curve <athlete-id> --start <date> --end <date>` | Get power vs heart rate curve |
 | `intervals list-pace-distances` | List pace curve distances |
+| `intervals list-athlete-hr-curves-best <athlete-id>` | List best heart rate curves |
+| `intervals list-athlete-power-curves-best <athlete-id>` | List best power curves |
+| `intervals list-athlete-pace-curves-best <athlete-id>` | List best pace curves |
 
 ### Wellness & Weather
 

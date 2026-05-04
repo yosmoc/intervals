@@ -1,8 +1,9 @@
 use clap::{Parser, Subcommand};
 use intervals::client::ApiClient;
 use intervals::commands::{
-    athlete_settings, chat_and_fitness, create_event, create_manual_activity, csv_and_wellness,
-    custom_items, delete_activity, download_activity_file, folder_operations, get_activities,
+    activity_analysis, activity_interval_editing, activity_upload, athlete_settings,
+    chat_and_fitness, create_event, create_manual_activity, csv_and_wellness, custom_items,
+    delete_activity, download_activity_file, folder_operations, gear_operations, get_activities,
     get_activity, get_activity_best_efforts, get_activity_map, get_activity_segments,
     get_activity_streams, get_activity_weather_summary, get_athlete, get_athlete_models,
     get_athlete_profile, get_athlete_summary, get_athlete_training_plan, get_delete_event,
@@ -111,6 +112,197 @@ enum Commands {
     GetActivitySegments {
         #[arg(help = "Activity ID")]
         activity_id: String,
+    },
+    #[command(about = "Get activity heart rate curve")]
+    GetActivityHRCurve {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+    },
+    #[command(about = "Get activity heart rate histogram")]
+    GetActivityHRHistogram {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+    },
+    #[command(about = "Get activity heart rate load model")]
+    GetActivityHRLoadModel {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+    },
+    #[command(about = "Get activity pace curve")]
+    GetActivityPaceCurve {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+    },
+    #[command(about = "Get activity pace histogram")]
+    GetActivityPaceHistogram {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+    },
+    #[command(about = "Get activity power curves")]
+    GetActivityPowerCurves {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+    },
+    #[command(about = "Get activity power curve")]
+    GetActivityPowerCurve {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+    },
+    #[command(about = "Get activity power histogram")]
+    GetActivityPowerHistogram {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+    },
+    #[command(about = "Get activity power spike model")]
+    GetActivityPowerSpikeModel {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+    },
+    #[command(about = "Get activity power vs heart rate")]
+    GetActivityPowerVsHR {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+    },
+    #[command(about = "Get activity gradient-adjusted pace histogram")]
+    GetActivityGAPHistogram {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+    },
+    #[command(about = "Get activity time at heart rate")]
+    GetActivityTimeAtHR {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+    },
+    #[command(about = "List best heart rate curves for athlete")]
+    ListAthleteHRCurvesBest {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+    },
+    #[command(about = "List best power curves for athlete")]
+    ListAthletePowerCurvesBest {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+    },
+    #[command(about = "List best pace curves for athlete")]
+    ListAthletePaceCurvesBest {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+    },
+    #[command(about = "Update intervals for an activity")]
+    UpdateActivityIntervals {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+        #[arg(long, help = "Intervals as JSON array")]
+        intervals: String,
+    },
+    #[command(about = "Update/create an activity interval")]
+    UpdateActivityInterval {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+        #[arg(help = "Interval ID")]
+        interval_id: i64,
+        #[arg(long, help = "Interval data as JSON")]
+        data: String,
+    },
+    #[command(about = "Split an activity interval")]
+    SplitActivityInterval {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+        #[arg(long, help = "Interval ID to split")]
+        interval_id: i64,
+        #[arg(long, help = "Split index")]
+        split_index: Option<i64>,
+    },
+    #[command(about = "Delete intervals from an activity")]
+    DeleteActivityIntervals {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+        #[arg(long, help = "Interval IDs to delete (comma-separated)")]
+        interval_ids: String,
+    },
+    #[command(about = "Update activity streams from JSON")]
+    UpdateActivityStreams {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+        #[arg(long, help = "Stream data as JSON")]
+        data: String,
+    },
+    #[command(about = "Update activity streams from CSV")]
+    UpdateActivityStreamsCSV {
+        #[arg(help = "Activity ID")]
+        activity_id: String,
+        #[arg(long, help = "Path to CSV file")]
+        csv_file: String,
+    },
+    #[command(about = "Upload activity file (fit/tcx/gpx/zip)")]
+    UploadActivity {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Path to activity file")]
+        file: String,
+    },
+    #[command(about = "Bulk create manual activities")]
+    CreateManualActivitiesBulk {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(long, help = "Activities as JSON array")]
+        activities: String,
+    },
+    #[command(about = "Download all FIT files as zip")]
+    DownloadActivityFitFiles {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(long, help = "Output zip file path")]
+        output: String,
+    },
+    #[command(about = "Get a specific gear item")]
+    GetGear {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Gear ID")]
+        gear_id: String,
+    },
+    #[command(about = "Create new gear or component")]
+    CreateGear {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(long, help = "Gear name")]
+        name: Option<String>,
+        #[arg(long, help = "Initial distance")]
+        distance: Option<f64>,
+        #[arg(long, help = "Retired status")]
+        retired: Option<bool>,
+    },
+    #[command(about = "Update gear or component")]
+    UpdateGear {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Gear ID")]
+        gear_id: String,
+        #[arg(long, help = "Gear name")]
+        name: Option<String>,
+        #[arg(long, help = "Distance")]
+        distance: Option<f64>,
+        #[arg(long, help = "Retired status")]
+        retired: Option<bool>,
+    },
+    #[command(about = "Delete gear or component")]
+    DeleteGear {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Gear ID")]
+        gear_id: String,
+    },
+    #[command(about = "Retire and replace gear component")]
+    ReplaceGear {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Gear ID")]
+        gear_id: String,
+        #[arg(long, help = "New gear ID")]
+        new_gear_id: Option<String>,
+        #[arg(long, help = "Retired date")]
+        retired_date: Option<String>,
     },
     #[command(about = "Get an event (planned workout, note etc.)")]
     GetEvent {
@@ -323,6 +515,52 @@ enum Commands {
     ListGear {
         #[arg(help = "Athlete ID")]
         id: String,
+    },
+    #[command(about = "Recalculate gear stats")]
+    CalcGear {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Gear ID")]
+        gear_id: String,
+    },
+    #[command(about = "Create a gear reminder")]
+    CreateGearReminder {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Gear ID")]
+        gear_id: String,
+        #[arg(long, help = "Distance threshold")]
+        distance: Option<f64>,
+        #[arg(long, help = "Date threshold")]
+        date: Option<String>,
+        #[arg(long, help = "Reminder notes")]
+        notes: Option<String>,
+    },
+    #[command(about = "Update a gear reminder")]
+    UpdateGearReminder {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Gear ID")]
+        gear_id: String,
+        #[arg(help = "Reminder ID")]
+        reminder_id: i64,
+        #[arg(long, help = "Distance threshold")]
+        distance: Option<f64>,
+        #[arg(long, help = "Date threshold")]
+        date: Option<String>,
+        #[arg(long, help = "Reminder notes")]
+        notes: Option<String>,
+        #[arg(long, help = "Mark as done", default_value = "false")]
+        done: bool,
+    },
+    #[command(about = "Delete a gear reminder")]
+    DeleteGearReminder {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Gear ID")]
+        gear_id: String,
+        #[arg(help = "Reminder ID")]
+        reminder_id: i64,
     },
     #[command(about = "Search activities by name or tag")]
     SearchActivities {
@@ -691,6 +929,232 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 get_activity_segments::get_activity_segments(&client, &activity_id).await?;
             println!("{}", serde_json::to_string_pretty(&segments)?);
         }
+        Commands::GetActivityHRCurve { activity_id } => {
+            let curve = activity_analysis::get_activity_hr_curve(&client, &activity_id).await?;
+            println!("{}", serde_json::to_string_pretty(&curve)?);
+        }
+        Commands::GetActivityHRHistogram { activity_id } => {
+            let histogram =
+                activity_analysis::get_activity_hr_histogram(&client, &activity_id).await?;
+            println!("{}", serde_json::to_string_pretty(&histogram)?);
+        }
+        Commands::GetActivityHRLoadModel { activity_id } => {
+            let model =
+                activity_analysis::get_activity_hr_load_model(&client, &activity_id).await?;
+            println!("{}", serde_json::to_string_pretty(&model)?);
+        }
+        Commands::GetActivityPaceCurve { activity_id } => {
+            let curve = activity_analysis::get_activity_pace_curve(&client, &activity_id).await?;
+            println!("{}", serde_json::to_string_pretty(&curve)?);
+        }
+        Commands::GetActivityPaceHistogram { activity_id } => {
+            let histogram =
+                activity_analysis::get_activity_pace_histogram(&client, &activity_id).await?;
+            println!("{}", serde_json::to_string_pretty(&histogram)?);
+        }
+        Commands::GetActivityPowerCurves { activity_id } => {
+            let curves =
+                activity_analysis::get_activity_power_curves(&client, &activity_id).await?;
+            println!("{}", serde_json::to_string_pretty(&curves)?);
+        }
+        Commands::GetActivityPowerCurve { activity_id } => {
+            let curve = activity_analysis::get_activity_power_curve(&client, &activity_id).await?;
+            println!("{}", serde_json::to_string_pretty(&curve)?);
+        }
+        Commands::GetActivityPowerHistogram { activity_id } => {
+            let histogram =
+                activity_analysis::get_activity_power_histogram(&client, &activity_id).await?;
+            println!("{}", serde_json::to_string_pretty(&histogram)?);
+        }
+        Commands::GetActivityPowerSpikeModel { activity_id } => {
+            let model =
+                activity_analysis::get_activity_power_spike_model(&client, &activity_id).await?;
+            println!("{}", serde_json::to_string_pretty(&model)?);
+        }
+        Commands::GetActivityPowerVsHR { activity_id } => {
+            let data = activity_analysis::get_activity_power_vs_hr(&client, &activity_id).await?;
+            println!("{}", serde_json::to_string_pretty(&data)?);
+        }
+        Commands::GetActivityGAPHistogram { activity_id } => {
+            let histogram =
+                activity_analysis::get_activity_gap_histogram(&client, &activity_id).await?;
+            println!("{}", serde_json::to_string_pretty(&histogram)?);
+        }
+        Commands::GetActivityTimeAtHR { activity_id } => {
+            let data = activity_analysis::get_activity_time_at_hr(&client, &activity_id).await?;
+            println!("{}", serde_json::to_string_pretty(&data)?);
+        }
+        Commands::ListAthleteHRCurvesBest { athlete_id } => {
+            let curves =
+                activity_analysis::list_athlete_hr_curves_best(&client, &athlete_id).await?;
+            println!("{}", serde_json::to_string_pretty(&curves)?);
+        }
+        Commands::ListAthletePowerCurvesBest { athlete_id } => {
+            let curves =
+                activity_analysis::list_athlete_power_curves_best(&client, &athlete_id).await?;
+            println!("{}", serde_json::to_string_pretty(&curves)?);
+        }
+        Commands::ListAthletePaceCurvesBest { athlete_id } => {
+            let curves =
+                activity_analysis::list_athlete_pace_curves_best(&client, &athlete_id).await?;
+            println!("{}", serde_json::to_string_pretty(&curves)?);
+        }
+        Commands::UpdateActivityIntervals {
+            ref activity_id,
+            ref intervals,
+        } => {
+            let input: activity_interval_editing::UpdateIntervalsInput =
+                serde_json::from_str(intervals)?;
+            let result =
+                activity_interval_editing::update_activity_intervals(&client, activity_id, &input)
+                    .await?;
+            println!("{}", serde_json::to_string_pretty(&result)?);
+        }
+        Commands::UpdateActivityInterval {
+            ref activity_id,
+            interval_id,
+            ref data,
+        } => {
+            let input: activity_interval_editing::UpdateIntervalInput = serde_json::from_str(data)?;
+            let result = activity_interval_editing::update_activity_interval(
+                &client,
+                activity_id,
+                interval_id,
+                &input,
+            )
+            .await?;
+            println!("{}", serde_json::to_string_pretty(&result)?);
+        }
+        Commands::SplitActivityInterval {
+            ref activity_id,
+            interval_id,
+            ref split_index,
+        } => {
+            let input = activity_interval_editing::SplitIntervalInput {
+                activity_id: activity_id.clone(),
+                interval_id,
+                split_index: *split_index,
+            };
+            let result =
+                activity_interval_editing::split_activity_interval(&client, activity_id, &input)
+                    .await?;
+            println!("{}", serde_json::to_string_pretty(&result)?);
+        }
+        Commands::DeleteActivityIntervals {
+            ref activity_id,
+            ref interval_ids,
+        } => {
+            let ids: Vec<i64> = interval_ids
+                .split(',')
+                .filter_map(|s| s.trim().parse().ok())
+                .collect();
+            let input = activity_interval_editing::DeleteIntervalsInput { interval_ids: ids };
+            activity_interval_editing::delete_activity_intervals(&client, activity_id, &input)
+                .await?;
+            println!("Intervals deleted successfully");
+        }
+        Commands::UpdateActivityStreams {
+            ref activity_id,
+            ref data,
+        } => {
+            let input: activity_interval_editing::StreamUpdate = serde_json::from_str(data)?;
+            activity_interval_editing::update_activity_streams(&client, activity_id, &input)
+                .await?;
+            println!("Streams updated successfully");
+        }
+        Commands::UpdateActivityStreamsCSV {
+            ref activity_id,
+            ref csv_file,
+        } => {
+            let csv_content = std::fs::read_to_string(csv_file)?;
+            activity_interval_editing::update_activity_streams_csv(
+                &client,
+                activity_id,
+                &csv_content,
+            )
+            .await?;
+            println!("Streams updated from CSV successfully");
+        }
+        Commands::UploadActivity {
+            ref athlete_id,
+            ref file,
+        } => {
+            let result = activity_upload::upload_activity(&client, athlete_id, file).await?;
+            println!("{}", serde_json::to_string_pretty(&result)?);
+        }
+        Commands::CreateManualActivitiesBulk {
+            ref athlete_id,
+            ref activities,
+        } => {
+            let input: activity_upload::BulkManualActivitiesInput =
+                serde_json::from_str(activities)?;
+            let result =
+                activity_upload::create_manual_activities_bulk(&client, athlete_id, &input).await?;
+            println!("{}", serde_json::to_string_pretty(&result)?);
+        }
+        Commands::DownloadActivityFitFiles {
+            ref athlete_id,
+            ref output,
+        } => {
+            activity_upload::download_activity_fit_files(&client, athlete_id, output).await?;
+            println!("FIT files downloaded to {}", output);
+        }
+        Commands::GetGear {
+            ref athlete_id,
+            ref gear_id,
+        } => {
+            let gear = gear_operations::get_gear(&client, athlete_id, gear_id).await?;
+            println!("{}", serde_json::to_string_pretty(&gear)?);
+        }
+        Commands::CreateGear {
+            ref athlete_id,
+            ref name,
+            ref distance,
+            ref retired,
+        } => {
+            let input = gear_operations::CreateGearInput {
+                name: name.clone(),
+                distance: *distance,
+                retired: *retired,
+            };
+            let gear = gear_operations::create_gear(&client, athlete_id, &input).await?;
+            println!("{}", serde_json::to_string_pretty(&gear)?);
+        }
+        Commands::UpdateGear {
+            ref athlete_id,
+            ref gear_id,
+            ref name,
+            ref distance,
+            ref retired,
+        } => {
+            let input = gear_operations::CreateGearInput {
+                name: name.clone(),
+                distance: *distance,
+                retired: *retired,
+            };
+            let gear = gear_operations::update_gear(&client, athlete_id, gear_id, &input).await?;
+            println!("{}", serde_json::to_string_pretty(&gear)?);
+        }
+        Commands::DeleteGear {
+            ref athlete_id,
+            ref gear_id,
+        } => {
+            gear_operations::delete_gear(&client, athlete_id, gear_id).await?;
+            println!("Gear deleted successfully");
+        }
+        Commands::ReplaceGear {
+            ref athlete_id,
+            ref gear_id,
+            ref new_gear_id,
+            ref retired_date,
+        } => {
+            let input = gear_operations::ReplaceGearInput {
+                new_gear_id: new_gear_id.clone(),
+                retired_date: retired_date.clone(),
+            };
+            gear_operations::replace_gear(&client, athlete_id, gear_id, &input).await?;
+            println!("Gear replaced successfully");
+        }
         Commands::GetEvent {
             athlete_id,
             event_id,
@@ -930,6 +1394,67 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Commands::ListGear { id } => {
             let gear = list_gear::list_gear(&client, &id).await?;
             println!("{}", serde_json::to_string_pretty(&gear)?);
+        }
+        Commands::CalcGear {
+            athlete_id,
+            gear_id,
+        } => {
+            let stats = gear_operations::calc_gear(&client, &athlete_id, &gear_id).await?;
+            println!("{}", serde_json::to_string_pretty(&stats)?);
+        }
+        Commands::CreateGearReminder {
+            athlete_id,
+            gear_id,
+            distance,
+            date,
+            notes,
+        } => {
+            let reminder = gear_operations::GearReminder {
+                id: None,
+                distance,
+                date,
+                notes,
+                done: None,
+            };
+            let result =
+                gear_operations::create_gear_reminder(&client, &athlete_id, &gear_id, &reminder)
+                    .await?;
+            println!("{}", serde_json::to_string_pretty(&result)?);
+        }
+        Commands::UpdateGearReminder {
+            athlete_id,
+            gear_id,
+            reminder_id,
+            distance,
+            date,
+            notes,
+            done,
+        } => {
+            let reminder = gear_operations::GearReminder {
+                id: Some(reminder_id),
+                distance,
+                date,
+                notes,
+                done: Some(done),
+            };
+            let result = gear_operations::update_gear_reminder(
+                &client,
+                &athlete_id,
+                &gear_id,
+                reminder_id,
+                &reminder,
+            )
+            .await?;
+            println!("{}", serde_json::to_string_pretty(&result)?);
+        }
+        Commands::DeleteGearReminder {
+            athlete_id,
+            gear_id,
+            reminder_id,
+        } => {
+            gear_operations::delete_gear_reminder(&client, &athlete_id, &gear_id, reminder_id)
+                .await?;
+            println!("Gear reminder deleted successfully");
         }
         Commands::SearchActivities {
             id,

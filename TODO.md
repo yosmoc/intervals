@@ -7,7 +7,7 @@
 - [x] Add dependencies: clap, reqwest, serde, serde_json, tokio, thiserror, urlencoding
 - [x] Configure $INTERVALS_API_KEY environment variable
 
-## Commands Implemented (65+ total)
+## Commands Implemented (94+ total)
 
 ### Athlete & Profile
 
@@ -102,7 +102,7 @@
 
 ## Current Status
 
-All 65+ commands implemented and verified against live API. 125+ tests passing.
+All 94+ commands implemented and verified against live API. 180 tests passing.
 
 ### Live API Verification Results (athlete: i545497)
 
@@ -168,43 +168,43 @@ All 65+ commands implemented and verified against live API. 125+ tests passing.
 - Cross-build (aarch64) failed due to missing OpenSSL headers → switched `reqwest` to `rustls-tls`
 - Upgraded `reqwest` from 0.12 to 0.13 (rustls is now default TLS backend)
 
-## Unimplemented API Endpoints (91 total)
+## Unimplemented API Endpoints (62 total)
 
 ### Activity Analysis — Histograms & Curves (12)
 
-- [ ] `get-activity-hr-curve <activity-id>` — `GET /api/v1/activity/{id}/hr-curve{ext}` — Activity heart rate curve (JSON/CSV)
-- [ ] `get-activity-hr-histogram <activity-id>` — `GET /api/v1/activity/{id}/hr-histogram` — Activity heart rate histogram
-- [ ] `get-activity-hr-load-model <activity-id>` — `GET /api/v1/activity/{id}/hr-load-model` — Activity heart rate training load model
-- [ ] `get-activity-pace-curve <activity-id>` — `GET /api/v1/activity/{id}/pace-curve{ext}` — Activity pace curve (JSON/CSV)
-- [ ] `get-activity-pace-histogram <activity-id>` — `GET /api/v1/activity/{id}/pace-histogram` — Activity pace histogram
-- [ ] `get-activity-power-curves <activity-id>` — `GET /api/v1/activity/{id}/power-curves{ext}` — Activity power curves (JSON/CSV)
-- [ ] `get-activity-power-curve <activity-id>` — `GET /api/v1/activity/{id}/power-curve{ext}` — Activity power curve (JSON/CSV)
-- [ ] `get-activity-power-histogram <activity-id>` — `GET /api/v1/activity/{id}/power-histogram` — Activity power histogram
-- [ ] `get-activity-power-spike-model <activity-id>` — `GET /api/v1/activity/{id}/power-spike-model` — Activity power spike detection model
-- [ ] `get-activity-power-vs-hr <activity-id>` — `GET /api/v1/activity/{id}/power-vs-hr{ext}` — Activity power vs heart rate (JSON/CSV)
-- [ ] `get-activity-gap-histogram <activity-id>` — `GET /api/v1/activity/{id}/gap-histogram` — Activity gradient-adjusted pace histogram
-- [ ] `get-activity-time-at-hr <activity-id>` — `GET /api/v1/activity/{id}/time-at-hr` — Activity time at heart rate data
+- [x] `get-activity-hr-curve <activity-id>` — `GET /api/v1/activity/{id}/hr-curve{ext}` — Activity heart rate curve (JSON/CSV)
+- [x] `get-activity-hr-histogram <activity-id>` — `GET /api/v1/activity/{id}/hr-histogram` — Activity heart rate histogram
+- [x] `get-activity-hr-load-model <activity-id>` — `GET /api/v1/activity/{id}/hr-load-model` — Activity heart rate training load model
+- [x] `get-activity-pace-curve <activity-id>` — `GET /api/v1/activity/{id}/pace-curve{ext}` — Activity pace curve (JSON/CSV)
+- [x] `get-activity-pace-histogram <activity-id>` — `GET /api/v1/activity/{id}/pace-histogram` — Activity pace histogram
+- [x] `get-activity-power-curves <activity-id>` — `GET /api/v1/activity/{id}/power-curves{ext}` — Activity power curves (JSON/CSV)
+- [x] `get-activity-power-curve <activity-id>` — `GET /api/v1/activity/{id}/power-curve{ext}` — Activity power curve (JSON/CSV)
+- [x] `get-activity-power-histogram <activity-id>` — `GET /api/v1/activity/{id}/power-histogram` — Activity power histogram
+- [x] `get-activity-power-spike-model <activity-id>` — `GET /api/v1/activity/{id}/power-spike-model` — Activity power spike detection model
+- [x] `get-activity-power-vs-hr <activity-id>` — `GET /api/v1/activity/{id}/power-vs-hr{ext}` — Activity power vs heart rate (JSON/CSV)
+- [x] `get-activity-gap-histogram <activity-id>` — `GET /api/v1/activity/{id}/gap-histogram` — Activity gradient-adjusted pace histogram
+- [x] `get-activity-time-at-hr <activity-id>` — `GET /api/v1/activity/{id}/time-at-hr` — Activity time at heart rate data
 
 ### Athlete Best Curves (3)
 
-- [ ] `list-athlete-hr-curves-best <id>` — `GET /api/v1/athlete/{id}/hr-curves{ext}` — List best heart rate curves
-- [ ] `list-athlete-power-curves-best <id>` — `GET /api/v1/athlete/{id}/power-curves{ext}` — List best power curves
-- [ ] `list-athlete-pace-curves-best <id>` — `GET /api/v1/athlete/{id}/pace-curves{ext}` — List best pace curves
+- [x] `list-athlete-hr-curves-best <id>` — `GET /api/v1/athlete/{id}/hr-curves{ext}` — List best heart rate curves
+- [x] `list-athlete-power-curves-best <id>` — `GET /api/v1/athlete/{id}/power-curves{ext}` — List best power curves
+- [x] `list-athlete-pace-curves-best <id>` — `GET /api/v1/athlete/{id}/pace-curves{ext}` — List best pace curves
 
 ### Activity Interval Editing (6)
 
-- [ ] `update-activity-intervals <activity-id>` — `PUT /api/v1/activity/{id}/intervals` — Update intervals for an activity
-- [ ] `update-activity-interval <activity-id> <interval-id>` — `PUT /api/v1/activity/{id}/intervals/{intervalId}` — Update/create an interval
-- [ ] `split-activity-interval <activity-id>` — `PUT /api/v1/activity/{id}/split-interval` — Split an interval
-- [ ] `delete-activity-intervals <activity-id>` — `PUT /api/v1/activity/{id}/delete-intervals` — Delete intervals
-- [ ] `update-activity-streams <activity-id>` — `PUT /api/v1/activity/{id}/streams` — Update streams from JSON
-- [ ] `update-activity-streams-csv <activity-id>` — `PUT /api/v1/activity/{id}/streams.csv` — Update streams from CSV
+- [x] `update-activity-intervals <activity-id>` — `PUT /api/v1/activity/{id}/intervals` — Update intervals for an activity
+- [x] `update-activity-interval <activity-id> <interval-id>` — `PUT /api/v1/activity/{id}/intervals/{intervalId}` — Update/create an interval
+- [x] `split-activity-interval <activity-id>` — `PUT /api/v1/activity/{id}/split-interval` — Split an interval
+- [x] `delete-activity-intervals <activity-id>` — `PUT /api/v1/activity/{id}/delete-intervals` — Delete intervals
+- [x] `update-activity-streams <activity-id>` — `PUT /api/v1/activity/{id}/streams` — Update streams from JSON
+- [x] `update-activity-streams-csv <activity-id>` — `PUT /api/v1/activity/{id}/streams.csv` — Update streams from CSV
 
 ### Activity Upload & Download (3)
 
-- [ ] `upload-activity <athlete-id> <file>` — `POST /api/v1/athlete/{id}/activities` — Upload activity file (fit/tcx/gpx/zip)
-- [ ] `create-manual-activities-bulk <athlete-id>` — `POST /api/v1/athlete/{id}/activities/manual/bulk` — Bulk create manual activities
-- [ ] `download-activity-fit-files <athlete-id>` — `POST /api/v1/athlete/{id}/download-fit-files` — Download zip of FIT files
+- [x] `upload-activity <athlete-id> <file>` — `POST /api/v1/athlete/{id}/activities` — Upload activity file (fit/tcx/gpx/zip)
+- [x] `create-manual-activities-bulk <athlete-id>` — `POST /api/v1/athlete/{id}/activities/manual/bulk` — Bulk create manual activities
+- [x] `download-activity-fit-files <athlete-id>` — `POST /api/v1/athlete/{id}/download-fit-files` — Download zip of FIT files
 
 ### Activity Search & Lists (4)
 
@@ -223,15 +223,15 @@ All 65+ commands implemented and verified against live API. 125+ tests passing.
 
 ### Gear CRUD (8)
 
-- [ ] `get-gear <athlete-id> <gear-id>` — `GET /api/v1/athlete/{id}/gear/{gearId}` — Get a specific gear item
-- [ ] `create-gear <athlete-id>` — `POST /api/v1/athlete/{id}/gear` — Create new gear or component
-- [ ] `update-gear <athlete-id> <gear-id>` — `PUT /api/v1/athlete/{id}/gear/{gearId}` — Update gear or component
-- [ ] `delete-gear <athlete-id> <gear-id>` — `DELETE /api/v1/athlete/{id}/gear/{gearId}` — Delete gear or component
-- [ ] `calc-gear <athlete-id> <gear-id>` — `GET /api/v1/athlete/{id}/gear/{gearId}/calc` — Recalculate gear stats
-- [ ] `create-gear-reminder <athlete-id> <gear-id>` — `POST /api/v1/athlete/{id}/gear/{gearId}/reminder` — Create a reminder
-- [ ] `update-gear-reminder <athlete-id> <gear-id> <reminder-id>` — `PUT /api/v1/athlete/{id}/gear/{gearId}/reminder/{reminderId}` — Update a reminder
-- [ ] `delete-gear-reminder <athlete-id> <gear-id> <reminder-id>` — `DELETE /api/v1/athlete/{id}/gear/{gearId}/reminder/{reminderId}` — Delete a reminder
-- [ ] `replace-gear <athlete-id> <gear-id>` — `POST /api/v1/athlete/{id}/gear/{gearId}/replace` — Retire and replace component
+- [x] `get-gear <athlete-id> <gear-id>` — `GET /api/v1/athlete/{id}/gear/{gearId}` — Get a specific gear item
+- [x] `create-gear <athlete-id>` — `POST /api/v1/athlete/{id}/gear` — Create new gear or component
+- [x] `update-gear <athlete-id> <gear-id>` — `PUT /api/v1/athlete/{id}/gear/{gearId}` — Update gear or component
+- [x] `delete-gear <athlete-id> <gear-id>` — `DELETE /api/v1/athlete/{id}/gear/{gearId}` — Delete gear or component
+- [x] `calc-gear <athlete-id> <gear-id>` — `GET /api/v1/athlete/{id}/gear/{gearId}/calc` — Recalculate gear stats
+- [x] `create-gear-reminder <athlete-id> <gear-id>` — `POST /api/v1/athlete/{id}/gear/{gearId}/reminder` — Create a reminder
+- [x] `update-gear-reminder <athlete-id> <gear-id> <reminder-id>` — `PUT /api/v1/athlete/{id}/gear/{gearId}/reminder/{reminderId}` — Update a reminder
+- [x] `delete-gear-reminder <athlete-id> <gear-id> <reminder-id>` — `DELETE /api/v1/athlete/{id}/gear/{gearId}/reminder/{reminderId}` — Delete a reminder
+- [x] `replace-gear <athlete-id> <gear-id>` — `POST /api/v1/athlete/{id}/gear/{gearId}/replace` — Retire and replace component
 
 ### Wellness CRUD (4)
 

@@ -1,3 +1,6 @@
+pub mod activity_analysis;
+pub mod activity_interval_editing;
+pub mod activity_upload;
 pub mod athlete_settings;
 pub mod chat_and_fitness;
 pub mod create_event;
@@ -7,6 +10,7 @@ pub mod custom_items;
 pub mod delete_activity;
 pub mod download_activity_file;
 pub mod folder_operations;
+pub mod gear_operations;
 pub mod get_activities;
 pub mod get_activity;
 pub mod get_activity_best_efforts;

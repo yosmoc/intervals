@@ -47,6 +47,11 @@ intervals download-activity-fit-file <activity-id> output.fit
 | `get-athlete-mmp-model <id> <activity-type>` | Get MMP power model for a sport |
 | `list-sport-settings <id>` | List sport settings (FTP, LTHR per sport) |
 | `list-gear <id>` | List athlete gear |
+| `get-gear <athlete-id> <gear-id>` | Get a specific gear item |
+| `create-gear <athlete-id>` | Create new gear (`--name`, `--distance`, `--retired`) |
+| `update-gear <athlete-id> <gear-id>` | Update gear (`--name`, `--distance`, `--retired`) |
+| `delete-gear <athlete-id> <gear-id>` | Delete gear |
+| `replace-gear <athlete-id> <gear-id>` | Retire and replace gear (`--new-gear-id`, `--retired-date`) |
 | `list-custom-items <id>` | List custom items (charts, custom fields) |
 | `get-custom-item <athlete-id> <item-id>` | Get a specific custom item |
 | `delete-custom-item <athlete-id> <item-id>` | Delete a custom item |
@@ -75,10 +80,31 @@ intervals download-activity-fit-file <activity-id> output.fit
 | `get-activity-map <activity-id>` | Get activity map data (lat/lng, bounds) |
 | `get-activity-weather-summary <activity-id>` | Get weather summary for an activity |
 | `get-activity-segments <activity-id>` | Get activity segments |
+| `get-activity-hr-curve <activity-id>` | Get activity heart rate curve |
+| `get-activity-hr-histogram <activity-id>` | Get activity heart rate histogram |
+| `get-activity-hr-load-model <activity-id>` | Get activity heart rate load model |
+| `get-activity-pace-curve <activity-id>` | Get activity pace curve |
+| `get-activity-pace-histogram <activity-id>` | Get activity pace histogram |
+| `get-activity-power-curves <activity-id>` | Get activity power curves |
+| `get-activity-power-curve <activity-id>` | Get activity power curve |
+| `get-activity-power-histogram <activity-id>` | Get activity power histogram |
+| `get-activity-power-spike-model <activity-id>` | Get activity power spike model |
+| `get-activity-power-vs-hr <activity-id>` | Get activity power vs heart rate |
+| `get-activity-gap-histogram <activity-id>` | Get activity gradient-adjusted pace histogram |
+| `get-activity-time-at-hr <activity-id>` | Get activity time at heart rate |
+| `update-activity-intervals <activity-id> --intervals <json>` | Update intervals for an activity |
+| `update-activity-interval <activity-id> <interval-id> --data <json>` | Update/create an interval |
+| `split-activity-interval <activity-id> --interval-id <id>` | Split an interval |
+| `delete-activity-intervals <activity-id> --interval-ids <ids>` | Delete intervals |
+| `update-activity-streams <activity-id> --data <json>` | Update streams from JSON |
+| `update-activity-streams-csv <activity-id> --csv-file <path>` | Update streams from CSV |
 | `download-activity-file <activity-id> <output>` | Download original activity file |
 | `download-activity-fit-file <activity-id> <output>` | Download FIT file (`--power`, `--hr`) |
 | `download-activity-gpx-file <activity-id> <output>` | Download GPX file (`--power`, `--hr`) |
 | `download-activities-csv <athlete-id> <output>` | Download all activities as CSV |
+| `upload-activity <athlete-id> <file>` | Upload activity file (fit/tcx/gpx/zip) |
+| `create-manual-activities-bulk <athlete-id> --activities <json>` | Bulk create manual activities |
+| `download-activity-fit-files <athlete-id> --output <path>` | Download all FIT files as zip |
 
 ### Wellness & Weather
 
@@ -118,6 +144,9 @@ intervals download-activity-fit-file <activity-id> output.fit
 | `list-athlete-pace-curves <id>` | List pace curves |
 | `get-power-hr-curve <id> --start <date> --end <date>` | Get power vs heart rate curve |
 | `list-pace-distances` | List pace curve distances |
+| `list-athlete-hr-curves-best <id>` | List best heart rate curves |
+| `list-athlete-power-curves-best <id>` | List best power curves |
+| `list-athlete-pace-curves-best <id>` | List best pace curves |
 
 ### Routes
 
