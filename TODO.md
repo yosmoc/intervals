@@ -7,7 +7,7 @@
 - [x] Add dependencies: clap, reqwest, serde, serde_json, tokio, thiserror, urlencoding
 - [x] Configure $INTERVALS_API_KEY environment variable
 
-## Commands Implemented (110+ total)
+## Commands Implemented (116+ total)
 
 ### Athlete & Profile
 
@@ -102,7 +102,7 @@
 
 ## Current Status
 
-All 110+ commands implemented and verified against live API. 196 tests passing.
+All 116+ commands implemented and verified against live API. 203 tests passing.
 
 ### Live API Verification Results (athlete: i545497)
 
@@ -168,7 +168,7 @@ All 110+ commands implemented and verified against live API. 196 tests passing.
 - Cross-build (aarch64) failed due to missing OpenSSL headers → switched `reqwest` to `rustls-tls`
 - Upgraded `reqwest` from 0.12 to 0.13 (rustls is now default TLS backend)
 
-## Unimplemented API Endpoints (46 total)
+## Unimplemented API Endpoints (40 total)
 
 ### Activity Analysis — Histograms & Curves (12)
 
@@ -260,12 +260,12 @@ All 110+ commands implemented and verified against live API. 196 tests passing.
 
 ### Event Bulk Operations (6)
 
-- [ ] `delete-events-range <athlete-id>` — `DELETE /api/v1/athlete/{id}/events` — Delete a range of events
-- [ ] `update-events-range <athlete-id>` — `PUT /api/v1/athlete/{id}/events` — Update all events for date range
-- [ ] `delete-events-bulk <athlete-id>` — `PUT /api/v1/athlete/{id}/events/bulk-delete` — Bulk delete events by id/external_id
-- [ ] `create-events-bulk <athlete-id>` — `POST /api/v1/athlete/{id}/events/bulk` — Create multiple events
-- [ ] `duplicate-events <athlete-id>` — `POST /api/v1/athlete/{id}/duplicate-events` — Duplicate events
-- [ ] `apply-plan-to-events <athlete-id>` — `POST /api/v1/athlete/{id}/events/apply-plan` — Apply plan to events
+- [x] `delete-events-range <athlete-id>` — `DELETE /api/v1/athlete/{id}/events` — Delete a range of events
+- [x] `update-events-range <athlete-id>` — `PUT /api/v1/athlete/{id}/events` — Update all events for date range
+- [x] `delete-events-bulk <athlete-id>` — `PUT /api/v1/athlete/{id}/events/bulk-delete` — Bulk delete events by id/external_id
+- [x] `create-events-bulk <athlete-id>` — `POST /api/v1/athlete/{id}/events/bulk` — Create multiple events
+- [x] `duplicate-events <athlete-id>` — `POST /api/v1/athlete/{id}/duplicate-events` — Duplicate events
+- [x] `apply-plan-to-events <athlete-id>` — `POST /api/v1/athlete/{id}/events/apply-plan` — Apply plan to events
 - [ ] `download-event-workout <athlete-id> <event-id> <format>` — `GET /api/v1/athlete/{id}/events/{eventId}/download{ext}` — Download planned workout
 
 ### Sport Settings CRUD (5)

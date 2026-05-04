@@ -152,6 +152,12 @@ All commands output JSON by default.
 | `intervals update-event <athlete-id> <event-id>` | Update an event (options: `--name`, `--description`, `--notes`) |
 | `intervals delete-event <athlete-id> <event-id>` | Delete an event from calendar |
 | `intervals mark-event-done <athlete-id> <event-id>` | Mark event as done (create manual activity from planned workout) |
+| `intervals delete-events-range <athlete-id> --start-date <date> --end-date <date>` | Delete events in date range |
+| `intervals update-events-range <athlete-id> --start-date <date> --end-date <date>` | Update events in date range (options: `--name`, `--description`, `--category`) |
+| `intervals delete-events-bulk <athlete-id>` | Bulk delete events (options: `--ids`, `--external-ids`) |
+| `intervals create-events-bulk <athlete-id> --events <json>` | Create multiple events |
+| `intervals duplicate-events <athlete-id> --event-ids <ids>` | Duplicate events (options: `--num-copies`, `--weeks-between`) |
+| `intervals apply-plan-to-events <athlete-id> --folder-id <id>` | Apply training plan to events |
 | `intervals list-event-tags <athlete-id>` | List event tags for an athlete |
 | `intervals list-workout-tags <athlete-id>` | List workout tags for an athlete |
 

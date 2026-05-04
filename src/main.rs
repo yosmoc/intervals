@@ -3,17 +3,18 @@ use intervals::client::ApiClient;
 use intervals::commands::{
     activity_analysis, activity_interval_editing, activity_upload, athlete_settings,
     chat_and_fitness, create_event, create_manual_activity, csv_and_wellness, custom_items,
-    delete_activity, download_activity_file, folder_operations, gear_operations, get_activities,
-    get_activity, get_activity_best_efforts, get_activity_map, get_activity_segments,
-    get_activity_streams, get_activity_weather_summary, get_athlete, get_athlete_models,
-    get_athlete_profile, get_athlete_summary, get_athlete_training_plan, get_delete_event,
-    get_interval_stats, get_route, get_update_weather_config, get_weather_forecast, get_wellness,
-    get_workout, list_activities, list_activities_around, list_activity_intervals,
-    list_activity_messages, list_activity_tags, list_athlete_hr_curves, list_athlete_pace_curves,
-    list_athlete_power_curves, list_athlete_routes, list_chats, list_event_workout_tags,
-    list_events, list_folders, list_gear, list_sport_settings, list_wellness, list_workouts,
-    mark_event_done, misc_endpoints, post_activity_message, search_activities,
-    search_activities_full, search_activity_intervals, update_activity, workout_operations,
+    delete_activity, download_activity_file, event_bulk_operations, folder_operations,
+    gear_operations, get_activities, get_activity, get_activity_best_efforts, get_activity_map,
+    get_activity_segments, get_activity_streams, get_activity_weather_summary, get_athlete,
+    get_athlete_models, get_athlete_profile, get_athlete_summary, get_athlete_training_plan,
+    get_delete_event, get_interval_stats, get_route, get_update_weather_config,
+    get_weather_forecast, get_wellness, get_workout, list_activities, list_activities_around,
+    list_activity_intervals, list_activity_messages, list_activity_tags, list_athlete_hr_curves,
+    list_athlete_pace_curves, list_athlete_power_curves, list_athlete_routes, list_chats,
+    list_event_workout_tags, list_events, list_folders, list_gear, list_sport_settings,
+    list_wellness, list_workouts, mark_event_done, misc_endpoints, post_activity_message,
+    search_activities, search_activities_full, search_activity_intervals, update_activity,
+    workout_operations,
 };
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
@@ -465,6 +466,83 @@ enum Commands {
         folder_id: i64,
         #[arg(long, help = "Workout IDs (comma-separated)")]
         workout_ids: String,
+    },
+    #[command(about = "Delete events in a date range")]
+    DeleteEventsRange {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(long, help = "Start date (YYYY-MM-DD)")]
+        start_date: String,
+        #[arg(long, help = "End date (YYYY-MM-DD)")]
+        end_date: String,
+    },
+    #[command(about = "Update events in a date range")]
+    UpdateEventsRange {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(long, help = "Start date (YYYY-MM-DD)")]
+        start_date: String,
+        #[arg(long, help = "End date (YYYY-MM-DD)")]
+        end_date: String,
+        #[arg(long, help = "New name")]
+        name: Option<String>,
+        #[arg(long, help = "New description")]
+        description: Option<String>,
+        #[arg(long, help = "New category")]
+        category: Option<String>,
+        #[arg(long, help = "New event type")]
+        event_type: Option<String>,
+    },
+    #[command(about = "Bulk delete events by ID or external ID")]
+    DeleteEventsBulk {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(long, help = "Event IDs (comma-separated)")]
+        ids: Option<String>,
+        #[arg(long, help = "External IDs (comma-separated)")]
+        external_ids: Option<String>,
+    },
+    #[command(about = "Create multiple events")]
+    CreateEventsBulk {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(long, help = "Events as JSON array")]
+        events: String,
+    },
+    #[command(about = "Duplicate events")]
+    DuplicateEvents {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(long, help = "Event IDs to duplicate (comma-separated)")]
+        event_ids: String,
+        #[arg(long, help = "Number of copies", default_value = "1")]
+        num_copies: i32,
+        #[arg(long, help = "Weeks between copies", default_value = "1")]
+        weeks_between: i32,
+    },
+    #[command(about = "Apply training plan to events")]
+    ApplyPlanToEvents {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(long, help = "Folder/plan ID")]
+        folder_id: i64,
+        #[arg(long, help = "Start date (YYYY-MM-DD)")]
+        start_date: Option<String>,
+    },
+    #[command(about = "Download event workout")]
+    DownloadEventWorkout {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Event ID")]
+        event_id: i64,
+        #[arg(help = "Output file path")]
+        output: String,
+        #[arg(
+            long,
+            help = "File extension (.zwo, .mrc, .erg, .fit)",
+            default_value = ".zwo"
+        )]
+        ext: String,
     },
     #[command(about = "Get an event (planned workout, note etc.)")]
     GetEvent {
@@ -1508,6 +1586,119 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             folder_operations::update_folder_workouts(&client, athlete_id, folder_id, &input)
                 .await?;
             println!("Folder workouts updated successfully");
+        }
+        Commands::DeleteEventsRange {
+            ref athlete_id,
+            ref start_date,
+            ref end_date,
+        } => {
+            let categories = vec!["NOTE".to_string(), "WORKOUT".to_string()];
+            event_bulk_operations::delete_events_range(
+                &client,
+                athlete_id,
+                start_date,
+                end_date,
+                &categories,
+            )
+            .await?;
+            println!("Events in date range deleted successfully");
+        }
+        Commands::UpdateEventsRange {
+            ref athlete_id,
+            ref start_date,
+            ref end_date,
+            ref name,
+            ref description,
+            ref category,
+            ref event_type,
+        } => {
+            let cats = category
+                .as_ref()
+                .map(|c| vec![c.clone()])
+                .unwrap_or_else(|| vec!["NOTE".to_string(), "WORKOUT".to_string()]);
+            let input = event_bulk_operations::UpdateEventsRangeInput {
+                start_date_local: start_date.clone(),
+                end_date_local: end_date.clone(),
+                name: name.clone(),
+                description: description.clone(),
+                category: category.clone(),
+                event_type: event_type.clone(),
+            };
+            event_bulk_operations::update_events_range(
+                &client, athlete_id, start_date, end_date, &cats, &input,
+            )
+            .await?;
+            println!("Events in date range updated successfully");
+        }
+        Commands::DeleteEventsBulk {
+            ref athlete_id,
+            ref ids,
+            ref external_ids,
+        } => {
+            let id_vec = ids
+                .as_ref()
+                .map(|s| s.split(',').filter_map(|x| x.trim().parse().ok()).collect());
+            let ext_id_vec = external_ids
+                .as_ref()
+                .map(|s| s.split(',').map(|x| x.trim().to_string()).collect());
+            let input = event_bulk_operations::DeleteEventsBulkInput {
+                ids: id_vec,
+                external_ids: ext_id_vec,
+            };
+            event_bulk_operations::delete_events_bulk(&client, athlete_id, &input).await?;
+            println!("Events deleted successfully");
+        }
+        Commands::CreateEventsBulk {
+            ref athlete_id,
+            ref events,
+        } => {
+            let events_vec: Vec<get_delete_event::EventEx> = serde_json::from_str(events)?;
+            let result =
+                event_bulk_operations::create_events_bulk(&client, athlete_id, &events_vec).await?;
+            println!("{}", serde_json::to_string_pretty(&result)?);
+        }
+        Commands::DuplicateEvents {
+            ref athlete_id,
+            ref event_ids,
+            num_copies,
+            weeks_between,
+        } => {
+            let ids: Vec<i64> = event_ids
+                .split(',')
+                .filter_map(|s| s.trim().parse().ok())
+                .collect();
+            let input = event_bulk_operations::DuplicateEventsInput {
+                event_ids: ids,
+                num_copies,
+                weeks_between: Some(weeks_between),
+            };
+            let result =
+                event_bulk_operations::duplicate_events(&client, athlete_id, &input).await?;
+            println!("{}", serde_json::to_string_pretty(&result)?);
+        }
+        Commands::ApplyPlanToEvents {
+            ref athlete_id,
+            folder_id,
+            ref start_date,
+        } => {
+            let input = event_bulk_operations::ApplyPlanInput {
+                folder_id,
+                start_date_local: start_date.clone(),
+            };
+            event_bulk_operations::apply_plan_to_events(&client, athlete_id, &input).await?;
+            println!("Plan applied to events successfully");
+        }
+        Commands::DownloadEventWorkout {
+            ref athlete_id,
+            event_id,
+            ref output,
+            ref ext,
+        } => {
+            event_bulk_operations::download_event_workout(
+                &client, athlete_id, event_id, output, ext,
+            )
+            .await?;
+            println!("Event workout downloaded to {}", output);
         }
         Commands::GetEvent {
             athlete_id,

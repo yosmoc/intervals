@@ -9,6 +9,7 @@ pub mod csv_and_wellness;
 pub mod custom_items;
 pub mod delete_activity;
 pub mod download_activity_file;
+pub mod event_bulk_operations;
 pub mod folder_operations;
 pub mod gear_operations;
 pub mod get_activities;

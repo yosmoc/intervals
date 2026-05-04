@@ -148,6 +148,12 @@ intervals download-activity-fit-file <activity-id> output.fit
 | `update-event <athlete-id> <event-id>` | Update an event (`--name`, `--description`, `--notes`) |
 | `delete-event <athlete-id> <event-id>` | Delete an event from calendar |
 | `mark-event-done <athlete-id> <event-id>` | Mark event as done (create manual activity from planned workout) |
+| `delete-events-range <athlete-id>` | Delete events in date range (`--start-date`, `--end-date`) |
+| `update-events-range <athlete-id>` | Update events in date range (`--start-date`, `--end-date`, `--name`, `--description`) |
+| `delete-events-bulk <athlete-id>` | Bulk delete events (`--ids`, `--external-ids`) |
+| `create-events-bulk <athlete-id> --events <json>` | Create multiple events |
+| `duplicate-events <athlete-id> --event-ids <ids>` | Duplicate events (`--num-copies`, `--weeks-between`) |
+| `apply-plan-to-events <athlete-id> --folder-id <id>` | Apply training plan to events |
 | `list-event-tags <id>` | List event tags for an athlete |
 | `list-workout-tags <id>` | List workout tags for an athlete |
 
