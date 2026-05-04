@@ -76,6 +76,43 @@ pub async fn update_route(
     Ok(route)
 }
 
+#[derive(Debug, Deserialize, Serialize)]
+pub struct RouteSimilarity {
+    pub distance_similarity: Option<f64>,
+    pub path_similarity: Option<f64>,
+    pub elevation_similarity: Option<f64>,
+}
+
+pub async fn compare_routes(
+    client: &crate::client::ApiClient,
+    athlete_id: &str,
+    route_id: i64,
+    other_id: i64,
+) -> Result<RouteSimilarity, Box<dyn std::error::Error>> {
+    let url = format!(
+        "{}/api/v1/athlete/{}/routes/{}/similarity/{}",
+        client.base_url(),
+        athlete_id,
+        route_id,
+        other_id
+    );
+    let response = client
+        .client()
+        .get(&url)
+        .basic_auth("API_KEY", Some(client.api_key()))
+        .send()
+        .await?;
+
+    if !response.status().is_success() {
+        let status = response.status().as_u16();
+        let body = response.text().await.unwrap_or_default();
+        return Err(format!("API error: {} - {}", status, body).into());
+    }
+
+    let result = response.json::<RouteSimilarity>().await?;
+    Ok(result)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -158,5 +195,26 @@ mod tests {
         let result = update_route(&client, "a-001", 123, &route).await;
 
         assert!(result.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_compare_routes_success() {
+        let mock_server = MockServer::start().await;
+
+        Mock::given(method("GET"))
+            .and(path("/api/v1/athlete/a-001/routes/123/similarity/456"))
+            .and(header("Authorization", TEST_AUTH_HEADER))
+            .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!({
+                "distance_similarity": 0.85,
+                "path_similarity": 0.92,
+                "elevation_similarity": 0.78
+            })))
+            .mount(&mock_server)
+            .await;
+
+        let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
+        let result = compare_routes(&client, "a-001", 123, 456).await.unwrap();
+
+        assert_eq!(result.path_similarity, Some(0.92));
     }
 }

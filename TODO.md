@@ -7,7 +7,7 @@
 - [x] Add dependencies: clap, reqwest, serde, serde_json, tokio, thiserror, urlencoding
 - [x] Configure $INTERVALS_API_KEY environment variable
 
-## Commands Implemented (127+ total)
+## Commands Implemented (128+ total)
 
 ### Athlete & Profile
 
@@ -102,7 +102,7 @@
 
 ## Current Status
 
-All 127+ commands implemented and verified against live API. 213 tests passing.
+All 128+ commands implemented and verified against live API. 214 tests passing.
 
 ### Live API Verification Results (athlete: i545497)
 
@@ -168,7 +168,7 @@ All 127+ commands implemented and verified against live API. 213 tests passing.
 - Cross-build (aarch64) failed due to missing OpenSSL headers → switched `reqwest` to `rustls-tls`
 - Upgraded `reqwest` from 0.12 to 0.13 (rustls is now default TLS backend)
 
-## Unimplemented API Endpoints (29 total)
+## Unimplemented API Endpoints (28 total)
 
 ### Activity Analysis — Histograms & Curves (12)
 
@@ -303,7 +303,7 @@ All 127+ commands implemented and verified against live API. 213 tests passing.
 ### Routes (2)
 
 - [x] `update-route <athlete-id> <route-id>` — `PUT /api/v1/athlete/{id}/routes/{route_id}` — Update a route
-- [ ] `compare-routes <athlete-id> <route-id> <other-id>` — `GET /api/v1/athlete/{id}/routes/{route_id}/similarity/{other_id}` — Route similarity comparison
+- [x] `compare-routes <athlete-id> <route-id> <other-id>` — `GET /api/v1/athlete/{id}/routes/{route_id}/similarity/{other_id}` — Route similarity comparison
 
 ### Athlete (1)
 

@@ -995,6 +995,15 @@ enum Commands {
         #[arg(long, help = "Mark as commute", default_value = "false")]
         commute: bool,
     },
+    #[command(about = "Compare two routes for similarity")]
+    CompareRoutes {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "First route ID")]
+        route_id: i64,
+        #[arg(help = "Second route ID")]
+        other_id: i64,
+    },
     #[command(about = "Get athlete profile")]
     GetAthleteProfile {
         #[arg(help = "Athlete ID")]
@@ -2295,6 +2304,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 latlngs: None,
             };
             let result = get_route::update_route(&client, &athlete_id, route_id, &route).await?;
+            println!("{}", serde_json::to_string_pretty(&result)?);
+        }
+        Commands::CompareRoutes {
+            athlete_id,
+            route_id,
+            other_id,
+        } => {
+            let result =
+                get_route::compare_routes(&client, &athlete_id, route_id, other_id).await?;
             println!("{}", serde_json::to_string_pretty(&result)?);
         }
         Commands::GetAthleteProfile { id } => {
