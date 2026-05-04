@@ -133,6 +133,12 @@ All commands output JSON by default.
 |---------|-------------|
 | `intervals list-workouts <athlete-id>` | List workouts in athlete's library |
 | `intervals get-workout <athlete-id> <workout-id>` | Get a specific workout |
+| `intervals create-workout <athlete-id>` | Create workout (options: `--name`, `--workout-type`, `--folder-id`) |
+| `intervals update-workout <athlete-id> <workout-id>` | Update workout (options: `--name`, `--description`, `--workout-type`) |
+| `intervals delete-workout <athlete-id> <workout-id>` | Delete a workout |
+| `intervals create-workouts-bulk <athlete-id> --workouts <json>` | Create multiple workouts |
+| `intervals duplicate-workouts <athlete-id> --workout-ids <ids>` | Duplicate workouts |
+| `intervals download-workouts-zip <athlete-id> <output>` | Download workouts as zip (options: `--oldest`, `--newest`, `--ext`) |
 | `intervals list-folders <athlete-id>` | List workout folders and plans |
 | `intervals list-folder-shared-with <athlete-id> <folder-id>` | List athletes a folder is shared with |
 | `intervals delete-folder <athlete-id> <folder-id>` | Delete a folder and all its workouts |

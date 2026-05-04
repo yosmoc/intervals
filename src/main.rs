@@ -13,7 +13,7 @@ use intervals::commands::{
     list_athlete_power_curves, list_athlete_routes, list_chats, list_event_workout_tags,
     list_events, list_folders, list_gear, list_sport_settings, list_wellness, list_workouts,
     mark_event_done, misc_endpoints, post_activity_message, search_activities,
-    search_activities_full, search_activity_intervals, update_activity,
+    search_activities_full, search_activity_intervals, update_activity, workout_operations,
 };
 
 const DEFAULT_BASE_URL: &str = "https://intervals.icu";
@@ -343,6 +343,86 @@ enum Commands {
     ListActivityStreamsExt {
         #[arg(help = "Activity ID")]
         activity_id: String,
+    },
+    #[command(about = "Create a new workout")]
+    CreateWorkout {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(long, help = "Workout name")]
+        name: Option<String>,
+        #[arg(long, help = "Workout description")]
+        description: Option<String>,
+        #[arg(long, help = "Workout type (e.g., Ride, Run)")]
+        workout_type: Option<String>,
+        #[arg(long, help = "Indoor workout")]
+        indoor: Option<bool>,
+        #[arg(long, help = "Moving time in seconds")]
+        moving_time: Option<i32>,
+        #[arg(long, help = "Joules")]
+        joules: Option<i32>,
+        #[arg(long, help = "Folder ID")]
+        folder_id: Option<i32>,
+    },
+    #[command(about = "Update a workout")]
+    UpdateWorkout {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Workout ID")]
+        workout_id: i32,
+        #[arg(long, help = "Workout name")]
+        name: Option<String>,
+        #[arg(long, help = "Workout description")]
+        description: Option<String>,
+        #[arg(long, help = "Workout type")]
+        workout_type: Option<String>,
+        #[arg(long, help = "Indoor workout")]
+        indoor: Option<bool>,
+        #[arg(long, help = "Moving time in seconds")]
+        moving_time: Option<i32>,
+        #[arg(long, help = "Joules")]
+        joules: Option<i32>,
+        #[arg(long, help = "Folder ID")]
+        folder_id: Option<i32>,
+    },
+    #[command(about = "Delete a workout")]
+    DeleteWorkout {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Workout ID")]
+        workout_id: i32,
+    },
+    #[command(about = "Create multiple workouts")]
+    CreateWorkoutsBulk {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(long, help = "Workouts as JSON array")]
+        workouts: String,
+    },
+    #[command(about = "Duplicate workouts")]
+    DuplicateWorkouts {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(long, help = "Workout IDs to duplicate (comma-separated)")]
+        workout_ids: String,
+        #[arg(long, help = "Target folder ID")]
+        target_folder_id: Option<i32>,
+    },
+    #[command(about = "Download workouts as zip")]
+    DownloadWorkoutsZip {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Output zip file path")]
+        output: String,
+        #[arg(long, help = "Oldest date (YYYY-MM-DD)")]
+        oldest: String,
+        #[arg(long, help = "Newest date (YYYY-MM-DD)")]
+        newest: String,
+        #[arg(
+            long,
+            help = "File extension (.zwo, .mrc, .erg, .fit)",
+            default_value = ".zwo"
+        )]
+        ext: String,
     },
     #[command(about = "Get an event (planned workout, note etc.)")]
     GetEvent {
@@ -1235,6 +1315,99 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Commands::ListActivityStreamsExt { ref activity_id } => {
             let streams = csv_and_wellness::list_activity_streams_ext(&client, activity_id).await?;
             println!("{}", serde_json::to_string_pretty(&streams)?);
+        }
+        Commands::CreateWorkout {
+            ref athlete_id,
+            ref name,
+            ref description,
+            ref workout_type,
+            ref indoor,
+            ref moving_time,
+            ref joules,
+            ref folder_id,
+        } => {
+            let input = workout_operations::CreateWorkoutInput {
+                name: name.clone(),
+                description: description.clone(),
+                workout_type: workout_type.clone(),
+                indoor: *indoor,
+                moving_time: *moving_time,
+                joules: *joules,
+                folder_id: *folder_id,
+            };
+            let workout = workout_operations::create_workout(&client, athlete_id, &input).await?;
+            println!("{}", serde_json::to_string_pretty(&workout)?);
+        }
+        Commands::UpdateWorkout {
+            ref athlete_id,
+            workout_id,
+            ref name,
+            ref description,
+            ref workout_type,
+            ref indoor,
+            ref moving_time,
+            ref joules,
+            ref folder_id,
+        } => {
+            let input = workout_operations::CreateWorkoutInput {
+                name: name.clone(),
+                description: description.clone(),
+                workout_type: workout_type.clone(),
+                indoor: *indoor,
+                moving_time: *moving_time,
+                joules: *joules,
+                folder_id: *folder_id,
+            };
+            let workout =
+                workout_operations::update_workout(&client, athlete_id, workout_id, &input).await?;
+            println!("{}", serde_json::to_string_pretty(&workout)?);
+        }
+        Commands::DeleteWorkout {
+            ref athlete_id,
+            workout_id,
+        } => {
+            workout_operations::delete_workout(&client, athlete_id, workout_id).await?;
+            println!("Workout deleted successfully");
+        }
+        Commands::CreateWorkoutsBulk {
+            ref athlete_id,
+            ref workouts,
+        } => {
+            let inputs: Vec<workout_operations::CreateWorkoutInput> =
+                serde_json::from_str(workouts)?;
+            let result =
+                workout_operations::create_workouts_bulk(&client, athlete_id, &inputs).await?;
+            println!("{}", serde_json::to_string_pretty(&result)?);
+        }
+        Commands::DuplicateWorkouts {
+            ref athlete_id,
+            ref workout_ids,
+            ref target_folder_id,
+        } => {
+            let ids: Vec<i32> = workout_ids
+                .split(',')
+                .filter_map(|s| s.trim().parse().ok())
+                .collect();
+            let input = workout_operations::DuplicateWorkoutsInput {
+                workout_ids: ids,
+                target_folder_id: *target_folder_id,
+            };
+            let result =
+                workout_operations::duplicate_workouts(&client, athlete_id, &input).await?;
+            println!("{}", serde_json::to_string_pretty(&result)?);
+        }
+        Commands::DownloadWorkoutsZip {
+            ref athlete_id,
+            ref output,
+            ref oldest,
+            ref newest,
+            ref ext,
+        } => {
+            workout_operations::download_workouts_zip(
+                &client, athlete_id, output, oldest, newest, ext,
+            )
+            .await?;
+            println!("Workouts zip downloaded to {}", output);
         }
         Commands::GetEvent {
             athlete_id,

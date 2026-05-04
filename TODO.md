@@ -7,7 +7,7 @@
 - [x] Add dependencies: clap, reqwest, serde, serde_json, tokio, thiserror, urlencoding
 - [x] Configure $INTERVALS_API_KEY environment variable
 
-## Commands Implemented (100+ total)
+## Commands Implemented (106+ total)
 
 ### Athlete & Profile
 
@@ -102,7 +102,7 @@
 
 ## Current Status
 
-All 100+ commands implemented and verified against live API. 186 tests passing.
+All 106+ commands implemented and verified against live API. 192 tests passing.
 
 ### Live API Verification Results (athlete: i545497)
 
@@ -168,7 +168,7 @@ All 100+ commands implemented and verified against live API. 186 tests passing.
 - Cross-build (aarch64) failed due to missing OpenSSL headers → switched `reqwest` to `rustls-tls`
 - Upgraded `reqwest` from 0.12 to 0.13 (rustls is now default TLS backend)
 
-## Unimplemented API Endpoints (56 total)
+## Unimplemented API Endpoints (50 total)
 
 ### Activity Analysis — Histograms & Curves (12)
 
@@ -242,14 +242,14 @@ All 100+ commands implemented and verified against live API. 186 tests passing.
 
 ### Workout CRUD (7)
 
-- [ ] `create-workout <athlete-id>` — `POST /api/v1/athlete/{id}/workouts` — Create a new workout
-- [ ] `update-workout <athlete-id> <workout-id>` — `PUT /api/v1/athlete/{id}/workouts/{workoutId}` — Update a workout
-- [ ] `delete-workout <athlete-id> <workout-id>` — `DELETE /api/v1/athlete/{id}/workouts/{workoutId}` — Delete a workout
-- [ ] `create-workouts-bulk <athlete-id>` — `POST /api/v1/athlete/{id}/workouts/bulk` — Create multiple workouts
+- [x] `create-workout <athlete-id>` — `POST /api/v1/athlete/{id}/workouts` — Create a new workout
+- [x] `update-workout <athlete-id> <workout-id>` — `PUT /api/v1/athlete/{id}/workouts/{workoutId}` — Update a workout
+- [x] `delete-workout <athlete-id> <workout-id>` — `DELETE /api/v1/athlete/{id}/workouts/{workoutId}` — Delete a workout
+- [x] `create-workouts-bulk <athlete-id>` — `POST /api/v1/athlete/{id}/workouts/bulk` — Create multiple workouts
 - [ ] `download-workout <athlete-id> <workout-id> <format>` — `POST /api/v1/athlete/{id}/download-workout{ext}` — Convert workout to zwo/mrc/erg/fit
-- [ ] `duplicate-workouts <athlete-id>` — `POST /api/v1/athlete/{id}/duplicate-workouts` — Duplicate workouts on a plan
+- [x] `duplicate-workouts <athlete-id>` — `POST /api/v1/athlete/{id}/duplicate-workouts` — Duplicate workouts on a plan
 - [ ] `import-workout <athlete-id> <folder-id> <file>` — `POST /api/v1/athlete/{id}/folders/{folderId}/import-workout` — Import workout from file
-- [ ] `download-workouts-zip <athlete-id>` — `GET /api/v1/athlete/{id}/workouts.zip` — Download workouts as zip
+- [x] `download-workouts-zip <athlete-id>` — `GET /api/v1/athlete/{id}/workouts.zip` — Download workouts as zip
 
 ### Folder CRUD (3)
 

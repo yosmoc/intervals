@@ -129,6 +129,12 @@ intervals download-activity-fit-file <activity-id> output.fit
 |---------|-------------|
 | `list-workouts <id>` | List workouts in athlete's library |
 | `get-workout <id> <workout-id>` | Get a specific workout |
+| `create-workout <athlete-id>` | Create workout (`--name`, `--workout-type`, `--folder-id`) |
+| `update-workout <athlete-id> <workout-id>` | Update workout (`--name`, `--description`, `--workout-type`) |
+| `delete-workout <athlete-id> <workout-id>` | Delete a workout |
+| `create-workouts-bulk <athlete-id> --workouts <json>` | Create multiple workouts |
+| `duplicate-workouts <athlete-id> --workout-ids <ids>` | Duplicate workouts |
+| `download-workouts-zip <athlete-id> <output>` | Download workouts as zip (`--oldest`, `--newest`, `--ext`) |
 | `list-folders <id>` | List workout folders and plans |
 | `list-folder-shared-with <athlete-id> <folder-id>` | List athletes a folder is shared with |
 | `delete-folder <athlete-id> <folder-id>` | Delete a folder and all its workouts |

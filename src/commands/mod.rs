@@ -54,6 +54,7 @@ pub mod search_activities;
 pub mod search_activities_full;
 pub mod search_activity_intervals;
 pub mod update_activity;
+pub mod workout_operations;
 
 #[cfg(test)]
 pub const TEST_AUTH_HEADER: &str = "Basic QVBJX0tFWTp0ZXN0LWFwaS1rZXk=";
