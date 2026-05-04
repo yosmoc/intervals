@@ -165,6 +165,91 @@ pub async fn send_chat_message(
     Ok(result)
 }
 
+pub async fn update_chat_message(
+    client: &crate::client::ApiClient,
+    chat_id: i64,
+    msg_id: i64,
+    content: &str,
+) -> Result<ChatMessage, Box<dyn std::error::Error>> {
+    let url = format!(
+        "{}/api/v1/chats/{}/messages/{}",
+        client.base_url(),
+        chat_id,
+        msg_id
+    );
+    let body = serde_json::json!({ "content": content });
+    let response = client
+        .client()
+        .put(&url)
+        .basic_auth("API_KEY", Some(client.api_key()))
+        .json(&body)
+        .send()
+        .await?;
+
+    if !response.status().is_success() {
+        let status = response.status().as_u16();
+        let body_text = response.text().await.unwrap_or_default();
+        return Err(format!("API error: {} - {}", status, body_text).into());
+    }
+
+    let result = response.json::<ChatMessage>().await?;
+    Ok(result)
+}
+
+pub async fn delete_chat_message(
+    client: &crate::client::ApiClient,
+    chat_id: i64,
+    msg_id: i64,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let url = format!(
+        "{}/api/v1/chats/{}/messages/{}",
+        client.base_url(),
+        chat_id,
+        msg_id
+    );
+    let response = client
+        .client()
+        .delete(&url)
+        .basic_auth("API_KEY", Some(client.api_key()))
+        .send()
+        .await?;
+
+    if !response.status().is_success() {
+        let status = response.status().as_u16();
+        let body_text = response.text().await.unwrap_or_default();
+        return Err(format!("API error: {} - {}", status, body_text).into());
+    }
+
+    Ok(())
+}
+
+pub async fn mark_chat_messages_seen(
+    client: &crate::client::ApiClient,
+    chat_id: i64,
+    msg_id: i64,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let url = format!(
+        "{}/api/v1/chats/{}/messages/{}/seen",
+        client.base_url(),
+        chat_id,
+        msg_id
+    );
+    let response = client
+        .client()
+        .put(&url)
+        .basic_auth("API_KEY", Some(client.api_key()))
+        .send()
+        .await?;
+
+    if !response.status().is_success() {
+        let status = response.status().as_u16();
+        let body_text = response.text().await.unwrap_or_default();
+        return Err(format!("API error: {} - {}", status, body_text).into());
+    }
+
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -291,5 +376,61 @@ mod tests {
             .unwrap();
 
         assert_eq!(result.message_id, Some(123));
+    }
+
+    #[tokio::test]
+    async fn test_update_chat_message_success() {
+        let mock_server = MockServer::start().await;
+
+        Mock::given(method("PUT"))
+            .and(path("/api/v1/chats/123/messages/456"))
+            .and(header("Authorization", TEST_AUTH_HEADER))
+            .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!({
+                "id": 456,
+                "content": "Updated message"
+            })))
+            .mount(&mock_server)
+            .await;
+
+        let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
+        let result = update_chat_message(&client, 123, 456, "Updated message")
+            .await
+            .unwrap();
+
+        assert_eq!(result.content.as_deref(), Some("Updated message"));
+    }
+
+    #[tokio::test]
+    async fn test_delete_chat_message_success() {
+        let mock_server = MockServer::start().await;
+
+        Mock::given(method("DELETE"))
+            .and(path("/api/v1/chats/123/messages/456"))
+            .and(header("Authorization", TEST_AUTH_HEADER))
+            .respond_with(ResponseTemplate::new(200))
+            .mount(&mock_server)
+            .await;
+
+        let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
+        let result = delete_chat_message(&client, 123, 456).await;
+
+        assert!(result.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_mark_chat_messages_seen_success() {
+        let mock_server = MockServer::start().await;
+
+        Mock::given(method("PUT"))
+            .and(path("/api/v1/chats/123/messages/456/seen"))
+            .and(header("Authorization", TEST_AUTH_HEADER))
+            .respond_with(ResponseTemplate::new(200))
+            .mount(&mock_server)
+            .await;
+
+        let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
+        let result = mark_chat_messages_seen(&client, 123, 456).await;
+
+        assert!(result.is_ok());
     }
 }

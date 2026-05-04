@@ -7,7 +7,7 @@
 - [x] Add dependencies: clap, reqwest, serde, serde_json, tokio, thiserror, urlencoding
 - [x] Configure $INTERVALS_API_KEY environment variable
 
-## Commands Implemented (124+ total)
+## Commands Implemented (127+ total)
 
 ### Athlete & Profile
 
@@ -102,7 +102,7 @@
 
 ## Current Status
 
-All 124+ commands implemented and verified against live API. 210 tests passing.
+All 127+ commands implemented and verified against live API. 213 tests passing.
 
 ### Live API Verification Results (athlete: i545497)
 
@@ -168,7 +168,7 @@ All 124+ commands implemented and verified against live API. 210 tests passing.
 - Cross-build (aarch64) failed due to missing OpenSSL headers → switched `reqwest` to `rustls-tls`
 - Upgraded `reqwest` from 0.12 to 0.13 (rustls is now default TLS backend)
 
-## Unimplemented API Endpoints (32 total)
+## Unimplemented API Endpoints (29 total)
 
 ### Activity Analysis — Histograms & Curves (12)
 
@@ -296,9 +296,9 @@ All 124+ commands implemented and verified against live API. 210 tests passing.
 - [x] `get-chat <chat-id>` — `GET /api/v1/chats/{id}` — Get a chat by id
 - [x] `list-chat-messages <chat-id>` — `GET /api/v1/chats/{id}/messages` — List messages for a chat
 - [x] `send-chat-message <athlete-id> <content>` — `POST /api/v1/chats/send-message` — Send a message
-- [ ] `update-chat-message <chat-id> <msg-id>` — `PUT /api/v1/chats/{id}/messages/{msgId}` — Update a message
-- [ ] `delete-chat-message <chat-id> <msg-id>` — `DELETE /api/v1/chats/{id}/messages/{msgId}` — Delete a message
-- [ ] `mark-chat-messages-seen <chat-id> <msg-id>` — `PUT /api/v1/chats/{id}/messages/{msgId}/seen` — Mark messages as seen
+- [x] `update-chat-message <chat-id> <msg-id>` — `PUT /api/v1/chats/{id}/messages/{msgId}` — Update a message
+- [x] `delete-chat-message <chat-id> <msg-id>` — `DELETE /api/v1/chats/{id}/messages/{msgId}` — Delete a message
+- [x] `mark-chat-messages-seen <chat-id> <msg-id>` — `PUT /api/v1/chats/{id}/messages/{msgId}/seen` — Mark messages as seen
 
 ### Routes (2)
 

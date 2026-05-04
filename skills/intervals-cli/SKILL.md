@@ -184,6 +184,9 @@ All commands output JSON by default.
 | `intervals get-chat <chat-id>` | Get a chat by id |
 | `intervals list-chat-messages <chat-id>` | List messages for a chat (options: `--before-id`, `--limit`) |
 | `intervals send-chat-message <athlete-id> <content>` | Send a chat message (option: `--chat-id`) |
+| `intervals update-chat-message <chat-id> <msg-id> <content>` | Update a chat message |
+| `intervals delete-chat-message <chat-id> <msg-id>` | Delete a chat message |
+| `intervals mark-chat-messages-seen <chat-id> <msg-id>` | Mark messages as seen |
 
 ### Other
 

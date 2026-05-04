@@ -1071,6 +1071,29 @@ enum Commands {
         #[arg(long, help = "Chat ID to send to")]
         chat_id: Option<i64>,
     },
+    #[command(about = "Update a chat message")]
+    UpdateChatMessage {
+        #[arg(help = "Chat ID")]
+        chat_id: i64,
+        #[arg(help = "Message ID")]
+        msg_id: i64,
+        #[arg(help = "New content")]
+        content: String,
+    },
+    #[command(about = "Delete a chat message")]
+    DeleteChatMessage {
+        #[arg(help = "Chat ID")]
+        chat_id: i64,
+        #[arg(help = "Message ID")]
+        msg_id: i64,
+    },
+    #[command(about = "Mark chat messages as seen")]
+    MarkChatMessagesSeen {
+        #[arg(help = "Chat ID")]
+        chat_id: i64,
+        #[arg(help = "Message ID")]
+        msg_id: i64,
+    },
     #[command(about = "List fitness model events for an athlete")]
     ListFitnessModelEvents {
         #[arg(help = "Athlete ID")]
@@ -2355,6 +2378,23 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 chat_and_fitness::send_chat_message(&client, &athlete_id, &content, chat_id)
                     .await?;
             println!("{}", serde_json::to_string_pretty(&result)?);
+        }
+        Commands::UpdateChatMessage {
+            chat_id,
+            msg_id,
+            content,
+        } => {
+            let result =
+                chat_and_fitness::update_chat_message(&client, chat_id, msg_id, &content).await?;
+            println!("{}", serde_json::to_string_pretty(&result)?);
+        }
+        Commands::DeleteChatMessage { chat_id, msg_id } => {
+            chat_and_fitness::delete_chat_message(&client, chat_id, msg_id).await?;
+            println!("Chat message deleted successfully");
+        }
+        Commands::MarkChatMessagesSeen { chat_id, msg_id } => {
+            chat_and_fitness::mark_chat_messages_seen(&client, chat_id, msg_id).await?;
+            println!("Messages marked as seen");
         }
         Commands::ListFitnessModelEvents { id } => {
             let events = chat_and_fitness::list_fitness_model_events(&client, &id).await?;

@@ -193,6 +193,9 @@ intervals download-activity-fit-file <activity-id> output.fit
 | `get-chat <chat-id>` | Get a chat by id |
 | `list-chat-messages <chat-id>` | List messages for a chat (`--before-id`, `--limit`) |
 | `send-chat-message <athlete-id> <content>` | Send a chat message (`--chat-id`) |
+| `update-chat-message <chat-id> <msg-id> <content>` | Update a chat message |
+| `delete-chat-message <chat-id> <msg-id>` | Delete a chat message |
+| `mark-chat-messages-seen <chat-id> <msg-id>` | Mark messages as seen |
 
 ### Other
 
