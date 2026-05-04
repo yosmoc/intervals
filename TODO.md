@@ -1,4 +1,4 @@
-# Intervals.mcu API CLI - TODO
+# Intervals.icu API CLI - TODO
 
 ## Project Setup
 

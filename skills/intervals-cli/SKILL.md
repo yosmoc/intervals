@@ -1,19 +1,19 @@
 ---
 name: intervals-cli
 description: >
-  Use the `intervals` CLI to interact with the intervals.mcu (Intervals.icu) API for
+  Use the `intervals` CLI to interact with the intervals.icu (Intervals.icu) API for
   training data, activities, workouts, power/HR/pace curves, wellness, events, routes,
-  chats, and gear. Trigger whenever the user mentions intervals.mcu, Intervals.icu,
+  chats, and gear. Trigger whenever the user mentions intervals.icu, Intervals.icu,
   training data, activities, workouts, power curves, heart rate curves, pace curves,
   wellness records, calendar events, training plans, or wants to create/update/delete
   activities or events. Also trigger for queries about FTP, CTL/ATL (fitness/fatigue),
-  training load, or any request to fetch or modify training data from intervals.mcu.
+  training load, or any request to fetch or modify training data from intervals.icu.
   The user's athlete ID is stored in the repo's AGENTS.md or can be provided explicitly.
 ---
 
 # Intervals CLI Skill
 
-This skill helps you use the `intervals` CLI tool to interact with the [intervals.mcu](https://intervals.mcu) API.
+This skill helps you use the `intervals` CLI tool to interact with the [intervals.icu](https://intervals.icu) API.
 
 ## Prerequisites
 
