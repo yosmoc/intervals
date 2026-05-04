@@ -34,6 +34,8 @@ All commands output JSON by default.
 | `intervals get-athlete-summary <athlete-id> [--start <date>] [--end <date>]` | Get athlete summary (fitness data, CTL/ATL, training load) |
 | `intervals get-athlete-settings <athlete-id> <device-class>` | Get settings for phone/tablet/desktop |
 | `intervals get-athlete-training-plan <athlete-id>` | Get current training plan |
+| `intervals update-training-plan <athlete-id> --data <json>` | Update athlete training plan |
+| `intervals update-athlete-plans --data <json>` | Update training plans for multiple athletes |
 | `intervals apply-plan-changes <athlete-id>` | Apply plan changes to calendar |
 | `intervals get-athlete-mmp-model <athlete-id> <activity-type>` | Get MMP power model for a sport |
 | `intervals list-sport-settings <athlete-id>` | Get sport settings (FTP, LTHR per sport) |
@@ -53,6 +55,10 @@ All commands output JSON by default.
 | `intervals list-custom-items <athlete-id>` | List custom items (charts, custom fields) |
 | `intervals get-custom-item <athlete-id> <item-id>` | Get a specific custom item |
 | `intervals delete-custom-item <athlete-id> <item-id>` | Delete a custom item |
+| `intervals create-custom-item <athlete-id> --data <json>` | Create a custom item |
+| `intervals update-custom-item <athlete-id> <item-id> --data <json>` | Update a custom item |
+| `intervals update-custom-item-indexes <athlete-id> --data <json>` | Re-order custom items |
+| `intervals upload-custom-item-image <athlete-id> <item-id> <file>` | Upload image for custom item |
 
 ### Activities
 
@@ -146,6 +152,9 @@ All commands output JSON by default.
 | `intervals create-workouts-bulk <athlete-id> --workouts <json>` | Create multiple workouts |
 | `intervals duplicate-workouts <athlete-id> --workout-ids <ids>` | Duplicate workouts |
 | `intervals download-workouts-zip <athlete-id> <output>` | Download workouts as zip (options: `--oldest`, `--newest`, `--ext`) |
+| `intervals download-workout <athlete-id> <workout-id> <output>` | Download a workout (option: `--ext`) |
+| `intervals download-workout-ext <workout-id> <output>` | Download a workout without athlete context (option: `--ext`) |
+| `intervals import-workout <athlete-id> <folder-id> <file>` | Import workout from file |
 | `intervals list-folders <athlete-id>` | List workout folders and plans |
 | `intervals list-folder-shared-with <athlete-id> <folder-id>` | List athletes a folder is shared with |
 | `intervals delete-folder <athlete-id> <folder-id>` | Delete a folder and all its workouts |
@@ -165,6 +174,7 @@ All commands output JSON by default.
 | `intervals create-events-bulk <athlete-id> --events <json>` | Create multiple events |
 | `intervals duplicate-events <athlete-id> --event-ids <ids>` | Duplicate events (options: `--num-copies`, `--weeks-between`) |
 | `intervals apply-plan-to-events <athlete-id> --folder-id <id>` | Apply training plan to events |
+| `intervals download-event-workout <athlete-id> <event-id> <output>` | Download event workout (option: `--ext`) |
 | `intervals list-event-tags <athlete-id>` | List event tags for an athlete |
 | `intervals list-workout-tags <athlete-id>` | List workout tags for an athlete |
 

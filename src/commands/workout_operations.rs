@@ -205,6 +205,106 @@ pub async fn download_workouts_zip(
     Ok(())
 }
 
+pub async fn download_workout(
+    client: &crate::client::ApiClient,
+    athlete_id: &str,
+    workout_id: i32,
+    ext: &str,
+    output_path: &str,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let url = format!(
+        "{}/api/v1/athlete/{}/download-workout{}?workoutId={}",
+        client.base_url(),
+        athlete_id,
+        ext,
+        workout_id
+    );
+    let response = client
+        .client()
+        .post(&url)
+        .basic_auth("API_KEY", Some(client.api_key()))
+        .send()
+        .await?;
+
+    if !response.status().is_success() {
+        let status = response.status().as_u16();
+        let body = response.text().await.unwrap_or_default();
+        return Err(format!("API error: {} - {}", status, body).into());
+    }
+
+    let bytes = response.bytes().await?;
+    std::fs::write(output_path, &bytes)?;
+    Ok(())
+}
+
+pub async fn download_workout_ext(
+    client: &crate::client::ApiClient,
+    workout_id: i32,
+    ext: &str,
+    output_path: &str,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let url = format!(
+        "{}/api/v1/download-workout{}?workoutId={}",
+        client.base_url(),
+        ext,
+        workout_id
+    );
+    let response = client
+        .client()
+        .post(&url)
+        .basic_auth("API_KEY", Some(client.api_key()))
+        .send()
+        .await?;
+
+    if !response.status().is_success() {
+        let status = response.status().as_u16();
+        let body = response.text().await.unwrap_or_default();
+        return Err(format!("API error: {} - {}", status, body).into());
+    }
+
+    let bytes = response.bytes().await?;
+    std::fs::write(output_path, &bytes)?;
+    Ok(())
+}
+
+pub async fn import_workout(
+    client: &crate::client::ApiClient,
+    athlete_id: &str,
+    folder_id: i32,
+    file_path: &str,
+) -> Result<super::list_workouts::Workout, Box<dyn std::error::Error>> {
+    let url = format!(
+        "{}/api/v1/athlete/{}/folders/{}/import-workout",
+        client.base_url(),
+        athlete_id,
+        folder_id
+    );
+    let file_bytes = std::fs::read(file_path)?;
+    let file_name = std::path::Path::new(file_path)
+        .file_name()
+        .unwrap_or_default()
+        .to_string_lossy()
+        .to_string();
+    let response = client
+        .client()
+        .post(&url)
+        .basic_auth("API_KEY", Some(client.api_key()))
+        .header("Content-Type", "application/octet-stream")
+        .header("X-File-Name", &file_name)
+        .body(file_bytes)
+        .send()
+        .await?;
+
+    if !response.status().is_success() {
+        let status = response.status().as_u16();
+        let body = response.text().await.unwrap_or_default();
+        return Err(format!("API error: {} - {}", status, body).into());
+    }
+
+    let workout = response.json::<super::list_workouts::Workout>().await?;
+    Ok(workout)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -381,5 +481,71 @@ mod tests {
         assert!(result.is_ok());
         assert!(output_path.exists());
         std::fs::remove_file(&output_path).ok();
+    }
+
+    #[tokio::test]
+    async fn test_download_workout_success() {
+        let mock_server = MockServer::start().await;
+        let output_path = std::env::temp_dir().join("test_workout.zwo");
+
+        Mock::given(method("POST"))
+            .and(path("/api/v1/athlete/a-001/download-workout.zwo"))
+            .and(header("Authorization", TEST_AUTH_HEADER))
+            .respond_with(ResponseTemplate::new(200).set_body_bytes(b"<workout>"))
+            .mount(&mock_server)
+            .await;
+
+        let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
+        let result =
+            download_workout(&client, "a-001", 42, ".zwo", output_path.to_str().unwrap()).await;
+
+        assert!(result.is_ok());
+        assert!(output_path.exists());
+        std::fs::remove_file(&output_path).ok();
+    }
+
+    #[tokio::test]
+    async fn test_download_workout_ext_success() {
+        let mock_server = MockServer::start().await;
+        let output_path = std::env::temp_dir().join("test_workout_ext.zwo");
+
+        Mock::given(method("POST"))
+            .and(path("/api/v1/download-workout.zwo"))
+            .and(header("Authorization", TEST_AUTH_HEADER))
+            .respond_with(ResponseTemplate::new(200).set_body_bytes(b"<workout>"))
+            .mount(&mock_server)
+            .await;
+
+        let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
+        let result = download_workout_ext(&client, 42, ".zwo", output_path.to_str().unwrap()).await;
+
+        assert!(result.is_ok());
+        assert!(output_path.exists());
+        std::fs::remove_file(&output_path).ok();
+    }
+
+    #[tokio::test]
+    async fn test_import_workout_success() {
+        let mock_server = MockServer::start().await;
+        let temp_file = std::env::temp_dir().join("test_import.zwo");
+        std::fs::write(&temp_file, b"<workout>").unwrap();
+
+        Mock::given(method("POST"))
+            .and(path("/api/v1/athlete/a-001/folders/1/import-workout"))
+            .and(header("Authorization", TEST_AUTH_HEADER))
+            .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!({
+                "id": 99,
+                "name": "Imported Workout"
+            })))
+            .mount(&mock_server)
+            .await;
+
+        let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
+        let result = import_workout(&client, "a-001", 1, temp_file.to_str().unwrap())
+            .await
+            .unwrap();
+
+        assert_eq!(result.name, Some("Imported Workout".to_string()));
+        std::fs::remove_file(&temp_file).ok();
     }
 }

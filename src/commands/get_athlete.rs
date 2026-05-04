@@ -29,6 +29,30 @@ pub async fn get_athlete(
     Ok(athlete)
 }
 
+pub async fn update_athlete(
+    client: &crate::client::ApiClient,
+    athlete_id: &str,
+    input: &serde_json::Value,
+) -> Result<Athlete, Box<dyn std::error::Error>> {
+    let url = format!("{}/api/v1/athlete/{}", client.base_url(), athlete_id);
+    let response = client
+        .client()
+        .put(&url)
+        .basic_auth("API_KEY", Some(client.api_key()))
+        .json(input)
+        .send()
+        .await?;
+
+    if !response.status().is_success() {
+        let status = response.status().as_u16();
+        let body = response.text().await.unwrap_or_default();
+        return Err(format!("API error: {} - {}", status, body).into());
+    }
+
+    let athlete = response.json::<Athlete>().await?;
+    Ok(athlete)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -93,6 +117,27 @@ mod tests {
         let result = get_athlete(&client, "12345").await;
 
         assert!(result.is_err());
+    }
+
+    #[tokio::test]
+    async fn test_update_athlete_success() {
+        let mock_server = MockServer::start().await;
+
+        Mock::given(method("PUT"))
+            .and(path("/api/v1/athlete/12345"))
+            .and(header("Authorization", TEST_AUTH_HEADER))
+            .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!({
+                "id": "i12345",
+                "name": "Updated Athlete"
+            })))
+            .mount(&mock_server)
+            .await;
+
+        let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
+        let input = serde_json::json!({ "name": "Updated Athlete" });
+        let athlete = update_athlete(&client, "12345", &input).await.unwrap();
+
+        assert_eq!(athlete.name, Some("Updated Athlete".to_string()));
     }
 
     #[test]

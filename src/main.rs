@@ -37,6 +37,13 @@ enum Commands {
         #[arg(help = "Athlete ID")]
         id: String,
     },
+    #[command(about = "Update an athlete")]
+    UpdateAthlete {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(long, help = "Athlete data as JSON")]
+        data: String,
+    },
     #[command(about = "Get athlete settings for a device class")]
     GetAthleteSettings {
         #[arg(help = "Athlete ID")]
@@ -424,6 +431,43 @@ enum Commands {
             default_value = ".zwo"
         )]
         ext: String,
+    },
+    #[command(about = "Download a workout in a specific format")]
+    DownloadWorkout {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Workout ID")]
+        workout_id: i32,
+        #[arg(help = "Output file path")]
+        output: String,
+        #[arg(
+            long,
+            help = "File extension (.zwo, .mrc, .erg, .fit)",
+            default_value = ".zwo"
+        )]
+        ext: String,
+    },
+    #[command(about = "Download a workout (no athlete context)")]
+    DownloadWorkoutExt {
+        #[arg(help = "Workout ID")]
+        workout_id: i32,
+        #[arg(help = "Output file path")]
+        output: String,
+        #[arg(
+            long,
+            help = "File extension (.zwo, .mrc, .erg, .fit)",
+            default_value = ".zwo"
+        )]
+        ext: String,
+    },
+    #[command(about = "Import a workout from file")]
+    ImportWorkout {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Folder ID")]
+        folder_id: i32,
+        #[arg(help = "Workout file path")]
+        file: String,
     },
     #[command(about = "Create a new folder or plan")]
     CreateFolder {
@@ -1127,6 +1171,38 @@ enum Commands {
         #[arg(help = "Item ID")]
         item_id: i64,
     },
+    #[command(about = "Create a custom item")]
+    CreateCustomItem {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(long, help = "Custom item data as JSON")]
+        data: String,
+    },
+    #[command(about = "Update a custom item")]
+    UpdateCustomItem {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Item ID")]
+        item_id: i64,
+        #[arg(long, help = "Custom item data as JSON")]
+        data: String,
+    },
+    #[command(about = "Update custom item indexes")]
+    UpdateCustomItemIndexes {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(long, help = "Index mappings as JSON array of {id, index}")]
+        data: String,
+    },
+    #[command(about = "Upload image for custom item")]
+    UploadCustomItemImage {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Item ID")]
+        item_id: i64,
+        #[arg(help = "Image file path")]
+        file: String,
+    },
     #[command(about = "List athlete HR curves")]
     ListAthleteHrCurves {
         #[arg(help = "Athlete ID")]
@@ -1141,6 +1217,18 @@ enum Commands {
     GetAthleteTrainingPlan {
         #[arg(help = "Athlete ID")]
         id: String,
+    },
+    #[command(about = "Update athlete training plan")]
+    UpdateTrainingPlan {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(long, help = "Training plan data as JSON")]
+        data: String,
+    },
+    #[command(about = "Update training plans for multiple athletes")]
+    UpdateAthletePlans {
+        #[arg(long, help = "Athlete plan updates as JSON array")]
+        data: String,
     },
     #[command(about = "Get athlete MMP model for an activity type")]
     GetAthleteMmpModel {
@@ -1183,6 +1271,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     match cli.command {
         Commands::GetAthlete { id } => {
             let athlete = get_athlete::get_athlete(&client, &id).await?;
+            println!("{}", serde_json::to_string_pretty(&athlete)?);
+        }
+        Commands::UpdateAthlete { athlete_id, data } => {
+            let input: serde_json::Value = serde_json::from_str(&data)?;
+            let athlete = get_athlete::update_athlete(&client, &athlete_id, &input).await?;
             println!("{}", serde_json::to_string_pretty(&athlete)?);
         }
         Commands::GetAthleteSettings { id, device_class } => {
@@ -1631,6 +1724,33 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             )
             .await?;
             println!("Workouts zip downloaded to {}", output);
+        }
+        Commands::DownloadWorkout {
+            ref athlete_id,
+            workout_id,
+            ref output,
+            ref ext,
+        } => {
+            workout_operations::download_workout(&client, athlete_id, workout_id, ext, output)
+                .await?;
+            println!("Workout downloaded to {}", output);
+        }
+        Commands::DownloadWorkoutExt {
+            workout_id,
+            ref output,
+            ref ext,
+        } => {
+            workout_operations::download_workout_ext(&client, workout_id, ext, output).await?;
+            println!("Workout downloaded to {}", output);
+        }
+        Commands::ImportWorkout {
+            ref athlete_id,
+            folder_id,
+            ref file,
+        } => {
+            let workout =
+                workout_operations::import_workout(&client, athlete_id, folder_id, file).await?;
+            println!("{}", serde_json::to_string_pretty(&workout)?);
         }
         Commands::CreateFolder {
             ref athlete_id,
@@ -2436,6 +2556,40 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             custom_items::delete_custom_item(&client, &athlete_id, item_id).await?;
             println!("Custom item deleted successfully");
         }
+        Commands::CreateCustomItem {
+            ref athlete_id,
+            ref data,
+        } => {
+            let input: custom_items::CustomItem = serde_json::from_str(data)?;
+            let item = custom_items::create_custom_item(&client, athlete_id, &input).await?;
+            println!("{}", serde_json::to_string_pretty(&item)?);
+        }
+        Commands::UpdateCustomItem {
+            ref athlete_id,
+            item_id,
+            ref data,
+        } => {
+            let input: custom_items::CustomItem = serde_json::from_str(data)?;
+            let item =
+                custom_items::update_custom_item(&client, athlete_id, item_id, &input).await?;
+            println!("{}", serde_json::to_string_pretty(&item)?);
+        }
+        Commands::UpdateCustomItemIndexes {
+            ref athlete_id,
+            ref data,
+        } => {
+            let indexes: Vec<(i64, i32)> = serde_json::from_str(data)?;
+            custom_items::update_custom_item_indexes(&client, athlete_id, &indexes).await?;
+            println!("Custom item indexes updated successfully");
+        }
+        Commands::UploadCustomItemImage {
+            ref athlete_id,
+            item_id,
+            ref file,
+        } => {
+            custom_items::upload_custom_item_image(&client, athlete_id, item_id, file).await?;
+            println!("Custom item image uploaded successfully");
+        }
         Commands::ListAthleteHrCurves { id } => {
             let curves = list_athlete_hr_curves::list_athlete_hr_curves(&client, &id).await?;
             println!("{}", serde_json::to_string_pretty(&curves)?);
@@ -2447,6 +2601,20 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Commands::GetAthleteTrainingPlan { id } => {
             let plan = get_athlete_training_plan::get_athlete_training_plan(&client, &id).await?;
             println!("{}", serde_json::to_string_pretty(&plan)?);
+        }
+        Commands::UpdateTrainingPlan {
+            ref athlete_id,
+            ref data,
+        } => {
+            let input: serde_json::Value = serde_json::from_str(data)?;
+            get_athlete_training_plan::update_training_plan(&client, athlete_id, &input).await?;
+            println!("Training plan updated successfully");
+        }
+        Commands::UpdateAthletePlans { ref data } => {
+            let updates: Vec<get_athlete_training_plan::AthletePlanUpdate> =
+                serde_json::from_str(data)?;
+            get_athlete_training_plan::update_athlete_plans(&client, &updates).await?;
+            println!("Athlete plans updated successfully");
         }
         Commands::GetAthleteMmpModel { id, activity_type } => {
             let model =

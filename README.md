@@ -39,10 +39,13 @@ intervals download-activity-fit-file <activity-id> output.fit
 | Command | Description |
 |---------|-------------|
 | `get-athlete <id>` | Get basic athlete profile |
+| `update-athlete <athlete-id> --data <json>` | Update athlete profile |
 | `get-athlete-profile <id>` | Get detailed athlete profile (city, country, timezone, sex) |
 | `get-athlete-summary <id> [--start <date>] [--end <date>]` | Get athlete summary (fitness data, CTL/ATL, training load) |
 | `get-athlete-settings <id> <device-class>` | Get settings for phone/tablet/desktop |
 | `get-athlete-training-plan <id>` | Get current training plan |
+| `update-training-plan <athlete-id> --data <json>` | Update athlete training plan |
+| `update-athlete-plans --data <json>` | Update training plans for multiple athletes |
 | `apply-plan-changes <id>` | Apply plan changes to calendar |
 | `get-athlete-mmp-model <id> <activity-type>` | Get MMP power model for a sport |
 | `list-sport-settings <id>` | List sport settings (FTP, LTHR per sport) |
@@ -62,6 +65,10 @@ intervals download-activity-fit-file <activity-id> output.fit
 | `list-custom-items <id>` | List custom items (charts, custom fields) |
 | `get-custom-item <athlete-id> <item-id>` | Get a specific custom item |
 | `delete-custom-item <athlete-id> <item-id>` | Delete a custom item |
+| `create-custom-item <athlete-id> --data <json>` | Create a custom item |
+| `update-custom-item <athlete-id> <item-id> --data <json>` | Update a custom item |
+| `update-custom-item-indexes <athlete-id> --data <json>` | Re-order custom items |
+| `upload-custom-item-image <athlete-id> <item-id> <file>` | Upload image for custom item |
 
 ### Activities
 
@@ -142,6 +149,9 @@ intervals download-activity-fit-file <activity-id> output.fit
 | `create-workouts-bulk <athlete-id> --workouts <json>` | Create multiple workouts |
 | `duplicate-workouts <athlete-id> --workout-ids <ids>` | Duplicate workouts |
 | `download-workouts-zip <athlete-id> <output>` | Download workouts as zip (`--oldest`, `--newest`, `--ext`) |
+| `download-workout <athlete-id> <workout-id> <output>` | Download a workout in specific format (`--ext`) |
+| `download-workout-ext <workout-id> <output>` | Download a workout (no athlete context) (`--ext`) |
+| `import-workout <athlete-id> <folder-id> <file>` | Import workout from file |
 | `list-folders <id>` | List workout folders and plans |
 | `list-folder-shared-with <athlete-id> <folder-id>` | List athletes a folder is shared with |
 | `delete-folder <athlete-id> <folder-id>` | Delete a folder and all its workouts |
@@ -161,6 +171,7 @@ intervals download-activity-fit-file <activity-id> output.fit
 | `create-events-bulk <athlete-id> --events <json>` | Create multiple events |
 | `duplicate-events <athlete-id> --event-ids <ids>` | Duplicate events (`--num-copies`, `--weeks-between`) |
 | `apply-plan-to-events <athlete-id> --folder-id <id>` | Apply training plan to events |
+| `download-event-workout <athlete-id> <event-id> <output>` | Download event workout (`--ext`) |
 | `list-event-tags <id>` | List event tags for an athlete |
 | `list-workout-tags <id>` | List workout tags for an athlete |
 

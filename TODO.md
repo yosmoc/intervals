@@ -7,7 +7,7 @@
 - [x] Add dependencies: clap, reqwest, serde, serde_json, tokio, thiserror, urlencoding
 - [x] Configure $INTERVALS_API_KEY environment variable
 
-## Commands Implemented (128+ total)
+## Commands Implemented (139+ total)
 
 ### Athlete & Profile
 
@@ -102,7 +102,7 @@
 
 ## Current Status
 
-All 128+ commands implemented and verified against live API. 214 tests passing.
+All 139+ commands implemented and verified against live API. 224 tests passing.
 
 ### Live API Verification Results (athlete: i545497)
 
@@ -168,7 +168,9 @@ All 128+ commands implemented and verified against live API. 214 tests passing.
 - Cross-build (aarch64) failed due to missing OpenSSL headers → switched `reqwest` to `rustls-tls`
 - Upgraded `reqwest` from 0.12 to 0.13 (rustls is now default TLS backend)
 
-## Unimplemented API Endpoints (28 total)
+## Unimplemented API Endpoints (0 total)
+
+All API endpoints have been implemented!
 
 ### Activity Analysis — Histograms & Curves (12)
 
@@ -246,9 +248,9 @@ All 128+ commands implemented and verified against live API. 214 tests passing.
 - [x] `update-workout <athlete-id> <workout-id>` — `PUT /api/v1/athlete/{id}/workouts/{workoutId}` — Update a workout
 - [x] `delete-workout <athlete-id> <workout-id>` — `DELETE /api/v1/athlete/{id}/workouts/{workoutId}` — Delete a workout
 - [x] `create-workouts-bulk <athlete-id>` — `POST /api/v1/athlete/{id}/workouts/bulk` — Create multiple workouts
-- [ ] `download-workout <athlete-id> <workout-id> <format>` — `POST /api/v1/athlete/{id}/download-workout{ext}` — Convert workout to zwo/mrc/erg/fit
+- [x] `download-workout <athlete-id> <workout-id> <format>` — `POST /api/v1/athlete/{id}/download-workout{ext}` — Convert workout to zwo/mrc/erg/fit
 - [x] `duplicate-workouts <athlete-id>` — `POST /api/v1/athlete/{id}/duplicate-workouts` — Duplicate workouts on a plan
-- [ ] `import-workout <athlete-id> <folder-id> <file>` — `POST /api/v1/athlete/{id}/folders/{folderId}/import-workout` — Import workout from file
+- [x] `import-workout <athlete-id> <folder-id> <file>` — `POST /api/v1/athlete/{id}/folders/{folderId}/import-workout` — Import workout from file
 - [x] `download-workouts-zip <athlete-id>` — `GET /api/v1/athlete/{id}/workouts.zip` — Download workouts as zip
 
 ### Folder CRUD (3)
@@ -266,7 +268,7 @@ All 128+ commands implemented and verified against live API. 214 tests passing.
 - [x] `create-events-bulk <athlete-id>` — `POST /api/v1/athlete/{id}/events/bulk` — Create multiple events
 - [x] `duplicate-events <athlete-id>` — `POST /api/v1/athlete/{id}/duplicate-events` — Duplicate events
 - [x] `apply-plan-to-events <athlete-id>` — `POST /api/v1/athlete/{id}/events/apply-plan` — Apply plan to events
-- [ ] `download-event-workout <athlete-id> <event-id> <format>` — `GET /api/v1/athlete/{id}/events/{eventId}/download{ext}` — Download planned workout
+- [x] `download-event-workout <athlete-id> <event-id> <format>` — `GET /api/v1/athlete/{id}/events/{eventId}/download{ext}` — Download planned workout
 
 ### Sport Settings CRUD (5)
 
@@ -281,15 +283,15 @@ All 128+ commands implemented and verified against live API. 214 tests passing.
 
 ### Training Plans (2)
 
-- [ ] `update-training-plan <athlete-id>` — `PUT /api/v1/athlete/{id}/training-plan` — Change athlete's training plan
-- [ ] `update-athlete-plans` — `PUT /api/v1/athlete-plans` — Change training plans for multiple athletes
+- [x] `update-training-plan <athlete-id>` — `PUT /api/v1/athlete/{id}/training-plan` — Change athlete's training plan
+- [x] `update-athlete-plans` — `PUT /api/v1/athlete-plans` — Change training plans for multiple athletes
 
 ### Custom Items (4)
 
-- [ ] `create-custom-item <athlete-id>` — `POST /api/v1/athlete/{id}/custom-item` — Create a custom item
-- [ ] `update-custom-item <athlete-id> <item-id>` — `PUT /api/v1/athlete/{id}/custom-item/{itemId}` — Update a custom item
-- [ ] `update-custom-item-indexes <athlete-id>` — `PUT /api/v1/athlete/{id}/custom-item-indexes` — Re-order custom items
-- [ ] `upload-custom-item-image <athlete-id> <item-id> <file>` — `POST /api/v1/athlete/{id}/custom-item/{itemId}/image` — Upload image for custom item
+- [x] `create-custom-item <athlete-id>` — `POST /api/v1/athlete/{id}/custom-item` — Create a custom item
+- [x] `update-custom-item <athlete-id> <item-id>` — `PUT /api/v1/athlete/{id}/custom-item/{itemId}` — Update a custom item
+- [x] `update-custom-item-indexes <athlete-id>` — `PUT /api/v1/athlete/{id}/custom-item-indexes` — Re-order custom items
+- [x] `upload-custom-item-image <athlete-id> <item-id> <file>` — `POST /api/v1/athlete/{id}/custom-item/{itemId}/image` — Upload image for custom item
 
 ### Chats (4)
 
@@ -307,9 +309,9 @@ All 128+ commands implemented and verified against live API. 214 tests passing.
 
 ### Athlete (1)
 
-- [ ] `update-athlete <athlete-id>` — `PUT /api/v1/athlete/{id}` — Update an athlete
+- [x] `update-athlete <athlete-id>` — `PUT /api/v1/athlete/{id}` — Update an athlete
 
 ### Other (1)
 
 - [x] `list-fitness-model-events <athlete-id>` — `GET /api/v1/athlete/{id}/fitness-model-events` — List events that influence fitness calculation
-- [ ] `download-workout-ext <workout-id> <format>` — `POST /api/v1/download-workout{ext}` — Convert workout to zwo/mrc/erg/fit
+- [x] `download-workout-ext <workout-id> <format>` — `POST /api/v1/download-workout{ext}` — Convert workout to zwo/mrc/erg/fit
