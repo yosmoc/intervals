@@ -7,7 +7,7 @@
 - [x] Add dependencies: clap, reqwest, serde, serde_json, tokio, thiserror, urlencoding
 - [x] Configure $INTERVALS_API_KEY environment variable
 
-## Commands Implemented (106+ total)
+## Commands Implemented (110+ total)
 
 ### Athlete & Profile
 
@@ -102,7 +102,7 @@
 
 ## Current Status
 
-All 106+ commands implemented and verified against live API. 192 tests passing.
+All 110+ commands implemented and verified against live API. 196 tests passing.
 
 ### Live API Verification Results (athlete: i545497)
 
@@ -168,7 +168,7 @@ All 106+ commands implemented and verified against live API. 192 tests passing.
 - Cross-build (aarch64) failed due to missing OpenSSL headers → switched `reqwest` to `rustls-tls`
 - Upgraded `reqwest` from 0.12 to 0.13 (rustls is now default TLS backend)
 
-## Unimplemented API Endpoints (50 total)
+## Unimplemented API Endpoints (46 total)
 
 ### Activity Analysis — Histograms & Curves (12)
 
@@ -253,10 +253,10 @@ All 106+ commands implemented and verified against live API. 192 tests passing.
 
 ### Folder CRUD (3)
 
-- [ ] `create-folder <athlete-id>` — `POST /api/v1/athlete/{id}/folders` — Create a new folder or plan
-- [ ] `update-folder <athlete-id> <folder-id>` — `PUT /api/v1/athlete/{id}/folders/{folderId}` — Update a folder or plan
-- [ ] `update-folder-shared-with <athlete-id> <folder-id>` — `PUT /api/v1/athlete/{id}/folders/{folderId}/shared-with` — Update folder sharing
-- [ ] `update-folder-workouts <athlete-id> <folder-id>` — `PUT /api/v1/athlete/{id}/folders/{folderId}/workouts` — Update plan workouts
+- [x] `create-folder <athlete-id>` — `POST /api/v1/athlete/{id}/folders` — Create a new folder or plan
+- [x] `update-folder <athlete-id> <folder-id>` — `PUT /api/v1/athlete/{id}/folders/{folderId}` — Update a folder or plan
+- [x] `update-folder-shared-with <athlete-id> <folder-id>` — `PUT /api/v1/athlete/{id}/folders/{folderId}/shared-with` — Update folder sharing
+- [x] `update-folder-workouts <athlete-id> <folder-id>` — `PUT /api/v1/athlete/{id}/folders/{folderId}/workouts` — Update plan workouts
 
 ### Event Bulk Operations (6)
 

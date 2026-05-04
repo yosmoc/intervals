@@ -138,6 +138,10 @@ intervals download-activity-fit-file <activity-id> output.fit
 | `list-folders <id>` | List workout folders and plans |
 | `list-folder-shared-with <athlete-id> <folder-id>` | List athletes a folder is shared with |
 | `delete-folder <athlete-id> <folder-id>` | Delete a folder and all its workouts |
+| `create-folder <athlete-id>` | Create folder (`--name`, `--description`, `--folder-type`) |
+| `update-folder <athlete-id> <folder-id>` | Update folder (`--name`, `--description`, `--folder-type`) |
+| `update-folder-shared-with <athlete-id> <folder-id> --athlete-ids <ids>` | Update folder sharing |
+| `update-folder-workouts <athlete-id> <folder-id> --workout-ids <ids>` | Update plan workouts |
 | `list-events <id>` | List calendar events (`--oldest`, `--newest`, `--category`, `--limit`) |
 | `create-event <id>` | Create calendar event (`--start-date-local`, `--event-type`, `--category`, `--name`, `--description`, `--uid`, `--upsert-on-uid`) |
 | `get-event <athlete-id> <event-id>` | Get an event (planned workout, note, etc.) |

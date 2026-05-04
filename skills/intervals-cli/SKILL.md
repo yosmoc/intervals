@@ -142,6 +142,10 @@ All commands output JSON by default.
 | `intervals list-folders <athlete-id>` | List workout folders and plans |
 | `intervals list-folder-shared-with <athlete-id> <folder-id>` | List athletes a folder is shared with |
 | `intervals delete-folder <athlete-id> <folder-id>` | Delete a folder and all its workouts |
+| `intervals create-folder <athlete-id>` | Create folder (options: `--name`, `--description`, `--folder-type`) |
+| `intervals update-folder <athlete-id> <folder-id>` | Update folder (options: `--name`, `--description`, `--folder-type`) |
+| `intervals update-folder-shared-with <athlete-id> <folder-id> --athlete-ids <ids>` | Update folder sharing |
+| `intervals update-folder-workouts <athlete-id> <folder-id> --workout-ids <ids>` | Update plan workouts |
 | `intervals list-events <athlete-id>` | List calendar events (options: `--oldest`, `--newest`, `--category`, `--limit`) |
 | `intervals create-event <athlete-id> --start-date-local <datetime> --event-type <type> --category <category>` | Create calendar event (options: `--name`, `--description`, `--uid`, `--upsert-on-uid`) |
 | `intervals get-event <athlete-id> <event-id>` | Get an event (planned workout, note, etc.) |

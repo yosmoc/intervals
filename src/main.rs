@@ -424,6 +424,48 @@ enum Commands {
         )]
         ext: String,
     },
+    #[command(about = "Create a new folder or plan")]
+    CreateFolder {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(long, help = "Folder name")]
+        name: Option<String>,
+        #[arg(long, help = "Folder description")]
+        description: Option<String>,
+        #[arg(long, help = "Folder type")]
+        folder_type: Option<String>,
+    },
+    #[command(about = "Update a folder or plan")]
+    UpdateFolder {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Folder ID")]
+        folder_id: i64,
+        #[arg(long, help = "Folder name")]
+        name: Option<String>,
+        #[arg(long, help = "Folder description")]
+        description: Option<String>,
+        #[arg(long, help = "Folder type")]
+        folder_type: Option<String>,
+    },
+    #[command(about = "Update folder sharing")]
+    UpdateFolderSharedWith {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Folder ID")]
+        folder_id: i64,
+        #[arg(long, help = "Athlete IDs to share with (comma-separated)")]
+        athlete_ids: String,
+    },
+    #[command(about = "Update plan workouts")]
+    UpdateFolderWorkouts {
+        #[arg(help = "Athlete ID")]
+        athlete_id: String,
+        #[arg(help = "Folder ID")]
+        folder_id: i64,
+        #[arg(long, help = "Workout IDs (comma-separated)")]
+        workout_ids: String,
+    },
     #[command(about = "Get an event (planned workout, note etc.)")]
     GetEvent {
         #[arg(help = "Athlete ID")]
@@ -1408,6 +1450,64 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             )
             .await?;
             println!("Workouts zip downloaded to {}", output);
+        }
+        Commands::CreateFolder {
+            ref athlete_id,
+            ref name,
+            ref description,
+            ref folder_type,
+        } => {
+            let input = folder_operations::CreateFolderInput {
+                name: name.clone(),
+                description: description.clone(),
+                folder_type: folder_type.clone(),
+            };
+            let result = folder_operations::create_folder(&client, athlete_id, &input).await?;
+            println!("{}", serde_json::to_string_pretty(&result)?);
+        }
+        Commands::UpdateFolder {
+            ref athlete_id,
+            folder_id,
+            ref name,
+            ref description,
+            ref folder_type,
+        } => {
+            let input = folder_operations::CreateFolderInput {
+                name: name.clone(),
+                description: description.clone(),
+                folder_type: folder_type.clone(),
+            };
+            let result =
+                folder_operations::update_folder(&client, athlete_id, folder_id, &input).await?;
+            println!("{}", serde_json::to_string_pretty(&result)?);
+        }
+        Commands::UpdateFolderSharedWith {
+            ref athlete_id,
+            folder_id,
+            ref athlete_ids,
+        } => {
+            let ids: Vec<String> = athlete_ids
+                .split(',')
+                .map(|s| s.trim().to_string())
+                .collect();
+            let input = folder_operations::UpdateFolderSharedWithInput { athlete_ids: ids };
+            folder_operations::update_folder_shared_with(&client, athlete_id, folder_id, &input)
+                .await?;
+            println!("Folder sharing updated successfully");
+        }
+        Commands::UpdateFolderWorkouts {
+            ref athlete_id,
+            folder_id,
+            ref workout_ids,
+        } => {
+            let ids: Vec<i32> = workout_ids
+                .split(',')
+                .filter_map(|s| s.trim().parse().ok())
+                .collect();
+            let input = folder_operations::UpdateFolderWorkoutsInput { workout_ids: ids };
+            folder_operations::update_folder_workouts(&client, athlete_id, folder_id, &input)
+                .await?;
+            println!("Folder workouts updated successfully");
         }
         Commands::GetEvent {
             athlete_id,
