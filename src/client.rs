@@ -1,5 +1,9 @@
 use reqwest::Client;
+use std::time::Duration;
 use thiserror::Error;
+
+const CONNECT_TIMEOUT: Duration = Duration::from_secs(10);
+const REQUEST_TIMEOUT: Duration = Duration::from_secs(30);
 
 #[derive(Error, Debug)]
 pub enum ApiError {
@@ -21,8 +25,13 @@ pub struct ApiClient {
 
 impl ApiClient {
     pub fn new(base_url: String, api_key: String) -> Self {
+        let client = Client::builder()
+            .connect_timeout(CONNECT_TIMEOUT)
+            .timeout(REQUEST_TIMEOUT)
+            .build()
+            .expect("failed to build HTTP client");
         Self {
-            client: Client::new(),
+            client,
             base_url,
             api_key,
         }
@@ -43,5 +52,47 @@ impl ApiClient {
 
     pub fn api_key(&self) -> &str {
         &self.api_key
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use wiremock::matchers::{method, path};
+    use wiremock::{Mock, MockServer, ResponseTemplate};
+
+    #[tokio::test]
+    async fn test_request_timeout_fires() {
+        let mock_server = MockServer::start().await;
+
+        // Respond with a 1-minute delay — much longer than REQUEST_TIMEOUT
+        Mock::given(method("GET"))
+            .and(path("/slow"))
+            .respond_with(ResponseTemplate::new(200).set_delay(Duration::from_secs(60)))
+            .mount(&mock_server)
+            .await;
+
+        let client = Client::builder()
+            .timeout(Duration::from_millis(100))
+            .build()
+            .unwrap();
+
+        let result = client
+            .get(format!("{}/slow", mock_server.uri()))
+            .send()
+            .await;
+
+        assert!(result.is_err(), "expected timeout error");
+        let err = result.unwrap_err();
+        assert!(
+            err.is_timeout(),
+            "expected is_timeout() == true, got: {err}"
+        );
+    }
+
+    #[tokio::test]
+    async fn test_api_client_new_builds_successfully() {
+        // Verifies that Client::builder() with timeouts does not panic
+        let _client = ApiClient::new("http://localhost".to_string(), "key".to_string());
     }
 }
