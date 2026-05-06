@@ -30,38 +30,29 @@ pub async fn get_athlete_summary(
     athlete_id: &str,
     params: &GetAthleteSummaryParams,
 ) -> Result<Vec<SummaryWithCats>, Box<dyn std::error::Error>> {
-    let mut url = format!(
+    let url = format!(
         "{}/api/v1/athlete/{}/athlete-summary.json",
         client.base_url(),
         athlete_id
     );
 
-    let mut query_params: Vec<(String, String)> = Vec::new();
+    let mut query_params: Vec<(&str, String)> = Vec::new();
     if let Some(ref start) = params.start {
-        query_params.push(("start".to_string(), start.clone()));
+        query_params.push(("start", start.clone()));
     }
     if let Some(ref end) = params.end {
-        query_params.push(("end".to_string(), end.clone()));
+        query_params.push(("end", end.clone()));
     }
     if let Some(ref tags) = params.tags {
         for tag in tags {
-            query_params.push(("tags".to_string(), tag.clone()));
-        }
-    }
-
-    if !query_params.is_empty() {
-        url.push('?');
-        for (i, (k, v)) in query_params.iter().enumerate() {
-            if i > 0 {
-                url.push('&');
-            }
-            url.push_str(&format!("{}={}", k, v));
+            query_params.push(("tags", tag.clone()));
         }
     }
 
     let response = client
         .client()
         .get(&url)
+        .query(&query_params)
         .basic_auth("API_KEY", Some(client.api_key()))
         .send()
         .await?;
@@ -118,6 +109,50 @@ mod tests {
 
         assert_eq!(summaries.len(), 1);
         assert_eq!(summaries[0].athlete_name.as_deref(), Some("Test Athlete"));
+    }
+
+    #[tokio::test]
+    async fn test_get_athlete_summary_special_char_tags() {
+        let mock_server = MockServer::start().await;
+
+        Mock::given(method("GET"))
+            .and(path("/api/v1/athlete/a-001/athlete-summary.json"))
+            .and(header("Authorization", TEST_AUTH_HEADER))
+            .and(wiremock::matchers::query_param("tags", "#training"))
+            .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!([])))
+            .mount(&mock_server)
+            .await;
+
+        let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
+        let params = GetAthleteSummaryParams {
+            start: None,
+            end: None,
+            tags: Some(vec!["#training".to_string()]),
+        };
+        let result = get_athlete_summary(&client, "a-001", &params).await;
+        assert!(result.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_get_athlete_summary_tag_with_space() {
+        let mock_server = MockServer::start().await;
+
+        Mock::given(method("GET"))
+            .and(path("/api/v1/athlete/a-001/athlete-summary.json"))
+            .and(header("Authorization", TEST_AUTH_HEADER))
+            .and(wiremock::matchers::query_param("tags", "tempo run"))
+            .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!([])))
+            .mount(&mock_server)
+            .await;
+
+        let client = ApiClient::new(mock_server.uri(), "test-api-key".to_string());
+        let params = GetAthleteSummaryParams {
+            start: None,
+            end: None,
+            tags: Some(vec!["tempo run".to_string()]),
+        };
+        let result = get_athlete_summary(&client, "a-001", &params).await;
+        assert!(result.is_ok());
     }
 
     #[tokio::test]
