@@ -1,7 +1,11 @@
 {
+  "scripts": {
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check"
+  },
   "devDependencies": {
-    "markdownlint-cli": "0.45.0",
-    "secretlint": "12.3.1",
-    "@secretlint/secretlint-rule-preset-recommend": "12.3.1"
+    "@secretlint/secretlint-rule-preset-recommend": "12.3.1",
+    "oxfmt": "0.48.0",
+    "secretlint": "12.3.1"
   }
 }

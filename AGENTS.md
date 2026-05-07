@@ -5,7 +5,7 @@
 - **TDD first**: Write tests, then implement. Use `wiremock` for HTTP mocking.
 - **After implementing a new function**: `cargo fmt --all` → `cargo test` →
   update `TODO.md`, `README.md`, and `skills/intervals-cli/SKILL.md`.
-- **Pre-commit hooks**: secretlint, cargo-fmt, cargo-test, pinact, markdownlint.
+- **Pre-commit hooks**: secretlint, cargo-fmt, cargo-test, pinact, oxfmt.
   All must pass.
 
 ## Key Commands
@@ -53,6 +53,5 @@ cargo fmt --all -- --check  # Check formatting (CI)
 
 - Athlete ID is the owner's ID. **Never** hardcode it in README,
   examples, or public docs — use `<athlete-id>`.
-- `skills/`, `node_modules/`, `TODO.md` are excluded from markdownlint
-  (see `.markdownlintignore`).
-- `package.json` exists only for dev tooling (secretlint, markdownlint-cli).
+- `skills/`, `node_modules/`, `TODO.md` are excluded from oxfmt (see `.oxfmtrc.json`).
+- `package.json` exists only for dev tooling (secretlint, oxfmt).
