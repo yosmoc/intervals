@@ -24,9 +24,9 @@ repos:
         language: system
         types: [yaml]
         pass_filenames: false
-      - id: markdownlint
-        name: markdownlint
-        entry: npx --no-install markdownlint
+      - id: oxfmt
+        name: oxfmt
+        entry: npx --no-install oxfmt --no-error-on-unmatched-pattern
         language: system
         types: [markdown]
-        exclude: ^skills/
+        exclude: ^(skills/|TODO\.md)
