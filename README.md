@@ -219,7 +219,20 @@ intervals download-activity-fit-file <activity-id> output.fit
 
 ## Installation
 
+### For AI Agents (Claude, etc.)
+
+Install the `intervals-cli` skill so agents can use this CLI on your behalf:
+
+```bash
+gh skill install yosmoc/intervals intervals-cli
+
+# Pin to a specific version
+gh skill install yosmoc/intervals intervals-cli --pin v0.0.9
+```
+
 ### Install via Cargo
+
+Install the `intervals` binary to use the CLI directly from your terminal:
 
 ```bash
 # From crates.io (latest released version)
