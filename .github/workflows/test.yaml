@@ -20,5 +20,7 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - name: cargo fmt --check
         run: cargo fmt --all -- --check
+      - name: cargo build
+        run: cargo build
       - name: cargo test
         run: cargo test
