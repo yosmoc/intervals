@@ -19,7 +19,7 @@ This skill helps you use the `intervals` CLI tool to interact with the [interval
 
 - The `intervals` binary must be built or available in PATH
 - `INTERVALS_API_KEY` environment variable must be set
-- The user's athlete ID (e.g., `i545497`) — check `AGENTS.md` in the repo root, or ask the user
+- The user's athlete ID — check `AGENTS.md` in the repo root, or ask the user
 
 ## Command Reference
 
