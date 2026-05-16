@@ -745,8 +745,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "intervals"
-version = "0.0.8"
+name = "intervals-cli"
+version = "0.0.10"
 dependencies = [
  "assert_cmd",
  "clap",

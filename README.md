@@ -236,7 +236,7 @@ Install the `intervals` binary to use the CLI directly from your terminal:
 
 ```bash
 # From crates.io (latest released version)
-cargo install intervals
+cargo install intervals-cli
 
 # From GitHub (latest commits)
 cargo install --git https://github.com/yosmoc/intervals.git
