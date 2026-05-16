@@ -19,7 +19,7 @@ cargo fmt --all -- --check  # Check formatting (CI)
 
 ## Project Structure
 
-- Single crate: `intervals` (binary name `intervals`, **not** `intervals-cli`)
+- Single crate: `intervals-cli` (binary name `intervals`)
 - `src/main.rs` — CLI entry point with `clap` subcommands
 - `src/commands/<feature>.rs` — one file per command, tests inline in same file
 - `src/client.rs` — `ApiClient` with HTTP Basic Auth
