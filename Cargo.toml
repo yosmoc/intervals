@@ -2,6 +2,9 @@
 name = "intervals"
 version = "0.0.8"
 edition = "2024"
+description = "CLI for the Intervals.icu API"
+license = "MIT"
+repository = "https://github.com/yosmoc/intervals"
 
 [[bin]]
 name = "intervals"

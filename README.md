@@ -219,6 +219,16 @@ intervals download-activity-fit-file <activity-id> output.fit
 
 ## Installation
 
+### Install via Cargo
+
+```bash
+# From crates.io (latest released version)
+cargo install intervals
+
+# From GitHub (latest commits)
+cargo install --git https://github.com/yosmoc/intervals.git
+```
+
 ### Download from GitHub Releases
 
 Pre-built binaries are available for Linux, macOS, and Windows on the
@@ -243,12 +253,6 @@ git clone https://github.com/yosmoc/intervals.git
 cd intervals
 cargo build --release
 # Binary is at: target/release/intervals
-```
-
-Or install directly via Cargo:
-
-```bash
-cargo install --git https://github.com/yosmoc/intervals.git
 ```
 
 ## Development
