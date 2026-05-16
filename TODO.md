@@ -104,7 +104,7 @@
 
 All 139+ commands implemented and verified against live API. 224 tests passing.
 
-### Live API Verification Results (athlete: i545497)
+### Live API Verification Results (athlete: &lt;athlete-id&gt;)
 
 | Command | Status | Notes |
 |---------|--------|-------|
